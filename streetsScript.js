@@ -124,8 +124,8 @@ function death(){
 function outOfBattle(){
     document.getElementById("textBox").style.display = "block";
     document.getElementById("battleScene").style.display = "none";
-    document.getElementById("charImg").style.width = "20%";
-    document.getElementById("charImg").style.height = "35%";
+    document.getElementById("charImg").style.width = "20vw";
+    document.getElementById("charImg").style.height = "20vw";
 }
 
 // если параметр enemy пустая строка "", появляется случайный враг из списка
