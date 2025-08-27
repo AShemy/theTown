@@ -1,7 +1,7 @@
 let hero = {
     hp:100,
     rep:0,
-    coins:100,
+    coins:3,
     weaponName:"Кулаки",
     dmg:3,
     speed:500,
@@ -808,4 +808,5 @@ function goTavern(){
 function backToHub(){
     startEvent("hub", "https://i.pinimg.com/originals/5c/1f/1c/5c1f1c9238e3d395047269a781363b55.jpg", "","День:"+day+". Куда отправляемся?",0,0,0)
 }
+
 
