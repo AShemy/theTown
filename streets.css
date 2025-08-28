@@ -41,8 +41,8 @@ body {
 }
 
 .characterImage {
-	width: 20vw;
-	height: 20vw;
+	width: 18vw;
+	height: 18vw;
 	margin: auto;
 	background-size: contain;
     background-position: center;
@@ -266,4 +266,5 @@ button img {
 
 #heroProfile p {
     text-align: center;
+
 }
