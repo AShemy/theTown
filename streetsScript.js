@@ -127,9 +127,15 @@ function outOfBattle(){
     if (window.matchMedia("(max-width: 600px)").matches){
         document.getElementById("charImg").style.width = "50vw";
         document.getElementById("charImg").style.height = "50vw";
+        document.getElementById("charImg").style.backgroundRepeat = "no-repeat";
+        document.getElementById("charImg").style.backgroundPosition = "center";
+        document.getElementById("charImg").style.backgroundSize = "contain";
     }else{
         document.getElementById("charImg").style.width = "15vw";
         document.getElementById("charImg").style.height = "15vw";
+        document.getElementById("charImg").style.backgroundRepeat = "no-repeat";
+        document.getElementById("charImg").style.backgroundPosition = "center";
+        document.getElementById("charImg").style.backgroundSize = "contain";
     }
 
 }

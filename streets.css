@@ -312,6 +312,10 @@ button img {
         text-align: center;
     }
 
+    #textBox p {
+        margin-top: 3%;
+    }
+
     .buttonBox button {
         width: 40vw;
         width-max: 300px;
