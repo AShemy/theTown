@@ -268,15 +268,16 @@ button img {
     text-align: center;
 }
 
-@media (min-width: 500px){
+@media (max-width: 500px){
 	.characterImage {
-		width: 90vw;
-		height: 40vw;
+		width: 60vw;
+		height: 60vw;
 		margin: auto;
 		background-size: contain;
 	    background-position: center;
 		margin-top: 1%;
 	}
 }
+
 
 
