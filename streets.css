@@ -9,6 +9,10 @@ body {
     overflow: hidden;
 }
 
+* {
+    touch-action: manipulation; /* отключает зум при двойном тапе */
+}
+
 .stats {
 	width: 20%;
 	height: 5%;
@@ -322,4 +326,5 @@ button img {
         font-size: 5vw;
         font-family: gabriola;
     }
+
 }
