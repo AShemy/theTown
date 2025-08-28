@@ -124,8 +124,14 @@ function death(){
 function outOfBattle(){
     document.getElementById("textBox").style.display = "block";
     document.getElementById("battleScene").style.display = "none";
-    document.getElementById("charImg").style.width = "20%";
-    document.getElementById("charImg").style.height = "35%";
+    if (window.matchMedia("(max-width: 600px)").matches){
+        document.getElementById("charImg").style.width = "50vw";
+        document.getElementById("charImg").style.height = "50vw";
+    }else{
+        document.getElementById("charImg").style.width = "15vw";
+        document.getElementById("charImg").style.height = "15vw";
+    }
+
 }
 
 // если параметр enemy пустая строка "", появляется случайный враг из списка
@@ -163,9 +169,9 @@ function runFight(){
 
 //появление сцены с битвой + атака врага
 function fightScene(){
-    document.getElementById("fist").style.display = "block";
     document.getElementById("textBox").style.display = "none";
     document.getElementById("fightForest").style.display = "none";
+    document.getElementById("fist").style.display = "block";
     document.getElementById("battleScene").style.display = "block";
     document.getElementById("charImg").style.width = "60%";
     document.getElementById("charImg").style.height = "62%";
@@ -312,6 +318,7 @@ function showProfile(){
         profileOnOfF=1
     }
 };
+
 
 //----------------------------------------Создание типовых событий----------------------------
 
