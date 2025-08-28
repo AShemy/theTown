@@ -268,7 +268,7 @@ button img {
     text-align: center;
 }
 
-@media (max-width: 500px){
+@media (min-width: 500px){
 	.characterImage {
 		width: 90vw;
 		height: 40vw;
@@ -278,4 +278,5 @@ button img {
 		margin-top: 1%;
 	}
 }
+
 
