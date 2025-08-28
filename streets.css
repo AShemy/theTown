@@ -266,5 +266,16 @@ button img {
 
 #heroProfile p {
     text-align: center;
-
 }
+
+@media (max-width: 500px){
+	.characterImage {
+		width: 90vw;
+		height: 40vw;
+		margin: auto;
+		background-size: contain;
+	    background-position: center;
+		margin-top: 1%;
+	}
+}
+
