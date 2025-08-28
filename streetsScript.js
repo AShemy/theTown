@@ -1,7 +1,7 @@
 let hero = {
     hp:100,
     rep:0,
-    coins:3,
+    coins:100,
     weaponName:"Кулаки",
     dmg:3,
     speed:500,
@@ -124,8 +124,8 @@ function death(){
 function outOfBattle(){
     document.getElementById("textBox").style.display = "block";
     document.getElementById("battleScene").style.display = "none";
-    document.getElementById("charImg").style.width = "20vw";
-    document.getElementById("charImg").style.height = "20vw";
+    document.getElementById("charImg").style.width = "20%";
+    document.getElementById("charImg").style.height = "35%";
 }
 
 // если параметр enemy пустая строка "", появляется случайный враг из списка
@@ -808,5 +808,4 @@ function goTavern(){
 function backToHub(){
     startEvent("hub", "https://i.pinimg.com/originals/5c/1f/1c/5c1f1c9238e3d395047269a781363b55.jpg", "","День:"+day+". Куда отправляемся?",0,0,0)
 }
-
 

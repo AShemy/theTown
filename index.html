@@ -9,15 +9,15 @@
     </head>
 	<body id="mainScreen">
     <!-- ================================== ***Основа***=================================== -->
-    <div id="heroProfile">
-        <p id="heroHp">Здоровье: 100</p>
-        <p id="heroCoins">Монеты: 3</p>
-        <p id="heroRep">Репутация: 0</p>
+        <div id="heroProfile">
+            <p id="heroHp">Здоровье: 100</p>
+            <p id="heroCoins">Монеты: 3</p>
+            <p id="heroRep">Репутация: 0</p>
 
-        <p id="heroWeapon">Оружие: Кулаки</p>
-        <p id="heroDmg">Урон: 1</p>
-        <p id="heroSpeed">Скорость : 0.5</p>
-    </div>
+            <p id="heroWeapon">Оружие: Кулаки</p>
+            <p id="heroDmg">Урон: 1</p>
+            <p id="heroSpeed">Скорость : 0.5</p>
+        </div>
         <div id="stats" class="stats">
             <button onclick="musicPlay()" class="btnMusic"></button>
             <img src="images/hp.png" alt="Здоровье"/>
@@ -189,6 +189,7 @@
 
         <div id="battleScene">
             <div id="fist">
+                <div id="enemyImg"></div>
                 <p id="enemyHp">100 из 100</p>
                 <button onclick="attack()" id="attack">Атаковать</button>
             </div>
