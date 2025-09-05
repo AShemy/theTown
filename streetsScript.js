@@ -1,10 +1,10 @@
 let hero = {
     hp:100,
-    rep:0,
-    coins:100,
+    rep:50,
+    coins:3,
     weaponName:"Кулаки",
-    dmg:3,
-    speed:500,
+    dmg:5,
+    speed:1500,
 }
 
 let locationHero;
@@ -16,6 +16,8 @@ let clickWood = 0;
 let correctAnswers = 0;
 
 let enemy;
+
+let priceUpgrade = 5;
 
 let loopCount = 0;
 let forestLoopCount = 0;
@@ -71,27 +73,6 @@ function endElementAnimation(id1) {
     document.getElementById(id1).style.opacity = '1';
 }
 
-function firstAttack(){
-    document.getElementById("fist").classList.remove("startFirstAnimation");
-    requestAnimationFrame(() => {
-        document.getElementById("fist").classList.add("startFirstAnimation");
-    });
-}
-
-function knifeAttack(){
-    document.getElementById("fist").classList.remove("startKnifeAnimation");
-    requestAnimationFrame(() => {
-        document.getElementById("fist").classList.add("startKnifeAnimation");
-    });
-}
-
-function swordAttack(){
-    document.getElementById("fist").classList.remove("startSwordAnimation");
-    requestAnimationFrame(() => {
-        document.getElementById("fist").classList.add("startSwordAnimation");
-    });
-}
-
 function enemyReaction(){
     document.getElementById("charImg").classList.remove("startEnemyAnimation");
     requestAnimationFrame(() => {
@@ -124,38 +105,46 @@ function death(){
 function outOfBattle(){
     document.getElementById("textBox").style.display = "block";
     document.getElementById("battleScene").style.display = "none";
-    if (window.matchMedia("(max-width: 600px)").matches){
-        document.getElementById("charImg").style.width = "50vw";
-        document.getElementById("charImg").style.height = "50vw";
-        document.getElementById("charImg").style.backgroundRepeat = "no-repeat";
-        document.getElementById("charImg").style.backgroundPosition = "center";
-        document.getElementById("charImg").style.backgroundSize = "contain";
+    if (window.matchMedia("(max-width: 700px)").matches){
+        document.getElementById("charImg").style.width = "55vw";
+        document.getElementById("charImg").style.height = "55vw";
     }else{
         document.getElementById("charImg").style.width = "15vw";
         document.getElementById("charImg").style.height = "15vw";
-        document.getElementById("charImg").style.backgroundRepeat = "no-repeat";
-        document.getElementById("charImg").style.backgroundPosition = "center";
-        document.getElementById("charImg").style.backgroundSize = "contain";
     }
-
+    document.getElementById("charImg").style.backgroundRepeat = "no-repeat";
+    document.getElementById("charImg").style.backgroundPosition = "center";
+    document.getElementById("charImg").style.backgroundSize = "contain";
 }
 
 // если параметр enemy пустая строка "", появляется случайный враг из списка
 function findFight(enemyPar){
     btnClose()
     document.getElementById("fightForest").style.display = "block";
+    document.getElementById("runFightDisabled").style.display = "block";
     document.getElementById("runFightDisabled").disabled = false;
 
     if (enemyPar==""){
-        let enemyList = [guard, strider,spider]
-        let randNum = Math.floor(Math.random()*enemyList.length)
-        enemy = enemyList[randNum]
+        if (forestLoopCount>0 && forestLoopCount<10){
+            let enemyList = [spider, rat, dog]
+            let randNum = Math.floor(Math.random()*enemyList.length)
+            enemy = enemyList[randNum]
+        }else if (forestLoopCount>=10 && forestLoopCount<20){
+            let enemyList = [spider, dog, guard]
+            let randNum = Math.floor(Math.random()*enemyList.length)
+            enemy = enemyList[randNum]
+        }else if (forestLoopCount>=20 && forestLoopCount<30){
+            let enemyList = [guard, robber, skeleton]
+            let randNum = Math.floor(Math.random()*enemyList.length)
+            enemy = enemyList[randNum]
+        }
+
     }else{
         enemy = enemyPar
     }
     console.log("Враг хп"+enemy.hp)
     document.getElementById("enemyHp").innerText = enemy.hp + " из " + enemy.hpMax;
-    startEvent("fightForest","images/forestBg.jpg", enemy.img1, "На вас набрасывается "+enemy.name,0,0,0)
+    startEvent("fightForest","images/forest/forestBg.jpg", enemy.img1, "На вас набрасывается "+enemy.name,0,0,0)
 }
 
 function runFight(){
@@ -177,7 +166,6 @@ function runFight(){
 function fightScene(){
     document.getElementById("textBox").style.display = "none";
     document.getElementById("fightForest").style.display = "none";
-    document.getElementById("fist").style.display = "block";
     document.getElementById("battleScene").style.display = "block";
     document.getElementById("charImg").style.width = "60%";
     document.getElementById("charImg").style.height = "62%";
@@ -190,13 +178,6 @@ function fightScene(){
 
 // атака главного героя
 function attack(){
-    if (hero.weaponName == "Кулаки"){
-        firstAttack()
-    }else if (hero.weaponName=="Ржавый нож"){
-        knifeAttack()
-    }else if (hero.weaponName == "Ржавый меч"){
-        swordAttack()
-    }
     enemy.hp -= hero.dmg;
     console.log("Враг хп"+enemy.hp)
     enemyReaction()
@@ -231,7 +212,13 @@ function enemyConstructor(enemyName,enemyHp,enemyDmg,enemySpeed,enemyImg,enemyRe
         let timer = setInterval(() => {
             if (hero.hp>0 && this.hp>0){
                 hero.hp-=this.dmg;
+                document.getElementById("hp").style.color = "red";
+                document.getElementById("hp").style.transform = "scale(1.3)";
                 rewriteStats()
+                setTimeout(()=>{
+                    document.getElementById("hp").style.color = "black";
+                    document.getElementById("hp").style.transform = "scale(1)";
+                },this.speed/2)
             }else if(hero.hp<=0){
                 clearInterval(timer)
                 death()
@@ -256,9 +243,16 @@ function enemyConstructor(enemyName,enemyHp,enemyDmg,enemySpeed,enemyImg,enemyRe
     this.giveReward = function() { hero.coins +=this.reward; };
 }
 
-let guard = new enemyConstructor("Дезертир", 50,6,2000,"images/guard.png",30)
-let strider = new enemyConstructor("Грабитель",30,3,1000,"images/NoName.png",5)
-let spider = new enemyConstructor("Паук",20,1,800,"images/spider.png",1)
+let spider = new enemyConstructor("Паук",10,1,500,"images/enemy/spider.png",1)
+let rat = new enemyConstructor("Крыса",15,2,1000,"images/enemy/rat.png",2)
+let dog = new enemyConstructor("Одичавшая собака",20,3,1500,"images/enemy/dog.png",5)
+
+
+let guard = new enemyConstructor("Дезертир", 30,4,1000,"images/town/guard.png",7)
+let robber = new enemyConstructor("Грабитель",25,5,1000,"images/town/thief.png",8)
+let skeleton = new enemyConstructor("Скелет",30,6,1000,"images/enemy/skeleton.png",10)
+
+let ratKing = new enemyConstructor("Крысинный король",40,3,1500,"images/enemy/ratKing.png",30)
 
 //------------------------------------------Служебные-------------------------------------------
 
@@ -298,17 +292,17 @@ function rewriteStats(){
 
 // скрытие всех кнопок
 function btnClose(){
-    let identsTown = ["hub","walkTown","findTresure","findThief","findClickerWood","findBeggar","findGuard","findBasement","findCat","findKMB"]
+    let identsTown = ["hub","walkTown","findTresure","findThief","findClickerWood","findBeggar","findGuard","findBasement","findCat","findKMB","findDude"]
     for (let i = 0; i < identsTown.length; i++){
         document.getElementById(identsTown[i]).style.display = "none";
     }
 
-    let identsTavern = ["backTavern","tavernHub","keeper","repPlus","business","backToKeeper","healer","merchant","sailor","shop"]
+    let identsTavern = ["backTavern","tavernHub","keeper","repPlus","business","backToKeeper","healer","sailor"]
     for (let i = 0; i < identsTavern.length; i++){
         document.getElementById(identsTavern[i]).style.display = "none";
     }
 
-    let identsForest = ["fist","forestNext","findHunter","calmForest","findTresureForest","fightForest","battleScene"]
+    let identsForest = ["forestNext","findAltar","findHunter","calmForest","findTresureForest","fightForest","battleScene"]
     for (let i = 0; i < identsForest.length; i++){
         document.getElementById(identsForest[i]).style.display = "none";
     }
@@ -402,11 +396,11 @@ function secondEvent(id1, backimg, imgGood, imgBad, evTextGood, evTextBad, evHpG
 //                                                   ---------------
   //=========Кошель=========
 function findTresure(){
-	startEvent("findTresure", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/coinsTree.png", 'Вы нашли кошель с золотом. Что будем делать?',0,0,0)
+	startEvent("findTresure", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/town/coinsTree.png", 'Вы нашли кошель с золотом. Что будем делать?',0,0,0)
 }
 
 function tresureTake(){
-    secondEvent("findTresure", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg', 'images/coinsTree.png', 'images/hunter.png', "Вы забрали деньги себе! +5 монет", 'К вам подходит сурового вида мужчина. "Решил прикарманить мое золото? Большая ошибка". Мужик навесил тебе тумаков. -20 здоровья -1 репутация', 0, 5, 0, -20, 0, -1)
+    secondEvent("findTresure", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg', 'images/town/coinsTree.png', 'images/hunter.png', "Вы забрали деньги себе! +5 монет", 'К вам подходит сурового вида мужчина. "Решил прикарманить мое золото? Большая ошибка". Мужик навесил тебе тумаков. -20 здоровья -1 репутация', 0, 5, 0, -20, 0, -1)
 }
 
 function tresureLookAround(){
@@ -416,23 +410,32 @@ function tresureLookAround(){
   //===============Воришка===================================
 function thief(){
     if (hero.coins>=5){
-        startEvent("findThief", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/thief.png", 'В толпе с вами столкнулся человек. Да он вас обчистил!',0,-5,0)
+        startEvent("findThief", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/town/thief.png", 'В толпе с вами столкнулся человек. Да он вас обчистил!',0,-5,0)
     }else{
-        startEvent("walkTown", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/thief.png", 'Проходя в толпе, вы задумались. "В кармане совсем пусто... Может стать карманником? Да ну, бред какой-то..."',0,0,0)
+        startEvent("walkTown", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/town/thief.png", 'Проходя в толпе, вы задумались. "В кармане совсем пусто... Может стать карманником? Да ну, бред какой-то..."',0,0,0)
     }
 }
 
 thiefRun.onclick = function thiefRun(){
-	secondEvent("findThief", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/thief2.png", "", "Вы знаете эти улицы как свои пять пальцев! Легко настигнув вора вы забираете свои деньги и забираете часть его монет, за моральный ущерб +7 монет +1 репутация","В глазах темнеет, голова кружится. Вы так и не смогли догнать проворного воришку. Ваши монеты утеряны навсегда -10 здоровья",0,7,1,-10, 0,0)
+	secondEvent("findThief", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/town/thief2.png", "", "Вы знаете эти улицы как свои пять пальцев! Легко настигнув вора вы забираете свои деньги и забираете часть его монет, за моральный ущерб +7 монет +1 репутация","В глазах темнеет, голова кружится. Вы так и не смогли догнать проворного воришку. Ваши монеты утеряны навсегда -10 здоровья",0,7,1,-10, 0,0)
 }
 
 thiefCry.onclick = function thiefCry(){
-    secondEvent("findThief", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg', "images/thief2.png", "", 'Вы громко кричите: "Держи вора!". Один человек из толпы подставил поднжку вору, и тот с криками улетел на землю. Вы выхватываете свой кошель','К сожалению, всем плевать на ваши крики. Воришка быстро растворился в толпе', 0,5,0,0,0,0)
+    secondEvent("findThief", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg', "images/town/thief2.png", "", 'Вы громко кричите: "Держи вора!". Один человек из толпы подставил поднжку вору, и тот с криками улетел на землю. Вы выхватываете свой кошель','К сожалению, всем плевать на ваши крики. Воришка быстро растворился в толпе', 0,5,0,0,0,0)
+}
+
+//=====================Чувак===================================
+function findDude(){
+    startEvent("findDude", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/town/dude.png", '"Вы бы не могли подписать мою петицию?"',0,0,0)
+}
+
+function agreeDude() {
+    secondEvent("findDude", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg', "images/town/dude.png","images/town/dude.png", '"Ехехе... Ты хоть видел что подписывал? А впрочем ладно, твой голос пошел во благо. +5 репутации"', 'Чувак молча бьет тебя лопатой по лицу и идет дальше... -20 здоровья -1 репутации', 0,0,5,-20, 0,-1)
 }
 
   //==================Игра КМБ===============================
 function findKMB(){
-    startEvent("findKMB", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg', 'images/NoName.png', 'На улице сидит попрошайка. Он играет в камень/ножницы/бумага со всеми желающими. Размеется, не просто так. Ставка 1 монета',0,0,0)
+    startEvent("findKMB", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg', 'images/town/NoName.png', 'На улице сидит попрошайка. Он играет в камень/ножницы/бумага со всеми желающими. Размеется, не просто так. Ставка 1 монета',0,0,0)
 	document.getElementById("paper").disabled = ggBeggar(hero.coins,1);;
 	document.getElementById("scissors").disabled = ggBeggar(hero.coins,1);
 	document.getElementById("rock").disabled = ggBeggar(hero.coins,1);
@@ -456,7 +459,7 @@ function KMB(gesture){
 function helpGranny(){
 	needWood = Math.floor(Math.random()*50)
     document.getElementById("helpGranny").style.display = "block";
-	startEvent("findClickerWood", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/granny.png", 'Эй, мил человек! Помоги старушке, наколи дров. Плачу 3 монеты.',0,0,0)
+	startEvent("findClickerWood", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/town/granny.png", 'Эй, мил человек! Помоги старушке, наколи дров. Плачу 3 монеты.',0,0,0)
 }
 
 function clickerWood(){
@@ -477,14 +480,14 @@ function clickerWood(){
 
 	// ===============Попрошайка=============================
 function findBeggar(){
-	startEvent("findBeggar", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/NoName.png", 'Вы встретили бродягу. Он явно нетрезв. "Я дича-а-а-а-айше извиняюсь...  Уважаемый... ух. Не найдется монеты, для страждущей души?"',0,0,0)
+	startEvent("findBeggar", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/town/NoName.png", 'Вы встретили бродягу. Он явно нетрезв. "Я дича-а-а-а-айше извиняюсь...  Уважаемый... ух. Не найдется монеты, для страждущей души?"',0,0,0)
 }
 
 function giveCoinBeggar(){
     if (hero.coins>=3){
-        secondEvent("findBeggar", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/NoName.png", "images/NoName.png", '"Ик! О-о-о, мое уважение, долгих лет жизни, счастья, здоровья..." Бродяга рассыпается в благодарнастях. -1 монета +1 репутация', '"Хе, да ты никак при деньгах... отдавай весь кошель, любезный". Бродяга вас ограбил, -3 монеты', 0, -1,1,0,-3,0 )
+        secondEvent("findBeggar", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/town/NoName.png", "images/town/NoName.png", '"Ик! О-о-о, мое уважение, долгих лет жизни, счастья, здоровья..." Бродяга рассыпается в благодарнастях. -1 монета +1 репутация', '"Хе, да ты никак при деньгах... отдавай весь кошель, любезный". Бродяга вас ограбил, -3 монеты', 0, -1,1,0,-3,0 )
     }else{
-        secondEvent("findBeggar", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/NoName.png", "images/NoName.png", 'Бродяга видит ваш пустой кошель. "Так, уважаемый... я смотрю ты сам не богат. Мне даже совестно у тебя что-то просить. На вот монету, вспоминай меня добрым словом". +1 монета', '"Аахахахах... Ой не могу, ик! Не позорься, убирай свои копейки...". Вас обсмеял нищий. -1 репутация', 0, 1,0,0,0,-1 )
+        secondEvent("findBeggar", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/town/NoName.png", "images/town/NoName.png", 'Бродяга видит ваш пустой кошель. "Так, уважаемый... я смотрю ты сам не богат. Мне даже совестно у тебя что-то просить. На вот монету, вспоминай меня добрым словом". +1 монета', '"Аахахахах... Ой не могу, ик! Не позорься, убирай свои копейки...". Вас обсмеял нищий. -1 репутация', 0, 1,0,0,0,-1 )
     }
 }
 
@@ -494,24 +497,24 @@ function findGuard(){
         document.getElementById("walkTown").style.display = "none";
     }, animSpeed*2010);
     document.getElementById("coinGuard").disabled = ggBeggar(hero.coins,2)
-	startEvent("findGuard", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/guard.png", 'Вас останавливает стражник. "Гражданин! Мы разыскиваем карманника и ты подходишь под описание. Карманы к досмотру!"',0,0,0)
+	startEvent("findGuard", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/town/guard.png", 'Вас останавливает стражник. "Гражданин! Мы разыскиваем карманника и ты подходишь под описание. Карманы к досмотру!"',0,0,0)
 }
 
 function agreeGuard(){
-	secondEvent("findGuard", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/guard.png","images/guard.png", '"Вроде все чисто... Спасибо за сотрудничество, гражданин!". Стражник уходит по своим делам. +1 репутация', 'Стражник роется в ваших вещах, выбрасывает вашу сумку на землю и уходит. Проверив свои пожитки вы поняли, что вас обокрали -2 монеты', 0, 0, 1,0,-2,0)
+	secondEvent("findGuard", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/town/guard.png","images/town/guard.png", '"Вроде все чисто... Спасибо за сотрудничество, гражданин!". Стражник уходит по своим делам. +1 репутация', 'Стражник роется в ваших вещах, выбрасывает вашу сумку на землю и уходит. Проверив свои пожитки вы поняли, что вас обокрали -2 монеты', 0, 0, 1,0,-2,0)
 }
 
 function coinGuard(){
-    secondEvent("findGuard",'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg', "images/guard.png","images/guard.png", 'Стражник аккуратно берет взятку. Затем нарочно громко говорит: "Спасибо за сотрудничество, к вам нет претензий!" -2 монеты', '"Как ты смеешь подкупать начальника городской стражи!" Стражник бьет вас дубинкой -10 здоровья -2 репутации', 0, -2, 0,-10,0,-2)
+    secondEvent("findGuard",'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg', "images/town/guard.png","images/town/guard.png", 'Стражник аккуратно берет взятку. Затем нарочно громко говорит: "Спасибо за сотрудничество, к вам нет претензий!" -2 монеты', '"Как ты смеешь подкупать начальника городской стражи!" Стражник бьет вас дубинкой -10 здоровья -2 репутации', 0, -2, 0,-10,0,-2)
 }
 
 function fightGuard(){
-	secondEvent("findGuard", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/guard.png","images/guard.png", 'Вы ловко делаете подсечку. Стражник неуклюже падает в лужу, а вы успеваете убежать. Несколько зевак одобрительно засмеялись +4 репутации', 'Подготовленный стражник легко справляется с вашими атаками. Когда ему надоело с вами играться, он делоет один четкий и сильный удар вам в челюсть. -20 здоровья -2 репутации', 0, 0, 4,-20,0,-2)
+	secondEvent("findGuard", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/town/guard.png","images/town/guard.png", 'Вы ловко делаете подсечку. Стражник неуклюже падает в лужу, а вы успеваете убежать. Несколько зевак одобрительно засмеялись +4 репутации', 'Подготовленный стражник легко справляется с вашими атаками. Когда ему надоело с вами играться, он делоет один четкий и сильный удар вам в челюсть. -20 здоровья -2 репутации', 0, 0, 4,-20,0,-2)
 }
 	
 	// =========================Подвал=======================
 function findBasement(){
-	startEvent("findBasement", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/granny.png", 'О, авантюрист! Ты тот кто мне нужен. Из моего подвала доносятся какие-то странные звуки, всю ночь не могла уснуть. Не мог бы ты посмотреть, что там происходит?',0,0,0)
+	startEvent("findBasement", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/town/granny.png", 'О, авантюрист! Ты тот кто мне нужен. Из моего подвала доносятся какие-то странные звуки, всю ночь не могла уснуть. Не мог бы ты посмотреть, что там происходит?',0,0,0)
 }
 
 function fightBasement(){
@@ -522,7 +525,7 @@ function fightBasement(){
 
 // ==========================Странный кот (сфинкс)===========
 function findCat(){
-    startEvent("findCat", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/cat.png", 'Словно из ниоткуда перед вами появился странный кот. "Привет, человек" - прозвучал голос в вашей голове - "Мы встретимся трижды. Отгадаешь мои загадки - получишь приз"',0,0,0)
+    startEvent("findCat", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/town/cat.png", 'Словно из ниоткуда перед вами появился странный кот. "Привет, человек" - прозвучал голос в вашей голове - "Мы встретимся трижды. Отгадаешь мои загадки - получишь приз"',0,0,0)
 }
 
 function riddlesCat(){
@@ -556,7 +559,7 @@ function riddlesCat(){
 
 function wrongAnswer(){
     document.getElementById("allQuestions").style.display = "none";
-    startEvent("walkTown", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/cat.png", '"Не верно. Не отчаивайся, думаю мы встретимся еще...". Кот растворился в воздухе',0,0,0)
+    startEvent("walkTown", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/town/cat.png", '"Не верно. Не отчаивайся, думаю мы встретимся еще...". Кот растворился в воздухе',0,0,0)
     rewriteStats()
 }
 
@@ -564,11 +567,11 @@ function correctAnswer(){
     document.getElementById("allQuestions").style.display = "none";
     correctAnswers++
     if (correctAnswers==3) {
-        startEvent("walkTown", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/cat.png", '"Ты ответил верно на 3 вопроса. Как я и обещал, получай награду" +3 репутации +5 монет',0,5,3)
+        startEvent("walkTown", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/town/cat.png", '"Ты ответил верно на 3 вопроса. Как я и обещал, получай награду" +3 репутации +5 монет',0,5,3)
         rewriteStats()
         correctAnswers=0
     }else{
-        startEvent("walkTown", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/cat.png", '"Верно" - промурчал кот. Верных ответов '+correctAnswers+ ' из 3. Еще увидимся"',0,0,0)
+        startEvent("walkTown", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/town/cat.png", '"Верно" - промурчал кот. Верных ответов '+correctAnswers+ ' из 3. Еще увидимся"',0,0,0)
     }
 }
 
@@ -666,9 +669,11 @@ function gossip(){
         '"Слушай, а вот скелеты в лесу. Как они вообще двигаются? У них же нет мышц..."',
         '"Недавно приходил один тут... Говорит, что нашел волшебного кота! Совсем допился, бедолага."',
         '"Если сдать деньги на хранение, то их не отнимут в драке. Понял намек?"',
-        '"Я раньше в ОПГ iKODe был, ты знал?"', '"Здесь могла быть ваша отсылка"',
+        '"Я раньше в ОПГ i___e был, ты знал?"', '"Здесь могла быть ваша отсылка"',
         '"А вот Хиробрин существует или это выдумка, как думаешь?"', '"Сейчас бы вареной картошки с селедочкой, да с лучком, а?"',
-        '"Inscryption - очень достойная игра, кстати."', '"..."', '"А ведь случайные события -довольно ленивый прием."'
+        '"Inscryption - очень достойная игра, кстати."', '"..."', '"А ведь случайные события -довольно ленивый прием."',
+        '🎵"О-йой... Задом к трону намертво прилип наш король..."🎵', '🎵"А дуб стоит и ныне там, и в снег, и в град, и в гром. Сто лет расти его ветвям... Так выпьем за него!"🎵',
+        '🎵"Всего одна жизнь, всего одна смерть... и тысяча способов их прозевать"🎵'
     ]
     let rndNum = Math.floor(Math.random()*listOfGossip.length);
     document.getElementById("text").innerText = listOfGossip[rndNum];
@@ -683,36 +688,6 @@ function findHealer(){
     }, animSpeed*2000);
 }
 
-//====================Продавец=================
-function findMerchant(){
-    startEvent("merchant", "https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", "images/merchant.png", '"Приветствую, авантюрист. Чего желаешь?"',0,0,0)
-    setTimeout(() => {
-        document.getElementById("backTavern").style.display = "block";
-    }, animSpeed*2000);
-}
-
-function openShop(){
-    locationHero = "shop"
-    document.getElementById("rustKnife").disabled = ggBeggar(hero.coins,30);
-    document.getElementById("rustSword").disabled = ggBeggar(hero.coins,80);
-    startEvent("shop", "https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", "images/merchant.png", '"Лучшее оружее во всем... эм... ну, в этой таверне точно лучшее!"',0,0,0)
-    setTimeout(() => {
-        document.getElementById("backTavern").style.display = "block";
-    }, animSpeed*2000);
-}
-
-function buyWeapon(weapon){
-    if (weapon == "rustKnife"){
-        shopBuy(30,"rustKnife",0,0,6,800)
-        document.getElementById("fist").style.background= 'url("images/knife1.png")'
-        document.getElementById("fist").style.backgroundSize = '100% 100%';
-    }else if (weapon == "rustSword"){
-        shopBuy(80,"rustSword",0,0,10,1000)
-        document.getElementById("fist").style.background= 'url("images/sword1.png")'
-        document.getElementById("fist").style.backgroundSize = '100% 100%';
-    }
-}
-
 function findSailor(){
     startEvent("sailor", "https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", "images/sailor.png", 'За столом сидит скучающий старый моряк. "Эй ты! Как там тебя... сыграем в кости?"',0,0,0)
     setTimeout(() => {
@@ -724,7 +699,7 @@ function findSailor(){
 //                      ------------------------------------------------------------------------
 //                                              -----------------
 function findHunter(){
-    startEvent("findHunter","images/forestBg.jpg","images/hunter.png",'Вы встречаете опытного охотника из города. "Ты как, не потерялся? За небольшую плату могу вывести в город. Всего за '+Math.floor(hero.coins*0.2*10)/10+' золотых"',0,0,0)
+    startEvent("findHunter","images/forest/forestBg.jpg","images/hunter.png",'Вы встречаете опытного охотника из города. "Ты как, не потерялся? За небольшую плату могу вывести в город. Всего за '+Math.floor(hero.coins*0.2*10)/10+' золотых"',0,0,0)
 }
 
 function backHubFromForest(){
@@ -736,9 +711,47 @@ function backHubFromForest(){
 }
 
 function calmForest(){
-    startEvent("calmForest","images/forestBg.jpg","",'В лесу тихо и спокойно',0,0,0)
+    startEvent("calmForest","images/forest/forestBg.jpg","",'В лесу тихо и спокойно',0,0,0)
 }
 
+function findAltar() {
+    if (hero.rep<priceUpgrade){
+        document.getElementById("speedUp").disabled = true;
+        document.getElementById("dmgUp").disabled = true;
+    }
+    startEvent("findAltar","images/forest/forestBg.jpg","images/forest/altar.png","Вы находите алтарь со светящимся знаком репутации. Пришло время усилиться. Ваш урон: "+hero.dmg+". Скорость атаки: раз в " + hero.speed/1000+"с", 0,0,0)
+}
+
+function fightStatUp(stat) {
+    hero.rep -= priceUpgrade;
+    if (stat == "speed"){
+        hero.speed = Math.floor((hero.speed-=hero.speed*0.05) *10)/10
+    }else if (stat == "damage"){
+        hero.dmg = Math.floor(hero.dmg*1.1*10)/10
+    }
+
+    rewriteStats()
+    document.getElementById("text").innerText = "Символ вспыхнул ярче. Теперь люди меньше вам доверяют, но вы стали сильнее. Ваш урон: "+hero.dmg+". Скорость атаки: раз в " + Math.floor(hero.speed/100)/10+"с"
+    priceUpgrade = Math.floor(priceUpgrade *= 1.2)
+    document.getElementById("speedUp").innerHTML = 'Скорость -' + priceUpgrade + '<img src="images/rep.png"/>';
+    document.getElementById("dmgUp").innerHTML = 'Урон -' + priceUpgrade + '<img src="images/rep.png"/>';
+    if (hero.rep<priceUpgrade){
+        document.getElementById("speedUp").disabled = true;
+        document.getElementById("dmgUp").disabled = true;
+    }
+}
+
+
+function findBoss(){
+    btnClose()
+    document.getElementById("fightForest").style.display = "block";
+    document.getElementById("runFightDisabled").style.display = "none";
+    //let enemyList = [guard, strider,spider]
+    //let randNum = Math.floor(Math.random()*enemyList.length)
+    enemy = ratKing
+    document.getElementById("enemyHp").innerText = enemy.hp + " из " + enemy.hpMax;
+    startEvent("fightForest","images/forest/forestBg.jpg", enemy.img1, "Лес - крайне опасное место. Вы нашли противника, которго не так легко победить... Перед вами "+enemy.name,0,0,0)
+}
 //=======================================Главная петля. Выбор случайного события========================================
 //                          ------------------------------------------------------------------
 //                                          ---------------------------------
@@ -752,9 +765,9 @@ function rndEvent(){
     }
 	if (loopCount<=10){
 		loopCount++;
-		let events = [findTresure, thief, findKMB, helpGranny, findBeggar, findGuard, findBasement, findCat] //Массив с функциями
+		let events = [findTresure, thief, findKMB, helpGranny, findBeggar, findGuard, findBasement, findCat, findDude] //Массив с функциями
 		let rndNum = Math.floor(Math.random()*events.length)
-		events[rndNum]()//Скобочки после массива вызовут фунцию
+		events[rndNum]()//Скобочки после массива вызовут функцию
         setTimeout(() => {
             document.getElementById("walkTown").style.display = "block";
         }, animSpeed*2000);
@@ -774,30 +787,35 @@ function forestEvent(){
     forestLoopCount++
     console.log("Игровой круг: "+forestLoopCount)
 
-    if (forestLoopCount%10 ==0){
-        day++;
-        deposit += Math.floor(deposit * 2 /100*10)/10
-        document.getElementById("depositSum").innerText = deposit;
-    }
-    //let events = [findHunter, calmForest,findFight] //Массив с функциями
-
-    let rndNum = Math.random()
-
-    if (hero.hp<=0){
-        death()
-        return
-    }else if (forestLoopCount%5==0 && forestLoopCount!=0){
-        findHunter()
+    if (forestLoopCount%9 == 0){
+        findAltar()
         setTimeout(() => {
             document.getElementById("forestNext").style.display = "block";
         }, animSpeed*2000);
-    } else if (rndNum>=0 && rndNum<0.3){
-        calmForest()
-        setTimeout(() => {
-            document.getElementById("forestNext").style.display = "block";
-        }, animSpeed*2000);
-    }else if (rndNum>=0.3 && rndNum<1){
-        findFight("")
+    }else if (forestLoopCount%10 ==0){
+            day++;
+            deposit += Math.floor(deposit * 2 /100*10)/10
+            document.getElementById("depositSum").innerText = deposit;
+            findBoss()
+    }else {
+        let rndNum = Math.random()
+
+        if (hero.hp<=0){
+            death()
+            return
+        }else if (forestLoopCount%5==0 && forestLoopCount!=0){
+            findHunter()
+            setTimeout(() => {
+                document.getElementById("forestNext").style.display = "block";
+            }, animSpeed*2000);
+        } else if (rndNum>=0 && rndNum<0.3){
+            calmForest()
+            setTimeout(() => {
+                document.getElementById("forestNext").style.display = "block";
+            }, animSpeed*2000);
+        }else if (rndNum>=0.3 && rndNum<1){
+            findFight("")
+        }
     }
 }
 
@@ -810,7 +828,7 @@ btnTown.onclick = function goTown(){
 btnForest.onclick = function goForest(){
     document.getElementById("hub").style.display = "none";
     btnClose()
-    startEvent("forestNext","images/forestBg.jpg", '',"Вы заходите в старый лес. Впереди опасности и приключения!",0,0,0)}
+    startEvent("forestNext","images/forest/forestBg.jpg", '',"Вы заходите в старый лес. Впереди опасности и приключения!",0,0,0)}
 
 function goTavern(){
     document.getElementById("hub").style.display = "none";

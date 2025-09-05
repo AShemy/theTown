@@ -83,6 +83,11 @@
             <div id="findCat" class="close">
                 <button onclick="riddlesCat()" id="riddleCat">Согласиться</button>
             </div>
+
+            <div id="findDude" class="close">
+                <button onclick="agreeDude()">Согласиться</button>
+            </div>
+
             <!-- ========================= *** Викторина Кота *** =============================== -->
             <div id="allQuestions">
                 <div id="question0" class="close">
@@ -120,7 +125,7 @@
             <div id="tavernHub">
                 <div class="twoButtons">
                     <button onclick="findKeeper()" id="">Тавернщик</button>
-                    <button onclick="findMerchant()" id="">Купец</button>
+                    <button onclick="" id="">Отдохнуть</button>
                 </div>
                 <div class="twoButtons">
                     <button onclick="findHealer()" id="">Врач</button>
@@ -153,16 +158,7 @@
             <div id="healer">
                 <button onclick="shopBuy(7,'plusHp',100,0,0,0)" id="plusHp"><img src="images/hp.png"/>100 <img src="images/coins.png"/>-7</button>
             </div>
-            <div id="merchant">
-                <button onclick="openShop()">Купить</button>
-            </div>
 
-            <div id="shop">
-                <div class="twoButtons">
-                    <button onclick="buyWeapon('rustKnife')" id="rustKnife">Ржавый нож</button>
-                    <button onclick="buyWeapon('rustSword')" id="rustSword">Ржавый меч</button>
-                </div>
-            </div>
 
             <div id="sailor">
                 <button onclick="">(WIP)Сыграть</button>
@@ -182,6 +178,11 @@
             <div id="fightForest">
                 <button onclick="fightScene()">Сражаться</button>
                 <button onclick="runFight()" id="runFightDisabled">Бежать</button>
+            </div>
+
+            <div id="findAltar">
+                <button onclick="fightStatUp('speed')" id="speedUp">Скорость -5<img src="images/rep.png"></button>
+                <button onclick="fightStatUp('damage')" id="dmgUp" >Урон -5<img src="images/rep.png"></button>
             </div>
 
             <button onclick="forestEvent()" id="forestNext">Идти дальше</button>
