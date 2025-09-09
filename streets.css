@@ -228,6 +228,20 @@ button img {
         background-size: contain;
         background-position: center;
         margin-top: 1%;
+    }    .characterImage {
+        width: 55vw;
+        height: 55vw;
+        margin: auto;
+        background-size: contain;
+        background-position: center;
+        margin-top: 1%;
+    }    .characterImage {
+        width: 55vw;
+        height: 55vw;
+        margin: auto;
+        background-size: contain;
+        background-position: center;
+        margin-top: 1%;
     }
 
     #textBox {

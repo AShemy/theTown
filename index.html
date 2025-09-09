@@ -18,6 +18,10 @@
             <p id="heroWeapon">Оружие: Кулаки</p>
             <p id="heroDmg">Урон: 1</p>
             <p id="heroSpeed">Скорость : 0.5</p>
+            <button onclick="cheatDMG()">+100 урона</button>
+            <button onclick="cheatREPplus()">+100 репутации</button>
+            <button onclick="cheatREPminus()">-100 репутации</button>
+            <button onclick="cheatRESTART()">Начальные значения</button>
         </div>
         <div id="stats" class="stats">
             <button onclick="musicPlay()" class="btnMusic"></button>
@@ -76,6 +80,12 @@
                 <button onclick="fightGuard()">Сопротивляться</button>
             </div>
 
+            <div id="findGuardPrison" class="close">
+                <button onclick="goPrison()">В тюрьму</button>
+                <button onclick="" id="fineGuard">Штраф<img src="images/coins.png"/></button>
+                <button onclick="findBoss('Криминальное отродье! Готовься отправиться к праотцам!',guard, 'images/town/town.jpg')">Сопротивляться</button>
+            </div>
+
             <div id="findBasement" class="close">
                 <button onclick="fightBasement()">Помочь</button>
             </div>
@@ -121,25 +131,30 @@
                 </div>
             </div>
             <button onclick="rndEvent()" id="walkTown">Идти дальше</button>
+            <!-- ============================= *** Тюрьма *** =============================== -->
+
+
+            <div id="prisonEv" class="close"></div>
+
+            <div id="neighborBandit" class="close">
+                <button onclick="giveCoinsBandit()" id="giveCoinsBandit">Заплатить -3<img src="images/coins.png"></button>
+                <button onclick="findBoss('Ехехе...Ну что, проверим течет ли у тебя кровь!', robber, 'images/prison.jpg')">Сопротивляться</button>
+            </div>
+
+            <button onclick="prisonClicker()" id="prisonMine">Добывать руду</button>
+
+            <button onclick="prisonEvent()" id="prisonNext">Далее</button>
             <!-- ============================= *** Таверна *** =============================== -->
             <div id="tavernHub">
-                <div class="twoButtons">
-                    <button onclick="findKeeper()" id="">Тавернщик</button>
-                    <button onclick="" id="">Отдохнуть</button>
-                </div>
-                <div class="twoButtons">
-                    <button onclick="findHealer()" id="">Врач</button>
-                    <button onclick="findSailor()" id="">Игрок</button>
-                </div>
+                <button onclick="findKeeper()" id="">Тавернщик</button>
+                <button onclick="tavernEvent()" id="">Отдохнуть</button>
+                <button onclick="findHealer()" id="">Врач</button>
                 <button onclick="backToHub()" id="backToHub">Назад</button>
             </div>
 
             <div id="keeper">
-                <div class="twoButtons">
-                    <button onclick="findReputation()">Репутация</button>
-                    <button onclick="findBusiness()">Вклад</button>
-                </div>
-                <button onclick="gossip()">Слухи</button>
+                <button onclick="findReputation()">Репутация</button>
+                <button onclick="findBusiness()">Вклад</button>
             </div>
 
             <div id="repPlus">
@@ -159,10 +174,18 @@
                 <button onclick="shopBuy(7,'plusHp',100,0,0,0)" id="plusHp"><img src="images/hp.png"/>100 <img src="images/coins.png"/>-7</button>
             </div>
 
+            <!-- ========================== Отдых в таверне====================== -->
+            <div id="findGossip"></div>
+
+            <div id="findCompany">
+                <button onclick="talkCompany()">"Здарова, мужики!"</button>
+            </div>
 
             <div id="sailor">
                 <button onclick="">(WIP)Сыграть</button>
             </div>
+
+            <button id="tavernNext" onclick="tavernEvent()">Далее</button>
 
             <button onclick="goTavern()" id="backTavern">Назад</button>
 

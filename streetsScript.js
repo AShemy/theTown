@@ -1,10 +1,9 @@
 let hero = {
     hp:100,
-    rep:10,
+    rep:0,
     coins:3,
-    weaponName:"Кулаки",
     dmg:5,
-    speed:1500,
+    speed:1000,
 }
 
 let locationHero;
@@ -130,11 +129,11 @@ function findFight(enemyPar){
             let randNum = Math.floor(Math.random()*enemyList.length)
             enemy = enemyList[randNum]
         }else if (forestLoopCount>=10 && forestLoopCount<20){
-            let enemyList = [spider, dog, guard]
+            let enemyList = [spider, dog, disertir]
             let randNum = Math.floor(Math.random()*enemyList.length)
             enemy = enemyList[randNum]
         }else if (forestLoopCount>=20 && forestLoopCount<30){
-            let enemyList = [guard, robber, skeleton]
+            let enemyList = [disertir, robber, skeleton]
             let randNum = Math.floor(Math.random()*enemyList.length)
             enemy = enemyList[randNum]
         }
@@ -221,7 +220,11 @@ function enemyConstructor(enemyName,enemyHp,enemyDmg,enemySpeed,enemyImg,enemyRe
                 },this.speed/2)
             }else if(hero.hp<=0){
                 clearInterval(timer)
-                death()
+                if (locationHero=="prison"){
+                    prisonHealer()
+                }else{
+                    death()
+                }
             }else if(this.hp<=0){
                 clearInterval(timer)
                 this.giveReward()
@@ -236,6 +239,8 @@ function enemyConstructor(enemyName,enemyHp,enemyDmg,enemySpeed,enemyImg,enemyRe
                     document.getElementById("walkTown").style.display = "block";
                 }else if ((enemy.hp<=0) || (locationHero=="tavern")){
                     document.getElementById("tavernNext").style.display = "block";
+                }else if (locationHero=="prison"){
+                    document.getElementById("prisonNext").style.display = "block";
                 }
             }
         }, this.speed);
@@ -248,9 +253,11 @@ let rat = new enemyConstructor("Крыса",15,2,1000,"images/enemy/rat.png",2)
 let dog = new enemyConstructor("Одичавшая собака",20,3,1500,"images/enemy/dog.png",5)
 
 
-let guard = new enemyConstructor("Дезертир", 30,4,1000,"images/town/guard.png",7)
+let disertir = new enemyConstructor("Дезертир", 30,4,1000,"images/town/guard.png",7)
 let robber = new enemyConstructor("Грабитель",25,5,1000,"images/town/thief.png",8)
 let skeleton = new enemyConstructor("Скелет",30,6,1000,"images/enemy/skeleton.png",10)
+
+let guard = new enemyConstructor("Стражник", 100,10,1000,"images/town/guard.png",7)
 
 let ratKing = new enemyConstructor("Крысинный король",40,3,1500,"images/enemy/ratKing.png",30)
 
@@ -292,12 +299,12 @@ function rewriteStats(){
 
 // скрытие всех кнопок
 function btnClose(){
-    let identsTown = ["hub","walkTown","findTresure","findThief","findClickerWood","findBeggar","findGuard","findBasement","findCat","findKMB","findDude"]
+    let identsTown = ["prisonNext","findGuardPrison","hub","walkTown","findTresure","findThief","findClickerWood","findBeggar","findGuard","findBasement","findCat","findKMB","findDude"]
     for (let i = 0; i < identsTown.length; i++){
         document.getElementById(identsTown[i]).style.display = "none";
     }
 
-    let identsTavern = ["backTavern","tavernHub","keeper","repPlus","business","backToKeeper","healer","sailor"]
+    let identsTavern = ["findCompany","tavernNext","backTavern","tavernHub","keeper","repPlus","business","backToKeeper","healer","sailor"]
     for (let i = 0; i < identsTavern.length; i++){
         document.getElementById(identsTavern[i]).style.display = "none";
     }
@@ -305,6 +312,11 @@ function btnClose(){
     let identsForest = ["forestNext","findAltar","findHunter","calmForest","findTresureForest","fightForest","battleScene"]
     for (let i = 0; i < identsForest.length; i++){
         document.getElementById(identsForest[i]).style.display = "none";
+    }
+
+    let identsPrison = ["neighborBandit", "prisonMine"]
+    for (let i = 0; i < identsPrison.length; i++){
+        document.getElementById(identsPrison[i]).style.display = "none";
     }
 }
 
@@ -318,7 +330,6 @@ function showProfile(){
         profileOnOfF=1
     }
 };
-
 
 //----------------------------------------Создание типовых событий----------------------------
 
@@ -385,10 +396,16 @@ function secondEvent(id1, backimg, imgGood, imgBad, evTextGood, evTextBad, evHpG
     setTimeout(() => {
         endElementAnimation(id1)
     }, animSpeed*2000);
-
-    setTimeout(() => {
-        document.getElementById("walkTown").style.display = "block";
+    if (locationHero=="town"){
+        setTimeout(() => {
+            document.getElementById("walkTown").style.display = "block";
         }, animSpeed*2000);
+    }else if(locationHero=="tavern"){
+        setTimeout(() => {
+            document.getElementById("tavernNext").style.display = "block";
+        }, animSpeed*2000);
+    }
+
 }
 
 //---------------------------------------------Случайные события в городе-----------------------------------------
@@ -409,7 +426,9 @@ function tresureLookAround(){
 
   //===============Воришка===================================
 function thief(){
-    if (hero.coins>=5){
+    if (hero.rep<0){
+        startEvent("walkTown", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/town/thief.png", 'В толпе вы видите карманника. Он кивает вам и растворяется в толпе. Ага, молодец, своих не трогает',0,0,0)
+    }else if (hero.coins>=5){
         startEvent("findThief", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/town/thief.png", 'В толпе с вами столкнулся человек. Да он вас обчистил!',0,-5,0)
     }else{
         startEvent("walkTown", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/town/thief.png", 'Проходя в толпе, вы задумались. "В кармане совсем пусто... Может стать карманником? Да ну, бред какой-то..."',0,0,0)
@@ -457,9 +476,14 @@ function KMB(gesture){
 
 	//==========Мини-кликер "Древесина"======================
 function helpGranny(){
-	needWood = Math.floor(Math.random()*50)
-    document.getElementById("helpGranny").style.display = "block";
-	startEvent("findClickerWood", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/town/granny.png", 'Эй, мил человек! Помоги старушке, наколи дров. Плачу 3 монеты.',0,0,0)
+    if (hero.rep>=0){
+        needWood = Math.floor(Math.random()*50)
+        document.getElementById("helpGranny").style.display = "block";
+        startEvent("findClickerWood", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/town/granny.png", 'Эй, мил человек! Помоги старушке, наколи дров. Плачу 3 монеты.',0,0,0)
+    }else if(hero.rep<0){
+        startEvent("findClickerWood", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/town/granny.png", '"Чего смотришь? Мимо проходи, не стой над душой. Ну и молодежь нынче...". До это бабули явно дошли слухи о ваших поступках...',0,0,0)
+        document.getElementById("helpGranny").style.display = "none";
+    }
 }
 
 function clickerWood(){
@@ -496,8 +520,16 @@ function findGuard(){
     setTimeout(() => {
         document.getElementById("walkTown").style.display = "none";
     }, animSpeed*2010);
-    document.getElementById("coinGuard").disabled = ggBeggar(hero.coins,2)
-	startEvent("findGuard", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/town/guard.png", 'Вас останавливает стражник. "Гражданин! Мы разыскиваем карманника и ты подходишь под описание. Карманы к досмотру!"',0,0,0)
+    if (hero.rep>=0){
+        document.getElementById("coinGuard").disabled = ggBeggar(hero.coins,2)
+        startEvent("findGuard", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/town/guard.png", 'Вас останавливает стражник. "Гражданин! Мы разыскиваем карманника и ты подходишь под описание. Карманы к досмотру!"',0,0,0)
+    }else if(hero.rep<0){
+        document.getElementById("walkTown").style.display = "none";
+        fine = hero.rep*(-10);
+        document.getElementById("fineGuard").disabled = ggBeggar(hero.coins,fine)
+        document.getElementById("fineGuard").innerHTML = 'Штраф -' + fine + '<img src="images/coins.png">'
+        startEvent("findGuardPrison", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/town/guard.png", '"Стоять, преступное отродье! Я не позволю нарушать закон в мою смену! Оплачивай штраф или сгниешь в тюрьме!"',0,0,0)
+    }
 }
 
 function agreeGuard(){
@@ -514,7 +546,11 @@ function fightGuard(){
 	
 	// =========================Подвал=======================
 function findBasement(){
-	startEvent("findBasement", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/town/granny.png", 'О, авантюрист! Ты тот кто мне нужен. Из моего подвала доносятся какие-то странные звуки, всю ночь не могла уснуть. Не мог бы ты посмотреть, что там происходит?',0,0,0)
+    if (hero.rep>=0){
+        startEvent("findBasement", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/town/granny.png", 'О, авантюрист! Ты тот кто мне нужен. Из моего подвала доносятся какие-то странные звуки, всю ночь не могла уснуть. Не мог бы ты посмотреть, что там происходит?',0,0,0)
+    }else if(hero.rep<0){
+        startEvent("findBasement", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/town/granny.png", '"Опять ты, злодей? Проходи, не задерживайся! Хотя... В мой подвал кто-то забрался, сделай хоть раз доброе дело, проверь что там."',0,0,0)
+    }
 }
 
 function fightBasement(){
@@ -575,9 +611,84 @@ function correctAnswer(){
     }
 }
 
-// =================================Арена====================
-// ==================================Козел===================
-// ==================================Архангел================
+//----------------------------------------События тюрьмы-----------------------------------------------
+//--------------сокамерник
+function neighbor(){
+    let rndNum = Math.random()
+    if (rndNum>=0 && rndNum<0.33){
+        startEvent("prisonEv", "images/prison.jpg", "images/town/NoName.png", 'В камеру вводят еще одного заключенного. Это обычный бродяга с улиц. Вы перекидываетесь парой слов, ничего интересного не узнаете',0,0,0)
+    }else if (rndNum>=0.33 && rndNum<0.66){
+        setTimeout(() => {
+            document.getElementById("prisonNext").style.display = "none";
+        }, animSpeed*2100);
+        startEvent("neighborBandit", "images/prison.jpg", "images/town/thief.png", 'В камеру вводят еще одного заключенного. Это опасный преступник. "Хочешь досидеть ло конца срока живым - плати"',0,0,0)
+        document.getElementById("giveCoinsBandit").disabled = ggBeggar(hero.coins, 3)
+    }else if (rndNum>=0.66 && rndNum<1){
+        startEvent("prisonEv", "images/prison.jpg", "images/town/NoName.png", 'В камеру вводят еще одного заключенного. Это бывший рыцарь. "Могу показать тебе пару приемов, если хочешь". Ваш урон увеличен',0,0,0)
+        hero.dmg = Math.floor(hero.dmg*1.1*10)/10
+    }
+}
+
+function giveCoinsBandit(){
+    startEvent("prisonEv", 'images/prison.jpg', 'images/town/thief.png', "Вот так бы сразу. А теперь свали и не отсвечивай", 0,-3,0)
+    document.getElementById("prisonNext").style.display = "block";
+}
+
+function arena(){
+    setTimeout(() => {
+        document.getElementById("prisonNext").style.display = "none";
+    }, animSpeed*2100);
+    enemyList = [dog, rat, robber, spider]
+    let rndNum = Math.floor(Math.random()*enemyList.length)
+    enemy = enemyList[rndNum]
+    findBoss("Начальник тюрьмы устраивает бои на потеху публике. Сегодня вы - гладиатор на его арене. Постарайтесь не умереть. В этот раз против вас "+enemy.name, enemy,"images/prison.jpg")
+}
+
+function prisonHealer(){
+    outOfBattle()
+    btnClose()
+    startEvent("prisonEv", "images/prison.jpg", "images/healer.png", '"Ого, живой! В тюрьме из медикаментов только подорожник, так что будь аккуратнее. В следующий раз могу не вылечить"',0,0,0)
+    hero.hp = 20
+    document.getElementById("prisonNext").style.display = "block";
+    rewriteStats()
+}
+
+function prisonMine(){
+    setTimeout(() => {
+        document.getElementById("prisonNext").style.display = "none";
+    }, animSpeed*2100);
+    needWood = Math.floor(Math.random()*50)
+    startEvent("prisonMine", "images/prison.jpg", "",'Пришла пора отрабатывать тюремную еду. Вас отправляют в шахты', 0,0,0)
+}
+
+function prisonClicker(){
+    if (clickWood < needWood){
+        clickWood++
+        document.getElementById("text").innerText = "Добыто руды "+clickWood+" из "+(needWood+1);
+    }else{
+        clickWood=0;
+        document.getElementById("text").innerText = "Дело сделано";
+        document.getElementById("prisonMine").style.display = "none";
+        document.getElementById("prisonNext").style.display = "block";
+        rewriteStats()
+    }
+}
+
+function prisonFood(){
+    let rndNum = Math.random()
+    if (rndNum>=0 && rndNum<0.33){
+        startEvent("prisonEv", "images/prison.jpg", "images/town/guard.png", 'Вот и пришло время обеда. Ого! В этот раз обычная каша. В чем подвох? +10 здоровья',10,0,0)
+    }else if (rndNum>=0.33 && rndNum<0.66){
+        setTimeout(() => {
+            document.getElementById("prisonNext").style.display = "none";
+        }, animSpeed*2100);
+        startEvent("neighborBandit", "images/prison.jpg", "images/town/guard.png", 'Вот и пришло время обеда. Это что, жареная крыса? Феее...',0,0,0)
+        document.getElementById("giveCoinsBandit").disabled = ggBeggar(hero.coins, 3)
+    }else if (rndNum>=0.66 && rndNum<1){
+        startEvent("prisonEv", "images/prison.jpg", "images/town/guard.png", 'Вот и пришло время обеда. Ого! В этот раз обычная каша? Съев пару ложек вы замечаете, что вам стало плохо... -20 здоровья',-20,0,0)
+        hero.dmg = Math.floor(hero.dmg*1.1*10)/10
+    }
+}
 
 // ----------------------------------------------События таверны------------------------------------------------------------------
 //                      ------------------------------------------------------------------------
@@ -657,26 +768,47 @@ function findKeeper(){
     }, animSpeed*2000);
 }
 
-function gossip(){
+function findGossip(){
     listOfGossip = [
         '"В лесу много добычи, это да. Но и много опасностей. Я бы не ходил туда с голыми кулаками."',
         '"Встречал в городе милую бабушку, которой постоянно нужно нарубить дров? Подозрительно, не находишь?"',
-        '"Чем дальше в лес, тем скибиди доп доп доп ес ес"',    '"А помнишь в лесу водились лабубу? Слава богу, их разработчик вырезал."',
+        '"Чем дальше в лес, тем скибиди доп доп доп ес ес"',
+        '"А помнишь в лесу водились лабубу? Слава богу, их разработчик вырезал."',
         '"Говорят в городе появился какой-то Чув...чудак, просит всех подписать петицию. Слушай, а петиция это вообще что?"',
         '"Если возникнут проблемы с законом - приходи ко мне. Я все улажу, за небольшое вознаграждение."',
         '"В лесу начали находить странные записки. А еще ходят байки про длинного человека в черном. Говорят, у него нет лица..."',
-        '"Если увидишь плачущую статую ангела - НЕ МОРГАЙ!"',   "Однажды я украл сладкий рулет и мне даже ничего за это не было!",
+        '"Если увидишь плачущую статую ангела - НЕ МОРГАЙ!"',
+        "Однажды я украл сладкий рулет и мне даже ничего за это не было!",
         '"Слушай, а вот скелеты в лесу. Как они вообще двигаются? У них же нет мышц..."',
         '"Недавно приходил один тут... Говорит, что нашел волшебного кота! Совсем допился, бедолага."',
         '"Если сдать деньги на хранение, то их не отнимут в драке. Понял намек?"',
-        '"Я раньше в ОПГ i___e был, ты знал?"', '"Здесь могла быть ваша отсылка"',
-        '"А вот Хиробрин существует или это выдумка, как думаешь?"', '"Сейчас бы вареной картошки с селедочкой, да с лучком, а?"',
-        '"Inscryption - очень достойная игра, кстати."', '"..."', '"А ведь случайные события -довольно ленивый прием."',
-        '🎵"О-йой... Задом к трону намертво прилип наш король..."🎵', '🎵"А дуб стоит и ныне там, и в снег, и в град, и в гром. Сто лет расти его ветвям... Так выпьем за него!"🎵',
-        '🎵"Всего одна жизнь, всего одна смерть... и тысяча способов их прозевать"🎵'
+        '"Я раньше в ОПГ iKODe был, ты знал?"',
+        '"Здесь могла быть ваша отсылка"',
+        '"А вот Хиробрин существует или это выдумка, как думаешь?"',
+        '"Сейчас бы вареной картошки с селедочкой, да с лучком, а?"',
+        '"Inscryption - очень достойная игра, кстати."', '"..."',
+        '"А ведь случайные события -довольно ленивый прием."',
+        '🎵"О-йой... Задом к трону намертво прилип наш король..."🎵',
+        '🎵"А дуб стоит и ныне там, и в снег, и в град, и в гром. Сто лет расти его ветвям... Так выпьем за него!"🎵',
+        '🎵"Всего одна жизнь, всего одна смерть... и тысяча способов их прозевать"🎵',
+        '"Охотника встречал? Каким-то образом он может появляться в нескольких местах одновременно! Жуткий тип..."',
+        '"Думаю повесить на стену портрет Дмитрия Брикоткина"',
+        '"Когда-то и меня вела дорога приключений… А потом мне прострелили колено"',
     ]
     let rndNum = Math.floor(Math.random()*listOfGossip.length);
-    document.getElementById("text").innerText = listOfGossip[rndNum];
+    startEvent("findGossip", "https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", "images/keeper.png", listOfGossip[rndNum], 0,0,0)
+}
+
+function findCompany(){
+    startEvent("findCompany", "https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", '', "Вам стало скучно. В конце зала вы видите шумную компанию. Попробуете присоединиться к ним?",0,0,0)
+}
+
+function talkCompany(){
+    if (hero.rep>0){
+        secondEvent("findCompany", "https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", 'images/town/NoName.png',"images/town/thief.png", 'За столом сидят местные работяги. "А, авантюрист! Ну, хорошему человеку мы всегда рады, присоединяйся!" Вы весело проводите время +2 репутации', 'За столом сидят местные бандиты. "Шел бы ты отсюда, лопушок. Такому простачку как ты за нашим столом места нет. И монеты гони, а то не поздоровится" -5 монет', 0,0,2,0,-5,0)
+    }else if (hero.rep<=0){
+        secondEvent("findCompany", "https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", 'images/town/NoName.png',"images/town/thief.png", 'За столом сидят местные работяги. "Хм... Наслышаны о тебе... Шел бы ты отсюда, пока зубы целы" -2 репутации', 'За столом сидят местные бандиты. "Ахаха, присаживайся с нами! Мы сорвали большой куш, давай отметим!". Вы славно проводите время, и даже успеваете умыкнуть кошель одного из бандитов +5 монет', 0,0,-2, 0,5,0)
+    }
 }
 
 //=====================Лекарь===============
@@ -690,10 +822,9 @@ function findHealer(){
 
 function findSailor(){
     startEvent("sailor", "https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", "images/sailor.png", 'За столом сидит скучающий старый моряк. "Эй ты! Как там тебя... сыграем в кости?"',0,0,0)
-    setTimeout(() => {
-        document.getElementById("backTavern").style.display = "block";
-    }, animSpeed*2000);
 }
+
+
 
 // -----------------------------------------------События леса------------------------------------------------------------------
 //                      ------------------------------------------------------------------------
@@ -741,16 +872,15 @@ function fightStatUp(stat) {
     }
 }
 
-
-function findBoss(){
+function findBoss(text, boss, bgimg){
     btnClose()
     document.getElementById("fightForest").style.display = "block";
     document.getElementById("runFightDisabled").style.display = "none";
     //let enemyList = [guard, strider,spider]
     //let randNum = Math.floor(Math.random()*enemyList.length)
-    enemy = ratKing
+    enemy = boss
     document.getElementById("enemyHp").innerText = enemy.hp + " из " + enemy.hpMax;
-    startEvent("fightForest","images/forest/forestBg.jpg", enemy.img1, "Лес - крайне опасное место. Вы нашли противника, которго не так легко победить... Перед вами "+enemy.name,0,0,0)
+    startEvent("fightForest",bgimg, enemy.img1, text,0,0,0)
 }
 //=======================================Главная петля. Выбор случайного события========================================
 //                          ------------------------------------------------------------------
@@ -780,6 +910,31 @@ function rndEvent(){
 	}
 }
 
+//Петля таверны
+function tavernEvent(){
+    locationHero = "tavern"
+    btnClose()
+    if (hero.hp<=0){
+        death()
+        return
+    }
+    if (loopCount<=10){
+        loopCount++;
+        let events = [findSailor, findGossip, findCompany] //Массив с функциями
+        let rndNum = Math.floor(Math.random()*events.length)
+        events[rndNum]()//Скобочки после массива вызовут функцию
+        setTimeout(() => {
+            document.getElementById("tavernNext").style.display = "block";
+        }, animSpeed*2000);
+    }else{
+        day++;
+        deposit += Math.floor(deposit * 2 /100*10)/10
+        document.getElementById("depositSum").innerText = deposit;
+        startEvent("hub", "https://i.pinimg.com/originals/5c/1f/1c/5c1f1c9238e3d395047269a781363b55.jpg", "","День:"+day+". Куда отправляемся?",0,0,0)
+        loopCount=0
+    }
+}
+
 //Петля леса
 function forestEvent(){
     locationHero = "forest"
@@ -793,29 +948,62 @@ function forestEvent(){
             document.getElementById("forestNext").style.display = "block";
         }, animSpeed*2000);
     }else if (forestLoopCount%10 ==0){
-            day++;
-            deposit += Math.floor(deposit * 2 /100*10)/10
-            document.getElementById("depositSum").innerText = deposit;
-            findBoss()
+        day++;
+        deposit += Math.floor(deposit * 2 /100*10)/10
+        document.getElementById("depositSum").innerText = deposit;
+        findBoss("Лес - опасное, мистическое место. Помимо обычных обитателей здесь можно встретить жутких существ из страшных рассказов, которыми пугают детей в городе... Перед вами Крысиный Король", ratKing, 'images/forest/forestBg.jpg')
+    }else if (forestLoopCount%10 == 1 && forestLoopCount!=1){
+        findHunter()
+        setTimeout(() => {
+            document.getElementById("forestNext").style.display = "block";
+        }, animSpeed*2000);
     }else {
         let rndNum = Math.random()
 
         if (hero.hp<=0){
             death()
-            return
-        }else if (forestLoopCount%5==0 && forestLoopCount!=0){
-            findHunter()
-            setTimeout(() => {
-                document.getElementById("forestNext").style.display = "block";
-            }, animSpeed*2000);
-        } else if (rndNum>=0 && rndNum<0.3){
+            return;
+            //---Спокойный лес-----------------------------------
+        }else if (rndNum>=0 && rndNum<0.2){
             calmForest()
             setTimeout(() => {
                 document.getElementById("forestNext").style.display = "block";
             }, animSpeed*2000);
+            //---Сражение----------------------------------------
         }else if (rndNum>=0.3 && rndNum<1){
             findFight("")
+            //---Охотник-----------------------------------------
+        }else if (rndNum>=0.2 && rndNum<3){
+            findHunter()
+            setTimeout(() => {
+                document.getElementById("forestNext").style.display = "block";
+            }, animSpeed*2000);
         }
+    }
+}
+
+
+function prisonEvent(){
+    locationHero = "prison"
+    btnClose()
+    if (loopCount<=10){
+        loopCount++;
+        let events = [neighbor, arena, prisonMine, prisonFood] //Массив с функциями
+        let rndNum = Math.floor(Math.random()*events.length)
+        events[rndNum]()
+        setTimeout(() => {
+            document.getElementById("prisonNext").style.display = "block";
+        }, animSpeed*2000);
+    }else{
+        day++;
+        if (hero.rep<0){
+            hero.rep = 0;
+        }
+        deposit += Math.floor(deposit * 2 /100*10)/10
+        document.getElementById("depositSum").innerText = deposit;
+        startEvent("hub", "https://i.pinimg.com/originals/5c/1f/1c/5c1f1c9238e3d395047269a781363b55.jpg", "","День:"+day+". Куда отправляемся?",0,0,0)
+        loopCount=0
+        rewriteStats()
     }
 }
 
@@ -836,8 +1024,33 @@ function goTavern(){
     startEvent("tavernHub","https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", '',"Вы заходите в таверну. Лука - хозяин таверны, любезно позволяет вам ночевать здесь",0,0,0)
 }
 
+function goPrison(){
+    startEvent("prisonNext","images/prison.jpg", '',"Чтож, за свои поступки нужно отвечать. Теперь вы в тюрьме",0,0,0)
+}
+
 function backToHub(){
     startEvent("hub", "https://i.pinimg.com/originals/5c/1f/1c/5c1f1c9238e3d395047269a781363b55.jpg", "","День:"+day+". Куда отправляемся?",0,0,0)
+}
+
+//-----------------------------------Читы-------------------------------------
+function cheatDMG(){
+    hero.dmg += 100
+    rewriteStats()
+}
+function cheatREPplus(){
+    hero.rep += 100
+    rewriteStats()
+}
+
+function cheatREPminus(){
+    hero.rep -= 100
+    rewriteStats()
+}
+function cheatRESTART(){
+    hero.hp = 100
+    hero.dmg = 5
+    hero.rep = 3
+    rewriteStats()
 }
 
 
