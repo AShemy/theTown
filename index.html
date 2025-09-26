@@ -15,12 +15,13 @@
             <p id="heroCoins">Монеты: 3</p>
             <p id="heroRep">Репутация: 0</p>
 
-            <p id="heroWeapon">Оружие: Кулаки</p>
             <p id="heroDmg">Урон: 1</p>
             <p id="heroSpeed">Скорость : 0.5</p>
             <button onclick="cheatDMG()">+100 урона</button>
             <button onclick="cheatREPplus()">+100 репутации</button>
             <button onclick="cheatREPminus()">-100 репутации</button>
+            <button onclick="cheatCOINplus()">+100 монет</button>
+            <button onclick="cheatCOINminus()">-100 монет</button>
             <button onclick="cheatRESTART()">Начальные значения</button>
         </div>
         <div id="stats" class="stats">
@@ -42,174 +43,7 @@
             <p id="text">День 1. Куда отправимся?</p>
         </div>
 
-        <div class="buttonbox" id="buttonBox">
-
-            <div id="hub">
-                <button id="btnTown">В Город</button>
-                <button id="btnTavern" onclick="goTavern()">В Таверну</button>
-                <button id="btnForest">В Лес </button>
-            </div>
-            <!-- ================================== ***Город*** =============================== -->
-            <div id="findTresure" class="close">
-                <button onclick="tresureTake()" >Забрать</button>
-                <button onclick="tresureLookAround()">Оглядеться</button>
-            </div>
-
-            <div id="findThief" class="close">
-                <button id="thiefRun">Погнаться</button>
-                <button id="thiefCry">Закричать</button>
-            </div>
-
-            <div id="findKMB" class="close">
-                <button onclick="KMB('камень')" id="rock">Камень!</button>
-                <button onclick="KMB('ножницы')" id="scissors">Ножницы!</button>
-                <button onclick="KMB('бумага')" id="paper">Бумага!</button>
-            </div>
-
-            <div id="findClickerWood" class="close">
-                <button onclick="clickerWood()" id="helpGranny">Нарубить дров</button>
-            </div>
-
-            <div id="findBeggar" class="close">
-                <button onclick="giveCoinBeggar()">Дать монету</button>
-            </div>
-
-            <div id="findGuard" class="close">
-                <button onclick="agreeGuard()">Согласиться</button>
-                <button onclick="coinGuard()" id="coinGuard">Откупиться -2<img src="images/coins.png"/></button>
-                <button onclick="fightGuard()">Сопротивляться</button>
-            </div>
-
-            <div id="findGuardPrison" class="close">
-                <button onclick="goPrison()">В тюрьму</button>
-                <button onclick="" id="fineGuard">Штраф<img src="images/coins.png"/></button>
-                <button onclick="findBoss('Криминальное отродье! Готовься отправиться к праотцам!',guard, 'images/town/town.jpg')">Сопротивляться</button>
-            </div>
-
-            <div id="findBasement" class="close">
-                <button onclick="fightBasement()">Помочь</button>
-            </div>
-
-            <div id="findCat" class="close">
-                <button onclick="riddlesCat()" id="riddleCat">Согласиться</button>
-            </div>
-
-            <div id="findDude" class="close">
-                <button onclick="agreeDude()">Согласиться</button>
-            </div>
-
-            <!-- ========================= *** Викторина Кота *** =============================== -->
-            <div id="allQuestions">
-                <div id="question0" class="close">
-                    <button onclick="wrongAnswer()">Портной</button>
-                    <button onclick="wrongAnswer()">Пастух</button>
-                    <button onclick="correctAnswer()">Летописец</button>
-                </div>
-                <div id="question1" class="close">
-                    <button onclick="wrongAnswer()">Нора и кроты</button>
-                    <button onclick="wrongAnswer()">Улей и пчелы</button>
-                    <button onclick="correctAnswer()">Река и рыбы</button>
-                </div>
-                <div id="question2" class="close">
-                    <button onclick="wrongAnswer()">Маска</button>
-                    <button onclick="wrongAnswer()">Тень</button>
-                    <button onclick="correctAnswer()">Зеркало</button>
-                </div>
-                <div id="question3" class="close">
-                    <button onclick="wrongAnswer()">Засуха</button>
-                    <button onclick="correctAnswer()">Огонь</button>
-                    <button onclick="wrongAnswer()">Пропасть</button>
-                </div>
-                <div id="question4" class="close">
-                    <button onclick="correctAnswer()">Ветер</button>
-                    <button onclick="wrongAnswer()">Молния</button>
-                    <button onclick="wrongAnswer()">Дерево</button>
-                </div>
-                <div id="question5" class="close">
-                    <button onclick="correctAnswer()">Губка</button>
-                    <button onclick="wrongAnswer()">Рыба</button><button onclick="wrongAnswer()">Ведро</button>
-                </div>
-            </div>
-            <button onclick="rndEvent()" id="walkTown">Идти дальше</button>
-            <!-- ============================= *** Тюрьма *** =============================== -->
-
-
-            <div id="prisonEv" class="close"></div>
-
-            <div id="neighborBandit" class="close">
-                <button onclick="giveCoinsBandit()" id="giveCoinsBandit">Заплатить -3<img src="images/coins.png"></button>
-                <button onclick="findBoss('Ехехе...Ну что, проверим течет ли у тебя кровь!', robber, 'images/prison.jpg')">Сопротивляться</button>
-            </div>
-
-            <button onclick="prisonClicker()" id="prisonMine">Добывать руду</button>
-
-            <button onclick="prisonEvent()" id="prisonNext">Далее</button>
-            <!-- ============================= *** Таверна *** =============================== -->
-            <div id="tavernHub">
-                <button onclick="findKeeper()" id="">Тавернщик</button>
-                <button onclick="tavernEvent()" id="">Отдохнуть</button>
-                <button onclick="findHealer()" id="">Врач</button>
-                <button onclick="backToHub()" id="backToHub">Назад</button>
-            </div>
-
-            <div id="keeper">
-                <button onclick="findReputation()">Репутация</button>
-                <button onclick="findBusiness()">Вклад</button>
-            </div>
-
-            <div id="repPlus">
-                <button onclick="shopBuy(10,'plusRep',0 ,1)" id="plusRep"><img src="images/rep.png"/>+1 <img src="images/coins.png"/>-10</button>
-                <button onclick="shopBuy(90,'plusRep10',0 ,10)" id="plusRep10"><img src="images/rep.png"/>+10 <img src="images/coins.png"/>-90</button>
-            </div>
-
-            <div id="business">
-                <div class="dep"><p id="depositSum">На вкладе: 0</p></div>
-                <button onclick="depositPlus()" id="depositPlus">Вложить в таверну</button>
-                <button onclick="depositMinus()" id="depositMinus">Забрать вклад</button>
-            </div>
-
-            <button onclick="findKeeper()" id="backToKeeper">Назад</button>
-
-            <div id="healer">
-                <button onclick="shopBuy(7,'plusHp',100,0,0,0)" id="plusHp"><img src="images/hp.png"/>100 <img src="images/coins.png"/>-7</button>
-            </div>
-
-            <!-- ========================== Отдых в таверне====================== -->
-            <div id="findGossip"></div>
-
-            <div id="findCompany">
-                <button onclick="talkCompany()">"Здарова, мужики!"</button>
-            </div>
-
-            <div id="sailor">
-                <button onclick="">(WIP)Сыграть</button>
-            </div>
-
-            <button id="tavernNext" onclick="tavernEvent()">Далее</button>
-
-            <button onclick="goTavern()" id="backTavern">Назад</button>
-
-            <!-- ============================= *** Лес *** ==================================== -->
-            <div id="findHunter">
-                <button onclick="backHubFromForest()">Согласиться</button>
-            </div>
-
-            <div id="calmForest"></div>
-
-            <div id="findTresureForest"></div>
-
-            <div id="fightForest">
-                <button onclick="fightScene()">Сражаться</button>
-                <button onclick="runFight()" id="runFightDisabled">Бежать</button>
-            </div>
-
-            <div id="findAltar">
-                <button onclick="fightStatUp('speed')" id="speedUp">Скорость -5<img src="images/rep.png"></button>
-                <button onclick="fightStatUp('damage')" id="dmgUp" >Урон -5<img src="images/rep.png"></button>
-            </div>
-
-            <button onclick="forestEvent()" id="forestNext">Идти дальше</button>
-        </div>
+        <div class="buttonbox" id="buttonBox"></div>
 
 
         <div id="battleScene">
@@ -220,8 +54,12 @@
             </div>
         </div>
 	</body>
-</html>	
+</html>
 
+<script src='service.js'></script>
 <script src='streetsScript.js'></script>
+<script src='townEvents.js'></script>
+<script src='tavernEvents.js'></script>
+
 		
 		
