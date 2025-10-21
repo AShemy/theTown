@@ -17,6 +17,23 @@
 
             <p id="heroDmg">Урон: 1</p>
             <p id="heroSpeed">Скорость : 0.5</p>
+            <table border="1px">
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
             <button onclick="cheatDMG()">+100 урона</button>
             <button onclick="cheatREPplus()">+100 репутации</button>
             <button onclick="cheatREPminus()">-100 репутации</button>
@@ -26,11 +43,13 @@
         </div>
         <div id="stats" class="stats">
             <button onclick="musicPlay()" class="btnMusic"></button>
-            <img src="images/hp.png" alt="Здоровье"/>
+            <img src="images/icons/hp.png" alt="Здоровье"/>
             <p id="hp">100</p>
-            <img src="images/coins.png"/>
+            <img src="images/icons/coins.png"/>
             <p id="coins">3</p>
-            <img src="images/rep.png"/>
+            <img src="images/icons/hunger.webp"/>
+            <p id="hunger">10</p>
+            <img src="images/icons/rep.png"/>
             <p id="rep">0</p>
             <button onclick="showProfile()" class="btnProfile"></button>
         </div>
@@ -49,14 +68,20 @@
         <div id="battleScene">
             <div id="fist">
                 <div id="enemyImg"></div>
-                <p id="enemyHp">100 из 100</p>
-                <button onclick="attack()" id="attack">Атаковать</button>
+                <!--<p id="enemyHp">100 из 100</p>-->
+                <div id="enemyHpBar">
+                    <div id="enemyBar"></div>
+                </div>
+                <div onclick="attack()" id="myProgress">
+                    <div id="myBar"></div>
+                </div>
             </div>
         </div>
 	</body>
 </html>
 
 <script src='service.js'></script>
+
 <script src='streetsScript.js'></script>
 <script src='townEvents.js'></script>
 <script src='tavernEvents.js'></script>

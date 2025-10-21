@@ -3,6 +3,76 @@
     user-select: none; /*Отрубаем выделение текста*/
 }
 
+
+/*--------------------------------Кнопка Ататки----------------------------------*/
+#myProgress {
+    width: 100%;
+    width: 35%;
+    height: 7vh;
+    border-radius: 20px;
+    background: url("images/icons/dmg.webp") no-repeat center center;
+    background-size: contain;
+    background-color: silver;
+    display: block;
+    margin: auto;
+    margin-top: 1%;
+    box-shadow: 10px 10px 10px black;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    font-size: 2vw;
+    font-family: gabriola;
+    text-align: center;
+}
+
+#myProgress p {
+    position: absolute;
+    text-align: center;
+}
+
+#myBar {
+    width: 0%;
+    height: 30px;
+    background-color: gray;
+    background: url("images/sword.webp") center center no-repeat;
+    background-size: contain;
+    height: 7vh;
+    border-radius: 20px;
+    transition: all 1s ease-in;
+    position: absolute;
+}
+
+
+.disabledDiv {
+    pointer-events: none;
+}
+
+/*--------------------------------Здоровье врага---------------*/
+#enemyHpBar {
+    width: 100%;
+    background-color: grey;
+    width: 45%;
+    width-max: 200px;
+    width-min: 100px;
+    height: 2vh;
+    border-radius: 20px;
+    border: 2px solid white;
+    display: block;
+    margin: auto;
+    margin-top: 1%;
+    box-shadow: 10px 10px 10px black;
+}
+
+#enemyBar {
+    width: 100%;
+    height: 30px;
+    background-color: #a02525;
+    height: 2vh;
+    border-radius: 20px;
+    transition: all 2s;
+}
+
+
 body {
     margin: 0%;
     width: 100%;
@@ -35,7 +105,7 @@ body {
     align-items: center;
     margin: auto;
     margin-top: 1%;
-    background-color: rgba(255,255,255,0.7);
+    background-color: rgba(255,255,255,0.8);
     border-radius: 20px;
     box-shadow: 10px 10px 10px black;
 }
@@ -125,10 +195,16 @@ button img {
 .btnProfile {
     width:9%;
     height: 80%;
-    background: url("images/profile.png");
+    background: url("images/icons/profile.png");
     background-size: contain;
     border: none;
     background-repeat: no-repeat;
+}
+
+table {
+    width: 60%;
+    width: 60%;
+    border: 1px solid black;
 }
 
 #fightScene{

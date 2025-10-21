@@ -2,6 +2,8 @@
 //                                 -----------------------------------------------------
 //                                                   ---------------
 
+
+// <img src='images/icons/hp.png'/>+40 <img src='images/icons/coins.png'/>-10
 function test(){
     btnClose()
     startEvent('images/town/town.jpg',"images/town/персонаж", 'текст события',0,0,0);
@@ -35,9 +37,183 @@ function test(){
     })
 }
 
+
+//====================Торговец=================================
+function findMerchant(){
+    btnClose()
+    let rndNum = Math.floor(Math.random()*21)
+    if (rndNum >= 0 && rndNum <= 10) {
+        startEvent('images/town/town.jpg',"images/town/merchant.webp", 'По пути вы встречаете торговца. "Пирожки, горячие, свежие пирожки! Налетай, торопись, пирожком угостись!"',0,0,0);
+        let rndNum = Math.floor(Math.random()*21)
+        console.log(rndNum)
+        btnCreate("<img src='images/icons/hunger.webp'/>=100 <img src='images/icons/coins.png'/>-20", "Далее","");
+        btn1.disabled = ggBeggar(hero.coins, 20)
+        btnShow()
+        btn1.addEventListener("click", function() {
+            if (rndNum >= 0 && rndNum <= 7) {
+                startEvent('images/town/town.jpg',"", 'Довольный торговец берет деньги и спешно уходит. Вы пробуете пирожок... Буэ... В начинке тухлое мясо?!',0,0,0);
+                hero.coins-=20;
+                goLocation("town")
+            }else if(rndNum > 7) {
+                startEvent('images/town/town.jpg',"images/town/merchant.webp", 'Довольный торговец пересчитывает монеты. "Приятного аппетита, путник!". Теперь вы сыты',0,0,0);
+                hero.hunger = 100;
+                hero.coins-=20;
+                goLocation("town");
+            }
+        })
+        btn2.addEventListener("click", townEvent)
+    }else if (rndNum >= 11){
+        startEvent('images/town/town.jpg',"images/town/merchant.webp", 'По пути вы встречаете торговца. "Амулеты силы! Стань мощнее чем 10 медведей!"',0,0,0);
+        let rndNum = Math.floor(Math.random()*21)
+        console.log(rndNum)
+        btnCreate("<img src='images/icons/dmg.webp'/>+10% <img src='images/icons/coins.png'/>-50", "Далее","");
+        btn1.disabled = ggBeggar(hero.coins, 50)
+        btnShow()
+        btn1.addEventListener("click", function() {
+            if (rndNum >= 0 && rndNum <= 7) {
+                startEvent('images/town/town.jpg',"", 'Довольный торговец берет деньги и спешно уходит. Вы надеваете амулет... ничего не происходит. Вас явно обманули, это пустышка',0,0,0);
+                hero.coins-=50;
+                goLocation("town")
+            }else if(rndNum > 7) {
+                startEvent('images/town/town.jpg',"images/town/merchant.webp", 'Довольный торговец пересчитывает монеты. Вы надеваете амулет... Вы чувствуете небывалую мощь в своих руках. Урон увеличен',0,0,0);
+                hero.dmg = Math.floor(hero.dmg*1.1*10)/10
+                hero.coins-=50;
+                goLocation("town");
+            }
+        })
+        btn2.addEventListener("click", townEvent)
+    }
+}
+
+function findBuisnessMerchant() {
+    console.log(eventCount.merchantBuisness)
+    btnClose()
+    if (eventCount.merchantBuisness == 0) {
+        startEvent('images/town/town.jpg', "images/town/merchant.webp", 'По пути вы встречаете торговца. "Пс, приятель! Я хочу создать палатку с лучшими товарами со всего света, но мне не хватает денег. Если поможешь деньгами, в будущем буду делиться частью выручки!"', 0, 0, 0);
+        btnCreate("<img src='images/icons/coins.png'/>-30", "Пройти мимо", "", "");
+        btnShow()
+        btn1.disabled = ggBeggar(hero.coins, 30)
+        btn1.addEventListener("click", function () {
+            startEvent('images/town/town.jpg', "images/town/merchant.webp", '"Теперь я могу называть тебя коллегой! В следующий раз ты увидишь результаты своего вклада!"', 0, 0, 0);
+            hero.coins -= 30;
+            eventCount.merchantBuisness++;
+            goLocation("town");
+        });
+        btn2.addEventListener("click", townEvent);
+    }else if (eventCount.merchantBuisness == 1){
+        startEvent('images/town/town.jpg',"images/town/merchant.webp", 'По пути вы встречаете торговца. "А, коллега! Прошлая закупка дала неплохой доход, твоя доля - 5 монет!"',0,5,0);
+        eventCount.merchantBuisness++;
+        btnCreate("Хорошо...", "","","");
+        btnShow()
+        btn1.addEventListener("click", townEvent);
+    }else if (eventCount.merchantBuisness == 2){
+        startEvent('images/town/town.jpg',"images/town/merchant.webp", 'По пути вы встречаете торговца. "Коллега! Работа идет, вот очередные 5 монет! Кстати, не желаешь вложить еще? Обещаю, в этот раз прибыль будет еще больше!"',0,5,0);
+        btnCreate("<img src='images/icons/coins.png'/>-80", "Пройти мимо", "","");
+        btnShow()
+        btn1.disabled = ggBeggar(hero.coins, 80)
+        btn1.addEventListener("click", function(){
+            startEvent('images/town/town.jpg', "images/town/merchant.webp", '"Партнер, ты не пожалеешь! Жди свою долю в следующий раз!"', 0, 0, 0);
+            hero.coins-=80;
+            eventCount.merchantBuisness++;
+            goLocation("town");
+        });
+        btn2.addEventListener("click", townEvent);
+    }else if (eventCount.merchantBuisness == 3){
+        startEvent('images/town/town.jpg',"images/town/merchant.webp", '"О, а вот и ты! Твоя доля от нашего небольшого бизнеса - 20 монет!"',0,20,0);
+        eventCount.merchantBuisness++;
+        btnCreate("Отлично!", "","","");
+        btnShow()
+        btn1.addEventListener("click", townEvent);
+    }else if (eventCount.merchantBuisness == 4){
+        startEvent('images/town/town.jpg',"images/town/merchant.webp", 'А вот и очередные 20 монет! Дело идет в гору! Кстати, у меня для тебя подарок - зелье скорости. Сможешь бить врагов еще быстрее!',0,20,0);
+        hero.speed-=200;
+        eventCount.merchantBuisness++;
+        btnCreate("Я быстрый!", "","","");
+        btnShow()
+        btn1.addEventListener("click", townEvent);
+    }else if (eventCount.merchantBuisness == 5) {
+        startEvent('images/town/town.jpg', "images/town/merchant.webp", 'Вот и твоя доля! Дружище, остался последний рывок. Моими товарами заинтересовался сам мер, а это сулит очень крупные сделки... Не хватает всего 200 монет', 0, 20, 0);
+        btnCreate("<img src='images/icons/coins.png'/>-200", "Пройти мимо", "", "");
+        btnShow()
+        btn1.disabled = ggBeggar(hero.coins, 200)
+        btn1.addEventListener("click", function () {
+            startEvent('images/town/town.jpg', "images/town/merchant.webp", '"Мы будем богаты, друг мой..."', 0, 0, 0);
+            hero.coins -= 200;
+            eventCount.merchantBuisness++;
+            goLocation("town");
+        });
+        btn2.addEventListener("click", townEvent);
+    }else if (eventCount.merchantBuisness == 6) {
+        startEvent('images/town/town.jpg', "images/town/merchant.webp", '"Теперь ты совладелец самой крупной торговой точки в городе! Вложений больше не понадобится, бизнес обеспечивает сам себя. Заходи иногда за своими деньгами и спасибо, друг!"', 0, 40, 0);
+        eventCount.merchantBuisness++;
+        btnCreate("Я бизнесмен", "", "", "");
+        btnShow()
+        btn1.addEventListener("click", townEvent)
+    }else if (eventCount.merchantBuisness == 7){
+        startEvent('images/town/town.jpg', "images/town/merchant.webp", '"Друг мой сердечный! Рад тебя видеть! Вот твои деньги, все как обычно."', 0, 40, 0);
+        btnCreate("Отлично!", "", "", "");
+        btnShow()
+        btn1.addEventListener("click", townEvent)
+    }
+}
+
+
 //=====================Чувак===================================
 function findDude(){
-    startEvent("findDude", 'https://i.pinimg.com/736x/98/24/0a/98240a35aa4a357b980788b278b455ed.jpg',"images/town/dude.png", '"Вы бы не могли подписать мою петицию?"',0,0,0)
+    let phrase = ['"Вы бы не могли подписать мою петицию?"',
+        '"Подпиши эту дурацкую петицию, или это придётся делать выжившим членам твоей семьи!"',
+        '"Подпиши эту петицию, или я пойду за тобой до дома и убью твою собаку"',
+        '"Послушай, просто подпиши эту дурацкую петицию, времени мало у меня, понимаешь?!"',
+        '"Подпиши мою петицию, чёрт возьми!"']
+
+    let phraseRejection = ['"Ууу… Завтра это будет болеть". Чувак больно избивает вас кулаками',
+        '"Ты, вероятно, и не думал, что тебе суждено умереть сегодня… Сюрприз!!!". Чувак обливает вас бензином. Спичка. Вжух. И где он достал бензин в средневековье?',
+        '"Теперь цветочки будут расти быстрее...". Чтож, это было унизительно.',
+        '"Вы, вероятно, думаете, что я не очень хороший человек…". С этими словами чувак в вас затвердевшим грязным носком.',
+        '"Не волнуйся, ты просто уснешь." Чувак прицельно бьет вас лопатой по лицу.',]
+
+    let phraseConsent = ['"ДА, ДЕТКА!!! Я — КОРОЛЬ ЯЩЕРИЦ!!!". Кажется он доволен, уходим.',
+        '"Ммм… пахнет цыпленком!". Чувак отвлекся от вас и ушел.',
+        '"Блин, это просто праздник какой-то!". Он явно очень рад, отлично. Можно идти дальше',
+        '"Кис, кис, коровка, коровка.". Это он вообще про что?',
+        '"Это может мне повредить, но я же чувствую себя потрясающе.". Ладно, поверим',
+        'Чувак молча, не моргая смотрит на вас. Так, медленно отходим...']
+
+    let petition = ['"Заставить всех играть в жестокие видеоигры"',
+        '"За право граждан на неограниченный доступ к оружию"',
+        '"За обязательное ношение защитных шлемов в городе"',
+        '"В поддержку легализации уличных боёв без правил"',
+        '"За отмену закона о запрете на кормление голубей"',
+        '"За легализацию охоты на голубей в городской черте"',
+        '"За обязательное ношение бронежилетов всеми горожанами"',
+        '"Против цензуры в СМИ: дайте людям правду!"',
+        '"Против людей, которые собирают петиции"',
+        'В этот раз лист пуст. Но пара подписей уже стоит...']
+
+    btnClose()
+    startEvent('images/town/town.jpg',"images/town/dude.png", phrase[Math.floor(Math.random()*phrase.length)],0,0,0)
+    let rndNum = Math.floor(Math.random()*21)
+    console.log(rndNum)
+    btnCreate("Согласиться", "Отказаться", "Что в петиции?","");
+    btnShow()
+    btn1.addEventListener("click", function() {
+        startEvent('images/town/town.jpg',"images/town/dude.png", phraseConsent[Math.floor(Math.random()*phraseConsent.length)],0,0,0)
+        goLocation("town");
+    })
+    btn2.addEventListener("click", function() {
+        if (rndNum >= 0 && rndNum <= 14) {
+            startEvent('images/town/town.jpg',"images/town/dude.png", phraseRejection[Math.floor(Math.random()*phraseRejection.length)],-20,0,0);
+            goLocation("town")
+        }else if(rndNum > 14) {
+            startEvent('images/town/town.jpg',"images/town/dude.png", 'Чувак резко теряет к вам интерес и идет дальше.',0,0,0);
+            goLocation("town")
+        }
+    })
+    btn3.addEventListener("click", function() {
+        startEvent('images/town/town.jpg',"images/town/dude.png", petition[Math.floor(Math.random()*petition.length)],0,0,0)
+        btn3.disabled = true;
+    })
+
 }
 
 function agreeDude() {
@@ -81,7 +257,7 @@ function findThief(){
                 startEvent('images/town/town.jpg',"", 'К сожалению, всем плевать на ваши крики. Воришка быстро растворился в толпе',0,0,0);
                 goLocation("town")
             }else if(rndNum >= 0 && rndNum <= 7) {
-                startEvent('images/town/town.jpg',"images/town/guard.png", '"Чего разорался! Хватит смущать народ, иди отсюда подобру-поздорову". Стражник не поверил вашей истории.',0,0,-5);
+                startEvent('images/town/town.jpg',"images/town/guard.webp", '"Чего разорался! Хватит смущать народ, иди отсюда подобру-поздорову". Стражник не поверил вашей истории.',0,0,-5);
                 goLocation("town")
             }
         });
@@ -99,7 +275,7 @@ function woundedThief(){
     btn1.addEventListener("click", function() {
         btnClose()
         if (rndNum >= 0 && rndNum <= 7) {
-            startEvent('images/town/town.jpg',"images/town/guard.png", 'Вас замечают стражники. У них конец смены и им сильно плевать на то, что вы лишь помогали преступнику. Вы в тюрьме за соучастие.',0,0,0);
+            startEvent('images/town/town.jpg',"images/town/guard.webp", 'Вас замечают стражники. У них конец смены и им сильно плевать на то, что вы лишь помогали преступнику. Вы в тюрьме за соучастие.',0,0,0);
             goLocation("prison")
         }else if(rndNum > 7 && rndNum <= 14) {
             startEvent('images/town/town.jpg',"images/healer.png", 'Вы доводите воришку до доктора. "А, опять ты, пройдоха? Опять поцапался со стражей?". Вернувшись в город вы замечаете пропажу монет. Ну а чего вы ожидали от вора?',0,-10,5);
@@ -111,7 +287,7 @@ function woundedThief(){
     });
     btn2.addEventListener("click", function() {
         if (hero.rep<0){
-            startEvent('images/town/town.jpg',"images/town/guard.png", 'Внимательно вас выслушав, стражник громко заржал: "Решил сдать подельника? Ты вероятно очень тупой. Мы тебя самого по всему городу ищем!". Вас отправляют в тюрьму.',0,0,0);
+            startEvent('images/town/town.jpg',"images/town/guard.webp", 'Внимательно вас выслушав, стражник громко заржал: "Решил сдать подельника? Ты вероятно очень тупой. Мы тебя самого по всему городу ищем!". Вас отправляют в тюрьму.',0,0,0);
             goLocation("prison")
             return
         }
@@ -122,7 +298,7 @@ function woundedThief(){
         }else if(rndNum > 7 && rndNum <= 14) {
             findBoss('"Лучше смерть! Мерзавец, ты пожалеешь!"', robber, 'images/town/town.jpg');
         }else if(rndNum > 14 && rndNum < 21) {
-            startEvent('images/town/town.jpg',"images/town/guard.png", 'Вы передаете воришку в руки страже. Один из стражников передает вам горсть монет за содействие',0,5,5);
+            startEvent('images/town/town.jpg',"images/town/guard.webp", 'Вы передаете воришку в руки страже. Один из стражников передает вам горсть монет за содействие',0,5,5);
             goLocation("town")
         }
     });
@@ -131,6 +307,8 @@ function woundedThief(){
     });
     btnShow()
 }
+
+
 
 
 //===========================Бродяга===============================
@@ -214,7 +392,7 @@ function findTresure(){
             startEvent('images/town/town.jpg',"images/town/NoName.png", 'В толпе вы видите мужчину, который растеряно хлопает по карманам. Вы возвращаете золото. "Спасибо тебе! Я всем расскажу о твоем благородном поступке!"',0,0,3);
             goLocation("town")
         }else if(rndNum > 14 && rndNum < 22) {
-            startEvent('images/town/town.jpg',"images/town/guard.png", 'В толпе вы видите стражника, который растеряно хлопает по карманам. Вы возвращаете золото. "У тебя доброе сердце. Не давай себя в обиду. Знаешь, я считаю что в нашем мире, добро должно быть с кулаками." Мужчина показывает вам несколько полезных приемов. Урон увеличен.',0,0,0);
+            startEvent('images/town/town.jpg',"images/town/guard.webp", 'В толпе вы видите стражника, который растеряно хлопает по карманам. Вы возвращаете золото. "У тебя доброе сердце. Не давай себя в обиду. Знаешь, я считаю что в нашем мире, добро должно быть с кулаками." Мужчина показывает вам несколько полезных приемов. Урон увеличен.',0,0,0);
             hero.dmg = Math.floor(hero.dmg*1.1*10)/10
             goLocation("town")
         }
@@ -262,14 +440,70 @@ function findBeggar(){
         }
     })
 }
+
+function fireBeggar(){
+    btnClose()
+    startEvent('images/town/town.jpg',"images/town/NoName.png", 'В одном из темных закоулков вы замечаете мерцание. У костра сидит бродяга и что-то бормочет себе под нос',0,0,0);
+    btnCreate("Подойти", "Пройти мимо", "","");
+    btnShow()
+    btn1.addEventListener("click", function() {
+        btnClose()
+        startEvent('images/town/town.jpg', "images/town/NoName.png", 'Заметив вас бродяга медленно поднимается. Красные глаза, изо рта капает пена. "Буэээауе?"', 0, 0, 0);
+        btnCreate("Да", "Нет", "Напасть", "");
+        btnShow()
+        btn1.addEventListener("click", function () {
+            let rndNum = Math.floor(Math.random() * 21)
+            if (rndNum >= 0 && rndNum <= 7) {
+                findBoss('Не отводя от вас взгляд, Бродяга достает дубину. Кажется, ему не понравился ответ.', strider, 'images/town/town.jpg')
+            } else if (rndNum > 7 && rndNum <= 14) {
+                startEvent('images/town/town.jpg', "images/town/NoName.png", 'Бродяга кивает и теряет к вам интерес', 0, 0, 0);
+                goLocation("town")
+            } else if (rndNum > 14 && rndNum < 22) {
+                if (rndNum % 0 == 0) {
+                    startEvent('images/town/town.jpg', "images/town/NoName.png", '"Буэээауе!" Бродяга хлопает вас по плечу. Кажется, вы угадали с ответом. Репутация повышена', 0, 0, 10);
+                    goLocation("town");
+                } else {
+                    startEvent('images/town/town.jpg', "images/town/NoName.png", '"Буэээауе..." Бродяга улыбнулся и даже прослезился. Он передает вам сверток - это деньги', 0, 10, 0);
+                    goLocation("town");
+                }
+            }
+        });
+        btn2.addEventListener("click", function () {
+            rndNum = Math.floor(Math.random() * 21)
+            if (rndNum >= 0 && rndNum <= 7) {
+                findBoss('Не отводя от вас взгляд, Бродяга достает дубину. Кажется, ему не понравился ответ.', strider, 'images/town/town.jpg')
+            } else if (rndNum > 7 && rndNum <= 14) {
+                startEvent('images/town/town.jpg', "images/town/NoName.png", 'Бродяга кивает и теряет к вам интерес', 0, 0, 0);
+                goLocation("town")
+            } else if (rndNum > 14 && rndNum < 22) {
+                if (rndNum % 0 == 0) {
+                    startEvent('images/town/town.jpg', "images/town/NoName.png", '"Буэээауе!" Бродяга хлопает вас по плечу. Кажется, вы угадали с ответом. Репутация повышена', 0, 0, 10);
+                    goLocation("town");
+                } else {
+                    startEvent('images/town/town.jpg', "images/town/NoName.png", '"Буэээауе..." Бродяга улыбнулся и даже прослезился. Он передает вам сверток - это деньги', 0, 10, 0);
+                    goLocation("town");
+                }
+            }
+        });
+        btn3.addEventListener("click", function () {
+            findBoss('Видя как вы тянетесь за оружием, бродяга оскалился. Он достает дубину и с диким ревом бросается на вас', strider, 'images/town/town.jpg')
+        })
+    });
+    btn2.addEventListener("click", townEvent)
+}
+
+
+
+
+
 // =========================Бабушка=======================
 //=Подвал
 function findBasement(){
     btnClose()
     if (hero.rep>=0){
-        startEvent('images/town/town.jpg',"images/town/granny.png", 'О, авантюрист! Ты тот кто мне нужен. Из моего подвала доносятся какие-то странные звуки, всю ночь не могла уснуть. Не мог бы ты посмотреть, что там происходит?',0,0,0)
+        startEvent('images/town/town.jpg',"images/town/granny.webp", 'О, авантюрист! Ты тот кто мне нужен. Из моего подвала доносятся какие-то странные звуки, всю ночь не могла уснуть. Не мог бы ты посмотреть, что там происходит?',0,0,0)
     }else if(hero.rep<0){
-        startEvent('images/town/town.jpg',"images/town/granny.png", '"Опять ты, злодей? Проходи, не задерживайся! Хотя... В мой подвал кто-то забрался, сделай хоть раз доброе дело, проверь что там."',0,0,0)
+        startEvent('images/town/town.jpg',"images/town/granny.webp", '"Опять ты, злодей? Проходи, не задерживайся! Хотя... В мой подвал кто-то забрался, сделай хоть раз доброе дело, проверь что там."',0,0,0)
     }
     btnCreate("Проверить", "Идти дальше", "","");
     btn1.addEventListener("click", function() {
@@ -283,11 +517,16 @@ function findBasement(){
 }
 //=Мини-кликер "Древесина"
 function woodClicker(){
+    if (eventCount.angryGranny>=10){
+        eventCount.angryGranny=0;
+        findBoss('"Ты слишком часто отказывал мне... Пришло время поплатиться" Бабка заливается жутким смехом',evilGranny,"images/town/town.jpg")
+        return;
+    }
     needWood = Math.floor(Math.random()*50);
     btnClose()
-    startEvent('images/town/town.jpg',"images/town/granny.png", '"Эй, мил человек! Помоги старушке, наколи дров. Плачу 3 монеты"',0,0,0);
+    startEvent('images/town/town.jpg',"images/town/granny.webp", '"Эй, мил человек! Помоги старушке, наколи дров. Плачу 3 монеты"',0,0,0);
     if (hero.rep<0) {
-        startEvent('images/town/town.jpg', "images/town/granny.png", '"Чего смотришь? Мимо проходи, не стой над душой. Ну и молодежь нынче...". До это бабули явно дошли слухи о ваших поступках...', 0, 0, 0)
+        startEvent('images/town/town.jpg', "images/town/granny.webp", '"Чего смотришь? Мимо проходи, не стой над душой. Ну и молодежь нынче...". До это бабули явно дошли слухи о ваших поступках...', 0, 0, 0)
         goLocation("town");
         return
     }
@@ -302,14 +541,18 @@ function woodClicker(){
                 document.getElementById("text").innerText = "Дров "+clickWood+" из "+(needWood+1);
                 clickWood++
             }else{
-                startEvent('images/town/town.jpg',"images/town/granny.png", '"Ну спасибо, помог бабушке. Это тебе, ни в чем себе не отказывай". Вы получаете горсть монет и безмерную благодарность бабушки.',0,3,2)
+                startEvent('images/town/town.jpg',"images/town/granny.webp", '"Ну спасибо, помог бабушке. Это тебе, ни в чем себе не отказывай". Вы получаете горсть монет и безмерную благодарность бабушки.',0,3,2)
                 clickWood=0;
                 rewriteStats()
                 goLocation("town")
             }
         })
     })
-    btn2.addEventListener("click", townEvent);
+    btn2.addEventListener("click",function() {
+        eventCount.angryGranny++;
+        startEvent('images/town/town.jpg',"images/town/granny.webp", '"Иди-иди, коль совести нет. Эх, ну и молодежь нынче."',0,0,0)
+        goLocation("town")
+    });
 }
 
 // =======================Стражник=======================
@@ -320,7 +563,7 @@ function findGuard(){
         return
     }
     let rndNum = Math.floor(Math.random()*22)+hero.attention
-    startEvent('images/town/town.jpg',"images/town/guard.png", 'Вас останавливает стражник. "Гражданин! Мы разыскиваем карманника и ты подходишь под описание. Карманы к досмотру!"',0,0,0)
+    startEvent('images/town/town.jpg',"images/town/guard.webp", 'Вас останавливает стражник. "Гражданин! Мы разыскиваем карманника и ты подходишь под описание. Карманы к досмотру!"',0,0,0)
     btnCreate("Согласиться", "Сопротивляться", "", "");
     btn1.addEventListener("click", function() {
         if (rndNum >= 0 && rndNum <= 7) {
@@ -329,7 +572,7 @@ function findGuard(){
         }else if(rndNum > 7 && rndNum <= 14) {
             findBoss('Пока стражник осматривает ваши вещи, вы внимательно к нему присматриваитесь. Шлем явно не по размеру... Вместо меча - воровской кинжал... Клеймо на шее! Да это переодетый бандит!', robber, "images/town/town.jpg");
         }else if(rndNum > 14) {
-            startEvent('images/town/town.jpg',"images/town/guard.png", '"Вроде все чисто... Спасибо за сотрудничество, гражданин!". Стражник уходит по своим делам',0,0,5);
+            startEvent('images/town/town.jpg',"images/town/guard.webp", '"Вроде все чисто... Спасибо за сотрудничество, гражданин!". Стражник уходит по своим делам',0,0,5);
             goLocation("town")
         }
     });
@@ -347,7 +590,7 @@ function findGuard(){
 function criminalScum(){
     btnClose()
     if (hero.rep>10){
-        startEvent('images/town/town.jpg',"images/town/guard.png", '"Эх... Да как же тебя угораздило так вляпаться? Ладно, я тебя отмажу, но это в последний раз!"',0,0,0);
+        startEvent('images/town/town.jpg',"images/town/guard.webp", '"Эх... Да как же тебя угораздило так вляпаться? Ладно, я тебя отмажу, но это в последний раз!"',0,0,0);
         goLocation("town")
         return
     }else if (hero.rep>=0){
@@ -356,19 +599,48 @@ function criminalScum(){
         fine = hero.rep*(-10);
     }
 
-    startEvent('images/town/town.jpg',"images/town/guard.png", '"Стоять, преступное отродье! Я не позволю нарушать закон в мою смену! Оплачивай штраф или сгниешь в тюрьме!"',0,0,0);
-    btnCreate("В тюрьму",'Штраф -' + fine + '<img src="images/coins.png">',"Сопротивляться","");
+    startEvent('images/town/town.jpg',"images/town/guard.webp", '"Стоять, преступное отродье! Я не позволю нарушать закон в мою смену! Оплачивай штраф или сгниешь в тюрьме!"',0,0,0);
+    btnCreate("В тюрьму",'Штраф -' + fine + '<img src="images/icons/coins.png">',"Сопротивляться","");
     btn2.disabled = ggBeggar(hero.coins,fine)
     btnShow()
 
     btn1.addEventListener("click", prisonEvent)
     btn2.addEventListener("click", function() {
-        startEvent('images/town/town.jpg',"images/town/guard.png", '"Тебе повезло, что казна остро нуждается в деньгах... Ступай, но помни: в следующий раз я сгною тебя в тюрьме!"',0,fine*(-1),hero.rep*(-1));
+        startEvent('images/town/town.jpg',"images/town/guard.webp", '"Тебе повезло, что казна остро нуждается в деньгах... Ступай, но помни: в следующий раз я сгною тебя в тюрьме!"',0,fine*(-1),hero.rep*(-1));
         goLocation("town");
     });
     btn3.addEventListener("click", function() {
         findBoss("Преступно отродье! Готовься к встрече с праотцами!",guard,"images/town/town.jpg")
     })
+}
+
+function indulgence(){
+    btnClose()
+    startEvent('images/town/town.jpg',"images/town/guard.webp", '"Слушайте все! Граждане воры, бандиты, алкоголики и тунеядцы! Мэр объявляет помилование всем, кто сознается в преступлениях прямо сейчас! Подходите, не стесняйтесь!"',0,0,0);
+    let rndNum = Math.floor(Math.random()*21)
+    console.log(rndNum)
+    btnCreate("Сдаться", "Идти дальше", "","");
+    if (hero.rep>=0){
+        btn1.disabled=true;
+        btn1.innerText = "Ваша репутация чиста";
+    }else{
+        btn1.disabled=false;
+    }
+    btnShow()
+    btn1.addEventListener("click", function() {
+        if (rndNum >= 0 && rndNum <= 7) {
+            startEvent('images/town/town.jpg',"images/town/guard.webp", 'Вы бежите к стражнику, готовясь раскаяться во всех грехах. Скоро ваша репутация будет чиста, как у младенца! "Еще один недоумок повелся! Так, этого в лес, пусть выживает там"',0,0,0);
+            goLocation("forest")
+        }else if(rndNum > 7 && rndNum <= 14) {
+            startEvent('images/town/town.jpg',"images/town/guard.webp", 'Вы бежите к стражнику, готовясь раскаяться во всех грехах. Скоро ваша репутация будет чиста, как у младенца! "Еще один недоумок повелся! Так, этого в тюрьму, нам план выполнять надо"',0,0,0);
+            goLocation("prison")
+        }else if(rndNum > 14 && rndNum < 22) {
+            startEvent('images/town/town.jpg',"images/town/guard.webp", 'Вы бежите к стражнику, готовясь раскаяться во всех грехах. Скоро ваша репутация будет чиста, как у младенца! "А, пройдоха, сегодня твой день! Поздравляю, теперь ты законопослушный гражданин!"',0,0,0);
+            hero.rep = 10;
+            goLocation("town")
+        }
+    })
+    btn2.addEventListener("click", townEvent)
 }
 
 // =========================== Арена ставка =====================
@@ -419,7 +691,7 @@ function makeBet(){
 function findArenaBet(){
     btnClose()
     let rndNum = Math.floor(Math.random()*22)
-    startEvent("images/town/town.jpg", "images/town/guard.png", 'Начальник тюрьмы проводит гладиаторские бои на потеху публике. Вы можете поставить на одного из бойцов. Возможно сегодня твой день?',0,0,0)
+    startEvent("images/town/town.jpg", "images/town/guard.webp", 'Начальник тюрьмы проводит гладиаторские бои на потеху публике. Вы можете поставить на одного из бойцов. Возможно сегодня твой день?',0,0,0)
     btnCreate("Красная", "Синяя", "В другой раз","");
     btn1.disabled = ggBeggar(hero.coins,5);
     btn2.disabled = ggBeggar(hero.coins,5);
@@ -510,20 +782,22 @@ function wrongAnswer(){
     btnShow()
 }
 
-function correctAnswer(){
+function correctAnswer() {
     btnClose();
     correctAnswers++
-    if (correctAnswers==3) {
-        startEvent( 'images/town/town.jpg',"images/town/cat.png",'"Ты ответил верно на 3 вопроса. Как я и обещал, получай награду"',0,5,3)
+    if (correctAnswers == 3) {
+        startEvent('images/town/town.jpg', "images/town/cat.png", '"Ты ответил верно на 3 вопроса. Как я и обещал, получай награду"', 0, 5, 3)
         rewriteStats()
-        correctAnswers=0
-    }else{
-        startEvent('images/town/town.jpg',"images/town/cat.png", '"Верно" - промурчал кот. Верных ответов '+correctAnswers+ ' из 3. Еще увидимся"',0,0,0)
+        correctAnswers = 0
+    } else {
+        startEvent('images/town/town.jpg', "images/town/cat.png", '"Верно" - промурчал кот. Верных ответов ' + correctAnswers + ' из 3. Еще увидимся"', 0, 0, 0)
     }
-    btnCreate("Далее","","","")
+    btnCreate("Далее", "", "", "")
     btn1.addEventListener("click", townEvent);
     btnShow()
 }
+
+
 
 
 

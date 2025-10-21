@@ -2,20 +2,30 @@ let hero = {
     hp:100,
     rep:0,
     coins:3,
+    hunger: 20,
     dmg:5,
     attention: 1,
     agility: 1,
     speech: 1,
-    speed: 1000,
+    speed: 400,
 }
-
+let thatDay = []
 let locationHero;
 
 let day = 1;
 let deposit = 0;
 let depositArena = 0;
+
 let needWood;
 let clickWood = 0;
+
+
+let eventCount = {
+    merchantBuisness: 0,
+    angryGranny: 0,
+}
+
+
 let correctAnswers = 0;
 
 let enemy;
@@ -34,6 +44,7 @@ let btn4;
 btnClose()
 document.getElementById("battleScene").style.display = "none";
 goHub()
+
 
 //------------------------------------------Противники----------------------------------------------
 function enemyConstructor(enemyName,enemyHp,enemyDmg,enemySpeed,enemyImg,enemyReward){
@@ -92,15 +103,15 @@ let rat = new enemyConstructor("Крыса",15,2,1000,"images/enemy/rat.png",2)
 let dog = new enemyConstructor("Одичавшая собака",20,3,1500,"images/enemy/dog.png",5)
 
 
-let disertir = new enemyConstructor("Дезертир", 30,4,1000,"images/town/guard.png",7)
+let disertir = new enemyConstructor("Дезертир", 30,4,1000,"images/town/guard.webp",7)
 let robber = new enemyConstructor("Грабитель",25,5,1000,"images/town/thief.png",8)
 let skeleton = new enemyConstructor("Скелет",30,6,1000,"images/enemy/skeleton.png",10)
 
-let guard = new enemyConstructor("Стражник", 100,10,1000,"images/town/guard.png",7)
+let guard = new enemyConstructor("Стражник", 100,10,1000,"images/town/guard.webp",7)
 let strider = new enemyConstructor("Бродяга", 30,3,1200,"images/town/NoName.png",5)
 
 
-
+let evilGranny = new enemyConstructor("Демоническая бабка",100,20,3000,"images/town/evilgranny.webp",50)
 let ratKing = new enemyConstructor("Крысинный король",40,3,1500,"images/enemy/ratKing.png",30)
 
 
@@ -128,7 +139,7 @@ function findFight(){
         let randNum = Math.floor(Math.random()*enemyList.length)
         enemy = enemyList[randNum]
     }
-    document.getElementById("enemyHp").innerText = enemy.hp + " из " + enemy.hpMax;
+    //document.getElementById("enemyHp").innerText = enemy.hp + " из " + enemy.hpMax;
     startEvent("images/forest/forestBg.jpg", enemy.img1, "На вас набрасывается "+enemy.name,0,0,0)
 }
 
@@ -191,7 +202,7 @@ function findBoss(text, boss, bgimg){
     btnClose()
 
     enemy = boss
-    document.getElementById("enemyHp").innerText = enemy.hp + " из " + enemy.hpMax;
+    //document.getElementById("enemyHp").innerText = enemy.hp + " из " + enemy.hpMax;
     startEvent(bgimg, enemy.img1, text,0,0,0)
 
     btnCreate("Сражаться","","","")
@@ -199,26 +210,44 @@ function findBoss(text, boss, bgimg){
     btnShow()
 }
 
+
 // атака главного героя
 function attack(){
     enemy.hp -= hero.dmg;
-    console.log("Враг хп"+enemy.hp)
+
+    let enemyPercent = enemy.hp/enemy.hpMax * 100;
+    let enemyHpBar = document.getElementById("enemyBar")
+    enemyHpBar.style.width = enemyPercent + "%";
+    if (enemyPercent > 80){
+        enemyHpBar.style.background = "#a02525";
+    }else if (enemyPercent < 79 && enemyPercent > 40){
+        enemyHpBar.style.background = "#a06725";
+    }else{
+        enemyHpBar.style.background = "#bf9c6d";
+    }
     enemyReaction()
 
-    let time = 100;
-    document.getElementById("attack").disabled = true;
+    var width = 100;
+    var elem = document.getElementById("myBar");
+    var mainElem = document.getElementById("myProgress");
+    mainElem.classList.add("disabledDiv")
+    elem.style.transition = hero.speed+'ms';
+    var id = setInterval(frame, hero.speed/10);
+    function frame() {
+        console.log(width);
+        if (width == 0) {
+            mainElem.classList.remove("disabledDiv")
+            //elem.innerText = "Атаковать";
+            clearInterval(id);
+        } else {
+            mainElem.classList.add("disabledDiv")
+            width--;
+            elem.style.width = width + "%";
+            //elem.innerText = "Ждите...";
+        }
+    }
 
-    let timer= setInterval(()=> {
-        time-=10
-        document.getElementById("attack").innerText = "Ожидание: " + time;
-    },hero.speed/10)
-    setTimeout(()=>{
-        document.getElementById("attack").disabled = false;
-        document.getElementById("attack").innerText = "Атаковать";
-        clearInterval(timer)
-    },hero.speed)
-
-    document.getElementById("enemyHp").innerText = enemy.hp + " из " + enemy.hpMax;
+    //document.getElementById("enemyHp").innerText = enemy.hp + " из " + enemy.hpMax;
 }
 
 
@@ -305,18 +334,18 @@ function prisonFood(){
     btn1.addEventListener('click', prisonEvent)
     let rndNum = Math.random()
     if (rndNum>=0 && rndNum<0.33){
-        startEvent("images/prison.jpg", "images/town/guard.png", 'Вот и пришло время обеда. Ого! В этот раз обычная каша. В чем подвох? +10 здоровья',10,0,0)
+        startEvent("images/prison.jpg", "images/town/guard.webp", 'Вот и пришло время обеда. Ого! В этот раз обычная каша. В чем подвох? +10 здоровья',10,0,0)
     }else if (rndNum>=0.33 && rndNum<0.66){
-        startEvent("images/prison.jpg", "images/town/guard.png", 'Вот и пришло время обеда. Это что, жареная крыса? Феее...',0,0,0)
+        startEvent("images/prison.jpg", "images/town/guard.webp", 'Вот и пришло время обеда. Это что, жареная крыса? Феее...',0,0,0)
     }else if (rndNum>=0.66 && rndNum<1){
-        startEvent("images/prison.jpg", "images/town/guard.png", 'Вот и пришло время обеда. Ого! В этот раз обычная каша? Съев пару ложек вы замечаете, что вам стало плохо... -20 здоровья',-20,0,0)
+        startEvent("images/prison.jpg", "images/town/guard.webp", 'Вот и пришло время обеда. Ого! В этот раз обычная каша? Съев пару ложек вы замечаете, что вам стало плохо... -20 здоровья',-20,0,0)
     }
 }
 
 function neighborFood(){
     startEvent("images/prison.jpg", "images/town/NoName.png", '"Эй, другалечек! Еда здесь поганая, да? Могу продать тебе этот изысканный сладкий рулет!"',0,0,0)
     btnClose()
-    btnCreate("<img src='images/hp.png'/>+40 <img src='images/coins.png'/>-10","Жалобно выпросить","Дальше","")
+    btnCreate("<img src='images/icons/hp.png'/>+40 <img src='images/icons/coins.png'/>-10","Жалобно выпросить","Дальше","")
     btnShow()
 
     btn1.addEventListener('click', function(){
@@ -429,23 +458,50 @@ function fightStatUp(stat) {
 //                                          ---------------------------------
 //Петля города
 function townEvent(){
+    let events = [woundedThief, findTresure, findThief, findKMB, findBasement, findGuard, woodClicker,findBeggar,findArenaBet, findCat, findMerchant, findDude, indulgence, findBuisnessMerchant, fireBeggar] //Массив с функциями
+    let listOfIndex = new Set();
+
+    if (loopCount==0){  //Создаем массив без повторяющихся значений
+        for(let i = 0; i < 10; i++) {
+            let rndNum;
+            do {
+                rndNum = Math.floor(Math.random() * events.length);
+            } while (listOfIndex.has(rndNum));
+
+            listOfIndex.add(rndNum);
+            thatDay.push(events[rndNum]);
+        }
+    }
+
     locationHero = "town"
     btnClose()
+
     if (hero.hp<=0){
         death()
         return
     }
-	if (loopCount<=10){
-		loopCount++;
-		let events = [woundedThief, findTresure, findThief, findKMB, findBasement, findGuard, woodClicker,findBeggar,findArenaBet, findCat] //Массив с функциями
-		let rndNum = Math.floor(Math.random()*events.length)
-		events[rndNum]()//Скобочки после массива вызовут функцию
+
+    if (loopCount<10){
+        hero.hunger--;
+        if (hero.hunger <= 0){
+            hero.hunger = 0
+            hero.hp -= 10;
+        }
+        console.log(thatDay)
+
+        console.log(thatDay[loopCount]);
+        console.log("круг: "+loopCount)
+
+        thatDay[loopCount]()
+        //events[14]()
+        loopCount++;
 	}else{
         day++;
         deposit += Math.floor(deposit * 2 /100*10)/10
-        //document.getElementById("depositSum").innerText = deposit;
-        goHub()
         loopCount=0
+        thatDay.length = 0;
+        listOfIndex.clear();
+        goHub()
 	}
 }
 
@@ -459,6 +515,9 @@ function tavernEvent(){
     }
     if (loopCount<=10){
         loopCount++;
+        if (hero.hunger < 100){
+            hero.hunger++;
+        }
         let events = [findSailor, findGossip, findCompany] //Массив с функциями
         let rndNum = Math.floor(Math.random()*events.length)
         events[rndNum]()//Скобочки после массива вызовут функцию
@@ -473,8 +532,16 @@ function tavernEvent(){
 //Петля леса
 function forestEvent(){
     locationHero = "forest"
+    document.getElementById("enemyBar").style.width = 100 + "%"
+    document.getElementById("myBar").style.width = 0 + "%"
+    document.getElementById("enemyBar").style.background = "#a02525";
     btnClose()
     forestLoopCount++
+    hero.hunger--;
+    if (hero.hunger <= 0){
+        hero.hunger = 0
+        hero.hp -= 10;
+    }
     console.log("Игровой круг: "+forestLoopCount)
 
     if (forestLoopCount%9 == 0){
@@ -529,9 +596,7 @@ function goLocation(where){
     btnClose()
     btnCreate("Далее","","","")
     if (where=="town"){
-        btn1.addEventListener("click", function() {
-            townEvent()
-        })
+        btn1.addEventListener("click", townEvent)
     }else if (where=="tavern"){
         btn1.addEventListener("click", function() {
             tavernEvent()

@@ -2,7 +2,7 @@
 //                      ------------------------------------------------------------------------
 //                                              -----------------
 function findKeeper(){
-    startEvent("https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", "images/keeper.png", '"Приветствую, тебе как обычно? В городе бывает неспокойно, советую оставить деньги у меня, на вкладе. Если возникнет проблема с местными - также обращайся."',0,0,0)
+    startEvent("https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", "images/keeper.webp", '"Приветствую, тебе как обычно? В городе бывает неспокойно, советую оставить деньги у меня, на вкладе. Если возникнет проблема с местными - также обращайся."',0,0,0)
     btnClose()
     btnCreate("Репутация","Вклад","Назад","")
     btnShow()
@@ -14,7 +14,7 @@ function findKeeper(){
 function findReputation(){
     startEvent("https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", "images/keeper.png", '"Репутация - это твое лицо в обществе. Хорошая репутация открывает нужные двери, плохая - ненужные. Могу поправить твою репутацию за умеренную плату"',0,0,0)
     btnClose()
-    btnCreate("<img src='images/rep.png'/>+1 <img src='images/coins.png'/>-10", "<img src='images/rep.png'/>+10 <img src='images/coins.png'/>-90","Назад","")
+    btnCreate("<img src='images/rep.png'/>+1 <img src='images/icons/coins.png'/>-10", "<img src='images/rep.png'/>+10 <img src='images/icons/coins.png'/>-90","Назад","")
     btnShow()
     btn1.disabled = ggBeggar(hero.coins,10)
     btn2.disabled = ggBeggar(hero.coins,90)
@@ -72,7 +72,7 @@ function findBusiness(){
 function findHealer(){
     startEvent("https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", "images/healer.png", 'Лекарь отрывается от записей и поднимает взгляд на вас. "Что-то ты бледный... Рассказывай, что с тобой в этот раз"',0,0,0)
     btnClose()
-    btnCreate("<img src=\"images/hp.png\"/>100 <img src=\"images/coins.png\"/>-7","Назад","","")
+    btnCreate("<img src=\"images/icons/hp.png\"/>100 <img src=\"images/icons/coins.png\"/>-7","Назад","","")
     btnShow()
     btn1.disabled = ggBeggar(hero.coins,7);
 
@@ -118,7 +118,7 @@ function findGossip(){
         '"Когда-то и меня вела дорога приключений… А потом мне прострелили колено"',
     ]
     let rndNum = Math.floor(Math.random()*listOfGossip.length);
-    startEvent("https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", "images/keeper.png", listOfGossip[rndNum], 0,0,0)
+    startEvent("https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", "images/keeper.webp", listOfGossip[rndNum], 0,0,0)
     btnClose()
     btnCreate("Сидеть дальше","","","")
     btnShow()

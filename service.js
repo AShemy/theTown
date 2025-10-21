@@ -91,6 +91,7 @@ function ggBeggar(stat, price){
 function rewriteStats(){
     document.getElementById("hp").innerText = hero.hp;
     document.getElementById("rep").innerText = hero.rep;
+    document.getElementById("hunger").innerText = hero.hunger;
     hero.coins = Math.floor(hero.coins*10)/10
     document.getElementById("coins").innerText = hero.coins;
 
