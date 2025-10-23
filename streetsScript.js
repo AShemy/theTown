@@ -7,7 +7,7 @@ let hero = {
     attention: 1,
     agility: 1,
     speech: 1,
-    speed: 400,
+    speed: 300,
 }
 let thatDay = []
 let locationHero;
@@ -59,13 +59,14 @@ function enemyConstructor(enemyName,enemyHp,enemyDmg,enemySpeed,enemyImg,enemyRe
         let timer = setInterval(() => {
             if (hero.hp>0 && this.hp>0){
                 hero.hp-=this.dmg;
-                document.getElementById("hp").style.color = "red";
-                document.getElementById("hp").style.transform = "scale(1.3)";
                 rewriteStats()
-                setTimeout(()=>{
-                    document.getElementById("hp").style.color = "black";
-                    document.getElementById("hp").style.transform = "scale(1)";
-                },this.speed/2)
+                //document.getElementById("hp").style.color = "red";
+                //document.getElementById("hp").style.transform = "scale(1.3)";
+
+                //setTimeout(()=>{
+                //    document.getElementById("hp").style.color = "black";
+                //    document.getElementById("hp").style.transform = "scale(1)";
+                //},this.speed/2)
             }else if(hero.hp<=0){
                 clearInterval(timer)
                 if (locationHero=="prison"){
@@ -249,8 +250,6 @@ function attack(){
 
     //document.getElementById("enemyHp").innerText = enemy.hp + " из " + enemy.hpMax;
 }
-
-
 
 
 //----------------------------------------События тюрьмы-----------------------------------------------
@@ -516,7 +515,7 @@ function tavernEvent(){
     if (loopCount<=10){
         loopCount++;
         if (hero.hunger < 100){
-            hero.hunger++;
+            hero.hunger+=5;
         }
         let events = [findSailor, findGossip, findCompany] //Массив с функциями
         let rndNum = Math.floor(Math.random()*events.length)
@@ -617,7 +616,7 @@ function goLocation(where){
 function goTavern(){
     startEvent("https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", '',"Вы заходите в таверну. Лука - хозяин таверны, любезно позволяет вам ночевать здесь",0,0,0)
     btnClose()
-    btnCreate("Тавернщик","Отдых","Врач","Назад")
+    btnCreate("<img src='images/icons/rep.png'/><img src='images/icons/coins.png'/>Тавернщик","<img src='images/icons/hunger.webp'/>Отдых","<img src='images/icons/hp.png'/>Врач","Назад")
     btnShow()
     btn1.addEventListener("click", findKeeper)
     btn2.addEventListener("click", tavernEvent)
@@ -630,9 +629,9 @@ function goPrison(){
 }
 
 function goHub(){
-    startEvent("images/hub.jpg", "","День:"+day+". Куда отправляемся?",0,0,0)
+    startEvent("images/hub.jpg", "","День "+day+". Куда отправляемся?",0,0,0)
     btnClose()
-    btnCreate("В Город", "В Таверну", "В Лес", "")
+    btnCreate("<img src='images/icons/rep.png'/>В Город", "<img src='images/icons/hp.png'/><img src='images/icons/hunger.webp'/>В Таверну", "<img src='images/icons/dmg.webp'/>В Лес", "")
     btnShow()
     btn1.addEventListener("click", townEvent);
     btn2.addEventListener("click", goTavern);

@@ -89,9 +89,29 @@ function ggBeggar(stat, price){
 
 //Обновление статов на экране
 function rewriteStats(){
-    document.getElementById("hp").innerText = hero.hp;
+    //document.getElementById("hp").innerText = hero.hp;
+    document.getElementById("ggBar").style.width = hero.hp + "%";
+    ggBar.style.background = 'url("images/icons/hp.png") left center no-repeat';
+    ggBar.style.backgroundSize = 'contain';
+    if (hero.hp >= 75){
+        ggBar.style.background = "#39a614";
+    }else if (hero.hp < 75 && hero.hp >= 40){
+        ggBar.style.background = "#a69314";
+    }else if (hero.hp<40){
+        ggBar.style.background = "#a61414";
+    }
+
+    //document.getElementById("hunger").innerText = hero.hunger;
+    document.getElementById("hungerBar").style.width = hero.hunger + "%";
+    if (hero.hunger >= 75){
+        hungerBar.style.background = "#ffaf00";
+    }else if (hero.hunger < 75 && hero.hunger >= 40){
+        hungerBar.style.background = "#ff4d00";
+    }else{
+        hungerBar.style.background = "#870101";
+    }
+
     document.getElementById("rep").innerText = hero.rep;
-    document.getElementById("hunger").innerText = hero.hunger;
     hero.coins = Math.floor(hero.coins*10)/10
     document.getElementById("coins").innerText = hero.coins;
 

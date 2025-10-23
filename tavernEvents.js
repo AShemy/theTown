@@ -4,7 +4,7 @@
 function findKeeper(){
     startEvent("https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", "images/keeper.webp", '"Приветствую, тебе как обычно? В городе бывает неспокойно, советую оставить деньги у меня, на вкладе. Если возникнет проблема с местными - также обращайся."',0,0,0)
     btnClose()
-    btnCreate("Репутация","Вклад","Назад","")
+    btnCreate("<img src='images/icons/rep.png'/>Репутация","<img src='images/icons/coins.png'/>Вклад","Назад","")
     btnShow()
     btn1.addEventListener("click", findReputation)
     btn2.addEventListener("click", findBusiness)
@@ -12,9 +12,9 @@ function findKeeper(){
 }
 // ===============Покупка репутации==================
 function findReputation(){
-    startEvent("https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", "images/keeper.png", '"Репутация - это твое лицо в обществе. Хорошая репутация открывает нужные двери, плохая - ненужные. Могу поправить твою репутацию за умеренную плату"',0,0,0)
+    startEvent("https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", "images/keeper.webp", '"Репутация - это твое лицо в обществе. Хорошая репутация открывает нужные двери, плохая - ненужные. Могу поправить твою репутацию за умеренную плату"',0,0,0)
     btnClose()
-    btnCreate("<img src='images/rep.png'/>+1 <img src='images/icons/coins.png'/>-10", "<img src='images/rep.png'/>+10 <img src='images/icons/coins.png'/>-90","Назад","")
+    btnCreate("<img src='images/icons/rep.png'/>+1 <img src='images/icons/coins.png'/>-10", "<img src='images/icons/rep.png'/>+10 <img src='images/icons/coins.png'/>-90","Назад","")
     btnShow()
     btn1.disabled = ggBeggar(hero.coins,10)
     btn2.disabled = ggBeggar(hero.coins,90)
@@ -36,7 +36,7 @@ function findReputation(){
 }
 // ===================Вклад=======================
 function findBusiness(){
-    startEvent("https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", "images/keeper.png", '"Лучший спопсоб приумножить деньги - вложить их в дело. Можешь передать часть своих кровных мне - потом заберешь больше" \n На счете: '+deposit,0,0,0)
+    startEvent("https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", "images/keeper.webp", '"Лучший спопсоб приумножить деньги - вложить их в дело. Можешь передать часть своих кровных мне - потом заберешь больше. Не беру меньше 20 монет." \n На счете: '+deposit,0,0,0)
     btnClose()
     btnCreate("Добавить", "Убавить", "Назад","");
     if (deposit<20) {btn2.disabled = true;}

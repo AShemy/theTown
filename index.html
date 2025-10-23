@@ -41,17 +41,32 @@
             <button onclick="cheatCOINminus()">-100 монет</button>
             <button onclick="cheatRESTART()">Начальные значения</button>
         </div>
-        <div id="stats" class="stats">
-            <button onclick="musicPlay()" class="btnMusic"></button>
-            <img src="images/icons/hp.png" alt="Здоровье"/>
-            <p id="hp">100</p>
-            <img src="images/icons/coins.png"/>
-            <p id="coins">3</p>
-            <img src="images/icons/hunger.webp"/>
-            <p id="hunger">10</p>
-            <img src="images/icons/rep.png"/>
-            <p id="rep">0</p>
+
+        <div class="menu">
             <button onclick="showProfile()" class="btnProfile"></button>
+
+            <div id="stats" class="stats">
+                <img src="images/icons/hp.png" alt="Здоровье"/>
+                <div class="ggMainBar">
+                    <div id="ggBar"></div>
+                </div>
+                <!--<p id="hp">100</p>-->
+
+                <img src="images/icons/hunger.webp"/>
+                <div class="ggMainBar">
+                    <div id="hungerBar"></div>
+                </div>
+                <!--<p id="hunger">10</p>-->
+
+                <img src="images/icons/coins.png"/>
+                <p id="coins">3</p>
+
+                <img src="images/icons/rep.png"/>
+                <p id="rep">0</p>
+            </div>
+
+            <button onclick="musicPlay()" class="btnMusic"></button>
+
         </div>
 
         <div class="characterImage" id="charImg">

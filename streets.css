@@ -47,9 +47,46 @@
     pointer-events: none;
 }
 
+.ggMainBar {
+    background-color: grey;
+    width: 45%;
+    width-max: 200px;
+    width-min: 100px;
+    height: 2vh;
+    border-radius: 10px;
+    border: 2px solid white;
+    display: block;
+    margin: auto;
+    margin-top: 1.2vh;
+    margin-left: 0.5vw;
+    overflow: hidden;
+}
+/*--------------------------------Голод ГГ-----------------*/
+#hungerBar {
+    width: 100%;
+    height: 30px;
+    background: url("images/icons/hunger.webp") left center no-repeat;
+    background-size: contain;
+    background-color: #ffaf00;
+    height: 2vh;
+    border-radius: 20px;
+    transition: all 2s;
+}
+
+/*--------------------------------Здоровье ГГ------------------*/
+#ggBar {
+    width: 100%;
+    height: 30px;
+    background: url("images/icons/hp.png") left center no-repeat;
+    background-size: contain;
+    background-color: #379700;
+    height: 2vh;
+    border-radius: 20px;
+    transition: all 2s;
+}
+
 /*--------------------------------Здоровье врага---------------*/
 #enemyHpBar {
-    width: 100%;
     background-color: grey;
     width: 45%;
     width-max: 200px;
@@ -66,27 +103,58 @@
 #enemyBar {
     width: 100%;
     height: 30px;
-    background-color: #a02525;
+    background-color: "#a02525";
     height: 2vh;
     border-radius: 20px;
     transition: all 2s;
 }
-
-
+/*---------------------------------БАЗА----------------------------------------------*/
 body {
     margin: 0%;
     width: 100%;
     height: 100%;
-	background: url('images/hub.jpg') center center no-repeat;
-	background-size: cover;
-	font-size: 2vw;
-	font-family: gabriola;
+    background: url('images/hub.jpg') center center no-repeat;
+    background-size: cover;
+    font-size: 2vw;
+    font-family: gabriola;
     overflow: hidden;
 }
 
+/*-----------------------------------Верхнее меню-----------------------------------*/
+.menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40%;
+    height: 5%;
+    margin: auto;
+}
+
+.menu button {
+    width: 5%;
+}
+
+.btnMusic{
+    width:9%;
+    height: 80%;
+    background: url("music.png");
+    background-size: contain;
+    border: none;
+    background-repeat: no-repeat;
+}
+
+.btnProfile {
+    width:9%;
+    height: 80%;
+    background: url("images/icons/profile.png");
+    background-size: contain;
+    border: none;
+    background-repeat: no-repeat;
+}
+
 .stats {
-	width: 20%;
-	height: 5%;
+	width: 80%;
+	height: 100%;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -95,25 +163,15 @@ body {
 	background-color: rgba(255,255,255,0.7);
 	border-radius: 20px;
 	box-shadow: 10px 10px 10px black;
-}
-
-.dep {
-    width: 25%;
-    height: 19%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: auto;
-    margin-top: 1%;
-    background-color: rgba(255,255,255,0.8);
-    border-radius: 20px;
-    box-shadow: 10px 10px 10px black;
+    padding-right: 0.5%;
 }
 
 #stats img {
 	height: 70%;
-	margin-left: 6%;
+	margin-left: 0.5vw;
 }
+
+/*---------------------------Изображение героя---------------------------*/
 
 .characterImage {
 	width: 15vw;
@@ -121,7 +179,7 @@ body {
 	margin: auto;
 	background-size: contain;
     background-position: center;
-	margin-top: 1%;
+	margin-top: 2%;
 }
 
 
@@ -142,7 +200,7 @@ body {
 	margin-left: 3%;
 	margin-top:0%;
 }
-
+/*-----------------------------Кнопковое---------------------------------*/
 .buttonBox {
 	width: 50%;
 	height: 25%;
@@ -172,40 +230,9 @@ body {
 
 button img {
     height: 35%;
-
 }
 
-.startBtn {
-    display: block;
-}
 
-.close {
-    display: none;
-}
-
-.btnMusic{
-    width:9%;
-    height: 80%;
-    background: url("music.png");
-    background-size: contain;
-    border: none;
-    background-repeat: no-repeat;
-}
-
-.btnProfile {
-    width:9%;
-    height: 80%;
-    background: url("images/icons/profile.png");
-    background-size: contain;
-    border: none;
-    background-repeat: no-repeat;
-}
-
-table {
-    width: 60%;
-    width: 60%;
-    border: 1px solid black;
-}
 
 #fightScene{
     width:100%;
@@ -214,11 +241,11 @@ table {
     background-size: cover;
 }
 
-.twoButtons {
+/*.twoButtons {
     display: flex;
     justify-content: center;
     align-items: center;
-}
+}*/
 
 #enemyImg {
     width: 60%;
@@ -308,7 +335,7 @@ table {
         margin: auto;
         background-size: contain;
         background-position: center;
-        margin-top: 1%;
+        margin-top: 3%;
     }
 
     #textBox {
@@ -341,9 +368,22 @@ table {
         font-family: gabriola;
     }
 
-    .stats {
-        width: 65%;
+    .menu {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 80%;
         height: 5%;
+        margin: auto;
+    }
+
+    .menu button {
+        width: 5%;
+    }
+
+    .stats {
+        width: 80%;
+        height: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
