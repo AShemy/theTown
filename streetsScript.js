@@ -1,32 +1,85 @@
 let hero = {
     hp:100,
+    maxHp:100,
     rep:0,
     coins:3,
-    hunger: 20,
+    hunger: 40,
     dmg:5,
     attention: 1,
     agility: 1,
     speech: 1,
-    speed: 300,
+    speed: 150,
+    day: 1,
+    location: "",
+    eat: function(food){
+        if(this.hunger+food<=this.maxHp){
+            this.hunger+=food;
+        }else{
+            this.hunger=100;
+        }
+    },
+    heal: function(plusHp){
+        if(this.hp+plusHp<=this.maxHp){
+            this.hp+=plusHp;
+        }else{
+            this.hp=100;
+        }
+    },
+    giveMoney: function(price){
+        if(this.coins-price<0){
+            this.coins=0
+        }else{
+            this.coins-=price
+        }
+    },
+    attack: function(){
+        enemy.hp -= hero.dmg;
+
+        let enemyPercent = enemy.hp/enemy.hpMax * 100;
+        let enemyHpBar = document.getElementById("enemyBar")
+        enemyHpBar.style.width = enemyPercent + "%";
+        if (enemyPercent >= 80){
+            enemyHpBar.style.background = "#39a614";
+        }else if (enemyPercent < 80 && enemyPercent > 40){
+            enemyHpBar.style.background = "#a69314";
+        }else{
+            enemyHpBar.style.background = "#870101";
+        }
+        enemyReaction()
+
+        var width = 100;
+        var elem = document.getElementById("myBar");
+        var mainElem = document.getElementById("myProgress");
+        mainElem.classList.add("disabledDiv")
+        elem.style.transition = hero.speed+'ms';
+        var id = setInterval(frame, hero.speed/10);
+        function frame() {
+            if (width == 0) {
+                mainElem.classList.remove("disabledDiv")
+                clearInterval(id);
+            } else {
+                mainElem.classList.add("disabledDiv")
+                width--;
+                elem.style.width = width + "%";
+            }
+        }
+    }
 }
 let thatDay = []
-let locationHero;
 
-let day = 1;
 let deposit = 0;
 let depositArena = 0;
-
-let needWood;
-let clickWood = 0;
 
 
 let eventCount = {
     merchantBuisness: 0,
     angryGranny: 0,
+    needWood: 0,
+    clickWood: 0,
+    correctAnswers: 0,
+    merCount: 0,
 }
 
-
-let correctAnswers = 0;
 
 let enemy;
 
@@ -60,37 +113,30 @@ function enemyConstructor(enemyName,enemyHp,enemyDmg,enemySpeed,enemyImg,enemyRe
             if (hero.hp>0 && this.hp>0){
                 hero.hp-=this.dmg;
                 rewriteStats()
-                //document.getElementById("hp").style.color = "red";
-                //document.getElementById("hp").style.transform = "scale(1.3)";
-
-                //setTimeout(()=>{
-                //    document.getElementById("hp").style.color = "black";
-                //    document.getElementById("hp").style.transform = "scale(1)";
-                //},this.speed/2)
             }else if(hero.hp<=0){
                 clearInterval(timer)
-                if (locationHero=="prison"){
+                if (hero.location=="prison"){
                     prisonHealer()
                 }else{
                     death()
                 }
             }else if(this.hp<=0){
                 clearInterval(timer)
+                document.getElementById("enemyBar").style.width = "100%";
                 this.giveReward()
                 this.hp = this.hpMax
                 rewriteStats()
                 outOfBattle()
-                console.log("Локация: "+locationHero)
                 document.getElementById("text").innerText = "Вы победили. Награда: "+this.reward + " монет";
                 btnCreate("Далее","","","")
                 btnShow();
-                if (locationHero=="forest"){
+                if (hero.location=="forest"){
                     btn1.addEventListener("click", forestEvent)
-                }else if (locationHero=="town"){
+                }else if (hero.location=="town"){
                     btn1.addEventListener("click", townEvent)
-                }else if (locationHero=="tavern"){
+                }else if (hero.location=="tavern"){
                     btn1.addEventListener("click", tavernEvent)
-                }else if (locationHero=="prison"){
+                }else if (hero.location=="prison"){
                     btn1.addEventListener("click", prisonEvent)
                 }
             }
@@ -149,17 +195,20 @@ function fightScene(){
     btnClose()
     setTimeout(() => {
         endElementAnimation()
+        document.getElementById("charImg").style.display = "none";
         document.getElementById("textBox").style.display = "none";
+        document.getElementById("buttonBox").style.display = "none";
         document.getElementById("battleScene").style.display = "block";
-        document.getElementById("charImg").style.width = "60%";
-        document.getElementById("charImg").style.height = "62%";
-        document.getElementById("charImg").style.backgroundRepeat = "no-repeat";
-        document.getElementById("charImg").style.backgroundPosition = "center";
-        document.getElementById("charImg").style.backgroundSize = "contain";
+        document.getElementById("enemyImage").style.background = 'url('+enemy.img1+') center center no-repeat';
+        document.getElementById("enemyImage").style.backgroundRepeat = "no-repeat";
+        document.getElementById("enemyImage").style.backgroundPosition = "center";
+        document.getElementById("enemyImage").style.backgroundSize = "contain";
     }, animSpeed*2000);
 
     enemy.attack()
 }
+
+
 //побег
 function runFight(btn){
     let chance = Math.floor(Math.random()*2)
@@ -173,22 +222,17 @@ function runFight(btn){
 
 //Выход из сражения, визуальное возвращение сцены в исходное состояние
 function outOfBattle(){
+    document.getElementById("charImg").style.display = "block";
     document.getElementById("textBox").style.display = "block";
+    document.getElementById("buttonBox").style.display = "block";
     document.getElementById("battleScene").style.display = "none";
-    if (window.matchMedia("(max-width: 700px)").matches){
-        document.getElementById("charImg").style.width = "55vw";
-        document.getElementById("charImg").style.height = "55vw";
-    }else{
-        document.getElementById("charImg").style.width = "15vw";
-        document.getElementById("charImg").style.height = "15vw";
-    }
     document.getElementById("charImg").style.backgroundRepeat = "no-repeat";
     document.getElementById("charImg").style.backgroundPosition = "center";
     document.getElementById("charImg").style.backgroundSize = "contain";
 }
 
 function death(){
-    locationHero = "tavern"
+    hero.location = "tavern"
     outOfBattle()
     btnClose()
     loopCount = 0
@@ -209,46 +253,6 @@ function findBoss(text, boss, bgimg){
     btnCreate("Сражаться","","","")
     btn1.addEventListener('click', fightScene)
     btnShow()
-}
-
-
-// атака главного героя
-function attack(){
-    enemy.hp -= hero.dmg;
-
-    let enemyPercent = enemy.hp/enemy.hpMax * 100;
-    let enemyHpBar = document.getElementById("enemyBar")
-    enemyHpBar.style.width = enemyPercent + "%";
-    if (enemyPercent > 80){
-        enemyHpBar.style.background = "#a02525";
-    }else if (enemyPercent < 79 && enemyPercent > 40){
-        enemyHpBar.style.background = "#a06725";
-    }else{
-        enemyHpBar.style.background = "#bf9c6d";
-    }
-    enemyReaction()
-
-    var width = 100;
-    var elem = document.getElementById("myBar");
-    var mainElem = document.getElementById("myProgress");
-    mainElem.classList.add("disabledDiv")
-    elem.style.transition = hero.speed+'ms';
-    var id = setInterval(frame, hero.speed/10);
-    function frame() {
-        console.log(width);
-        if (width == 0) {
-            mainElem.classList.remove("disabledDiv")
-            //elem.innerText = "Атаковать";
-            clearInterval(id);
-        } else {
-            mainElem.classList.add("disabledDiv")
-            width--;
-            elem.style.width = width + "%";
-            //elem.innerText = "Ждите...";
-        }
-    }
-
-    //document.getElementById("enemyHp").innerText = enemy.hp + " из " + enemy.hpMax;
 }
 
 
@@ -306,22 +310,22 @@ function prisonHealer(){
 }
 
 function prisonMine(){
-    needWood = Math.floor(Math.random()*70);
+    eventCount.needWood = Math.floor(Math.random()*50);
     btnClose()
     startEvent("images/prison.jpg", "",'Пришла пора отрабатывать тюремную еду. Вас отправляют в шахты', 0,0,0)
     btnCreate("Добывать", "", "","");
     btnShow()
     btn1.addEventListener("click", function() {
-        if (clickWood < needWood){
-            clickWood++
-            document.getElementById("text").innerText = "Добыто руды "+clickWood+" из "+(needWood+1);
+        if (eventCount.clickWood < eventCount.needWood){
+            eventCount.clickWood++
+            document.getElementById("text").innerText = "Добыто руды "+eventCount.clickWood+" из "+(eventCount.needWood+1);
         }else{
             btnClose()
             rewriteStats()
             btnCreate("Далее","","","")
             btnShow()
             document.getElementById("text").innerText = "Дело сделано";
-            clickWood=0
+            eventCount.clickWood=0
             btn1.addEventListener('click', prisonEvent)
         }
     })
@@ -381,7 +385,34 @@ function neighborFood(){
 
 // -----------------------------------------------События леса------------------------------------------------------------------
 //                      ------------------------------------------------------------------------
-//                                              -----------------
+//                                             -----------------
+
+function findGlade(){
+    btnClose()
+    startEvent("images/forest/forestBg.jpg","", 'Вы находите на прекрасную поляну. Она вполне подойдет для привала. Отдохнем?',0,0,0);
+    let rndNum = Math.floor(Math.random()*21)
+    console.log(rndNum)
+    btnCreate("Отдохнем!", "Идти дальше", "","");
+    btnShow()
+    btn1.addEventListener("click", function() {
+        if (rndNum >= 0 && rndNum <= 7) {
+            startEvent("images/forest/forestBg.jpg","", 'Где-то неподалеку воют волки, а совсем рядом слышен хруст веток. Здесь опасно останавливаться, привал отменяется.',0,0,0);
+            goLocation("forest")
+        }else if(rndNum > 7 && rndNum <= 14) {
+            startEvent("images/forest/forestBg.jpg","", 'Немного взремнув, вы восстанавливаете силы. Пора двигаться дальше!',0,0,0);
+            hero.heal(20)
+            goLocation("forest")
+        }else if(rndNum > 14) {
+            startEvent("images/forest/forestBg.jpg","", 'Вы замечательно отдохнкли в тени раскидистого дуба. Неподалеку даже нашли куст съедобных ягод',0,0,0);
+            hero.eat(40)
+            hero.heal(40)
+            goLocation("forest")
+        }
+    })
+    btn2.addEventListener("click", forestEvent)
+}
+
+
 function findHunter(){
     startEvent("images/forest/forestBg.jpg","images/hunter.png",'Вы встречаете опытного охотника из города. "Ты как, не потерялся? За небольшую плату могу вывести в город. Всего за '+Math.floor(hero.coins*0.2*10)/10+' золотых"',0,0,0)
     btnClose()
@@ -422,12 +453,13 @@ function findAltar() {
         hero.dmg = Math.floor(hero.dmg*1.1*10)/10
         document.getElementById("text").innerText = "Символ вспыхнул ярче. Теперь люди меньше вам доверяют, но вы стали сильнее. Ваш урон: "+hero.dmg+". Скорость атаки: раз в " + Math.floor(hero.speed/100)/10+"с"
         priceUpgrade = Math.floor(priceUpgrade *= 1.2)
-        btn1.innerHTML = 'Скорость -' + priceUpgrade + '<img src="images/rep.png"/>';
-        btn2.innerHTML = 'Урон -' + priceUpgrade + '<img src="images/rep.png"/>';
+        btn1.innerHTML = 'Скорость -' + priceUpgrade + '<img src="images/icons/rep.png"/>';
+        btn2.innerHTML = 'Урон -' + priceUpgrade + '<img src="images/icons/rep.png"/>';
         if (hero.rep<priceUpgrade){
            btn1.disabled = true;
            btn2.disabled = true;
         }
+        hero.rep-=priceUpgrade
         rewriteStats()
     })
     btn3.addEventListener('click', forestEvent)
@@ -466,13 +498,13 @@ function townEvent(){
             do {
                 rndNum = Math.floor(Math.random() * events.length);
             } while (listOfIndex.has(rndNum));
-
             listOfIndex.add(rndNum);
             thatDay.push(events[rndNum]);
         }
+        thatDay[Math.floor(Math.random() * 10)] = findMer;
     }
 
-    locationHero = "town"
+    hero.location = "town"
     btnClose()
 
     if (hero.hp<=0){
@@ -494,20 +526,22 @@ function townEvent(){
         thatDay[loopCount]()
         //events[14]()
         loopCount++;
-	}else{
-        day++;
+    }else{
+        hero.day++;
         deposit += Math.floor(deposit * 2 /100*10)/10
         loopCount=0
         thatDay.length = 0;
         listOfIndex.clear();
         goHub()
-	}
+    }
 }
 
 //Петля таверны
 function tavernEvent(){
-    locationHero = "tavern"
+    hero.location = "tavern"
     btnClose()
+
+
     if (hero.hp<=0){
         death()
         return
@@ -521,7 +555,7 @@ function tavernEvent(){
         let rndNum = Math.floor(Math.random()*events.length)
         events[rndNum]()//Скобочки после массива вызовут функцию
     }else{
-        day++;
+        hero.day++;
         deposit += Math.floor(deposit * 2 /100*10)/10
         goHub()
         loopCount=0
@@ -529,56 +563,73 @@ function tavernEvent(){
 }
 
 //Петля леса
-function forestEvent(){
-    locationHero = "forest"
-    document.getElementById("enemyBar").style.width = 100 + "%"
-    document.getElementById("myBar").style.width = 0 + "%"
-    document.getElementById("enemyBar").style.background = "#a02525";
+function forestEvent() {
+    console.log(forestLoopCount)
     btnClose()
+    if (eventCount.merCount < 3) {
+        startEvent("images/forest/forestBg.jpg", "images/town/guard.webp", '"Гражданин, дальше ходу нет! По приказу главы города проход в лес закрыт! Возвращайся в город."', 0, 0, 0)
+        goLocation('hub')
+        return;
+    }
+    if (eventCount.merCount == 3 && forestLoopCount==11) {
+        startEvent("images/forest/forestBg.jpg", "images/forest/cave.webp", '"Перед вами вход в пещеру. Вход завален камнями и деревянными обломками. Дальше не пройти. Стоит пообщаться с главой города Уильямом"', 0, 0, 0)
+        eventCount.merCount = 4
+        goLocation('hub')
+        return;
+    }
+
+    hero.location = "forest"
+    document.getElementById("myBar").style.width = 0 + "%"
+
     forestLoopCount++
     hero.hunger--;
-    if (hero.hunger <= 0){
+
+    if (hero.hunger <= 0) {
         hero.hunger = 0
         hero.hp -= 10;
     }
-    console.log("Игровой круг: "+forestLoopCount)
+    console.log("Игровой круг: " + forestLoopCount)
 
-    if (forestLoopCount%9 == 0){
+    if (forestLoopCount % 9 == 0) {
         findAltar()
-    }else if (forestLoopCount%10 ==0){
+    } else if (forestLoopCount % 10 == 0) {
         findBoss("Лес - опасное, мистическое место. Помимо обычных обитателей здесь можно встретить жутких существ из страшных рассказов, которыми пугают детей в городе... Перед вами Крысиный Король", ratKing, 'images/forest/forestBg.jpg')
-    }else if (forestLoopCount%10 == 1 && forestLoopCount!=1){
+    } else if (forestLoopCount % 10 == 1 && forestLoopCount != 1) {
         findHunter()
-    }else {
-        let rndNum = Math.random()
+    } else {
 
-        if (hero.hp<=0){
+        let rndNum = Math.random()
+        if (hero.hp <= 0) {
             death()
             return;
+            //---Поляна------------------------------------------
+        }else if (rndNum>=0.1 && rndNum<0.2){
+            findGlade()
             //---Спокойный лес-----------------------------------
-        }else if (rndNum>=0 && rndNum<0.2){
+        }else if (rndNum>=0 && rndNum<0.1){
             calmForest()
             //---Охотник-----------------------------------------
         }else if (rndNum>=0.2 && rndNum<0.3){
             findHunter()
             //---Сражение----------------------------------------
-        }else if (rndNum>=0.3 && rndNum<1){
+        }else if (rndNum>=0.3 && rndNum<1) {
             findFight()
         }
+
     }
 }
 
-
 function prisonEvent(){
-    locationHero = "prison"
+    hero.location = "prison"
     btnClose()
     if (loopCount<=10){
         loopCount++;
+        console.log("Игровой круг тюрьмы", loopCount)
         let events = [neighbor, arena, prisonMine,prisonFood, neighborFood] //Массив с функциями
         let rndNum = Math.floor(Math.random()*events.length)
         events[rndNum]()
     }else{
-        day++;
+        hero.day++;
         if (hero.rep<0){
             hero.rep = 0;
         }
@@ -597,31 +648,42 @@ function goLocation(where){
     if (where=="town"){
         btn1.addEventListener("click", townEvent)
     }else if (where=="tavern"){
-        btn1.addEventListener("click", function() {
-            tavernEvent()
-        })
+        btn1.addEventListener("click", tavernEvent)
     }else if (where=="forest"){
-        btn1.addEventListener("click", function() {
-            forestEvent()
-        })
+        btn1.addEventListener("click", forestEvent)
     }else if (where=="prison"){
-        btn1.addEventListener("click", function() {
-            prisonEvent()
-        })
+        btn1.addEventListener("click", prisonEvent)
+    }else if (where=="hub"){
+        btn1.addEventListener("click", goHub)
     }
     btnShow()
 }
 
 
 function goTavern(){
-    startEvent("https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", '',"Вы заходите в таверну. Лука - хозяин таверны, любезно позволяет вам ночевать здесь",0,0,0)
-    btnClose()
+    if (eventCount.merCount==0){
+        startEvent("https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", 'images/keeper.webp',"Хм, незнакомое лицо... Если ты к доктору - то вон сидит. Ко мне приходи когда монетой будешь богат, просто так не угощаю",0,0,0)
+        btnClose()
+        btnCreate("<img src='images/icons/hp.png'/>Врач","Назад","","")
+        btnShow()
+        btn1.addEventListener("click", findHealer)
+        btn2.addEventListener("click", goHub)
+        return
+    }else if (eventCount.merCount==1){
+        startEvent("https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", 'images/keeper.webp','Вы заходите в таверну. Лука - хозяин таверны, взял письмо, прочитал и удивленно вскинул брови. "Чтож... Уильям попросил обеспечить тебе ночлег и еду, так что располагайся"',0,0,0)
+        btnClose()
+        eventCount.merCount=2
+    }else{
+        startEvent("https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", '',"Вы заходите в таверну. Лука - хозяин таверны, любезно позволяет вам ночевать здесь",0,0,0)
+        btnClose()
+    }
     btnCreate("<img src='images/icons/rep.png'/><img src='images/icons/coins.png'/>Тавернщик","<img src='images/icons/hunger.webp'/>Отдых","<img src='images/icons/hp.png'/>Врач","Назад")
     btnShow()
     btn1.addEventListener("click", findKeeper)
     btn2.addEventListener("click", tavernEvent)
     btn3.addEventListener("click", findHealer)
     btn4.addEventListener("click", goHub)
+
 }
 
 function goPrison(){
@@ -629,10 +691,11 @@ function goPrison(){
 }
 
 function goHub(){
-    startEvent("images/hub.jpg", "","День "+day+". Куда отправляемся?",0,0,0)
+    startEvent("images/hub.jpg", "","День "+hero.day+". Куда отправляемся?",0,0,0)
     btnClose()
     btnCreate("<img src='images/icons/rep.png'/>В Город", "<img src='images/icons/hp.png'/><img src='images/icons/hunger.webp'/>В Таверну", "<img src='images/icons/dmg.webp'/>В Лес", "")
     btnShow()
+    console.log("Мер: ",eventCount.merCount);
     btn1.addEventListener("click", townEvent);
     btn2.addEventListener("click", goTavern);
     btn3.addEventListener("click", forestEvent);

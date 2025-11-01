@@ -2,6 +2,9 @@
     touch-action: manipulation; /* отключает зум при двойном тапе */
     user-select: none; /*Отрубаем выделение текста*/
 }
+.disabledDiv {
+    pointer-events: none;
+}
 
 
 /*--------------------------------Кнопка Ататки----------------------------------*/
@@ -42,11 +45,6 @@
     position: absolute;
 }
 
-
-.disabledDiv {
-    pointer-events: none;
-}
-
 .ggMainBar {
     background-color: grey;
     width: 45%;
@@ -61,6 +59,7 @@
     margin-left: 0.5vw;
     overflow: hidden;
 }
+
 /*--------------------------------Голод ГГ-----------------*/
 #hungerBar {
     width: 100%;
@@ -108,6 +107,7 @@
     border-radius: 20px;
     transition: all 2s;
 }
+
 /*---------------------------------БАЗА----------------------------------------------*/
 body {
     margin: 0%;
@@ -116,7 +116,7 @@ body {
     background: url('images/hub.jpg') center center no-repeat;
     background-size: cover;
     font-size: 2vw;
-    font-family: gabriola;
+    font-family: Gabriola;
     overflow: hidden;
 }
 
@@ -134,8 +134,8 @@ body {
     width: 5%;
 }
 
-.btnMusic{
-    width:9%;
+.btnMusic {
+    width: 9%;
     height: 80%;
     background: url("music.png");
     background-size: contain;
@@ -144,7 +144,7 @@ body {
 }
 
 .btnProfile {
-    width:9%;
+    width: 9%;
     height: 80%;
     background: url("images/icons/profile.png");
     background-size: contain;
@@ -153,77 +153,77 @@ body {
 }
 
 .stats {
-	width: 80%;
-	height: 100%;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	margin: auto;
+    width: 80%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
     margin-top: 1%;
-	background-color: rgba(255,255,255,0.7);
-	border-radius: 20px;
-	box-shadow: 10px 10px 10px black;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 20px;
+    box-shadow: 10px 10px 10px black;
     padding-right: 0.5%;
 }
 
 #stats img {
-	height: 70%;
-	margin-left: 0.5vw;
+    height: 70%;
+    margin-left: 0.5vw;
 }
 
-/*---------------------------Изображение героя---------------------------*/
-
+/*---------------------------Изображение персонажа---------------------------*/
 .characterImage {
-	width: 15vw;
-	height: 15vw;
-	margin: auto;
-	background-size: contain;
+    width: 15vw;
+    height: 15vw;
+    margin: auto;
+    background-size: contain;
     background-position: center;
-	margin-top: 2%;
+    margin-top: 2%;
 }
 
 
 #textBox {
-	width: 50%;
+    width: 50%;
     min-height: 20%;
-    padding: 0.5%   ;
-	margin: auto;
-	background-color: rgba(255,255,255,0.7);
-	border-radius: 20px;
-	box-shadow: 10px 10px 10px black;
-	text-align: center;
+    padding: 0.5%;
+    margin: auto;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 20px;
+    box-shadow: 10px 10px 10px black;
+    text-align: center;
 }
 
 #textBox p {
-	width: 90%;
-	text-align: center;
-	margin-left: 3%;
-	margin-top:0%;
+    width: 90%;
+    text-align: center;
+    margin-left: 3%;
+    margin-top: 0%;
 }
+
 /*-----------------------------Кнопковое---------------------------------*/
 .buttonBox {
-	width: 50%;
-	height: 25%;
-	margin: auto;
+    width: 50%;
+    height: 25%;
+    margin: auto;
 }
 
 .buttonBox button {
-	width: 20vw;
+    width: 20vw;
     width-max: 300px;
     width-min: 700px;
-	height: 30%;
-	border-radius: 20px;
-	background-color: silver;
-	display: block;
-	margin: auto;
-	margin-top: 1%;
-	box-shadow: 10px 10px 10px black;
+    height: 30%;
+    border-radius: 20px;
+    background-color: silver;
+    display: block;
+    margin: auto;
+    margin-top: 1%;
+    box-shadow: 10px 10px 10px black;
     font-size: 2vw;
-	font-family: gabriola;
+    font-family: gabriola;
 }
 
 .buttonBox button:hover {
-	background-color: white;
+    background-color: white;
     transform: scale(1.02);
     transition-duration: 0.4s;
 }
@@ -233,39 +233,31 @@ button img {
 }
 
 
-
-#fightScene{
-    width:100%;
+#fightScene {
+    width: 100%;
     height: 100%;
     background: url("https://avatars.mds.yandex.net/i?id=6011f9ffe6bd29aecb49239f94e2afdd_l-12613260-images-thumbs&n=13");
     background-size: cover;
 }
 
-/*.twoButtons {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}*/
-
-#enemyImg {
-    width: 60%;
-    height: 60%;
+#enemyImage{
+    width: 35vw;
+    height: 35vw;
+    display: block;
     margin: auto;
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-    margin-top: 1%;
 }
-#enemyHp {
+
+/*#enemyHp {
     width: 10%;
     height: 7%;
     margin: auto;
-    background-color: rgba(255,255,255,0.7);
+    background-color: rgba(255, 255, 255, 0.7);
     border-radius: 20px;
     box-shadow: 10px 10px 10px black;
     text-align: center;
     align-items: center;
-}
+}*/
+
 #fist button {
     width: 20%;
     height: 8%;
@@ -280,7 +272,6 @@ button img {
 }
 
 #fist {
-    top: 0%;
     width: 100%;
     height: 100%;
     background-size: 100% 100%;
@@ -288,15 +279,15 @@ button img {
 }
 
 .startEnemyAnimation {
-    animation: enemyReaction 0.8s linear alternate-reverse;
+    animation: enemyReaction 1s linear alternate-reverse;
 }
 
 @keyframes enemyReaction {
-    0%{
+    0% {
         transform: scale(1);
     }
-    100%{
-        transform: scale(0.9);
+    100% {
+        transform: scale(0.8);
     }
 }
 
@@ -304,7 +295,7 @@ button img {
 #heroProfile {
     width: 65%;
     height: 80%;
-    background: rgba(255,255,255,0.9);
+    background: rgba(255, 255, 255, 0.9);
     position: absolute;
     border-radius: 20px;
     padding-top: 2%;
@@ -403,6 +394,13 @@ button img {
         box-shadow: 10px 10px 10px black;
         text-align: center;
         align-items: center;
+    }
+
+    #enemyImage{
+        width: 80vw;
+        height: 80vw;
+        display: block;
+        margin: auto;
     }
 
     #fist button {

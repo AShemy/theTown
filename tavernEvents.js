@@ -128,24 +128,98 @@ function findGossip(){
 function findCompany(){
     startEvent("https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", '', "Вам стало скучно. В конце зала вы видите шумную компанию. Попробуете присоединиться к ним?",0,0,0)
     btnClose()
-    btnCreate("Сидеть дальше","","","")
+    btnCreate("Присоединиться","Сидеть дальше","","")
     btnShow()
-    btn1.addEventListener("click", tavernEvent)
-}
-
-function talkCompany(){
-    if (hero.rep>0){
-        secondEvent("findCompany", "https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", 'images/town/NoName.png',"images/town/thief.png", 'За столом сидят местные работяги. "А, авантюрист! Ну, хорошему человеку мы всегда рады, присоединяйся!" Вы весело проводите время +2 репутации', 'За столом сидят местные бандиты. "Шел бы ты отсюда, лопушок. Такому простачку как ты за нашим столом места нет. И монеты гони, а то не поздоровится" -5 монет', 0,0,2,0,-5,0)
-    }else if (hero.rep<=0){
-        secondEvent("findCompany", "https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", 'images/town/NoName.png',"images/town/thief.png", 'За столом сидят местные работяги. "Хм... Наслышаны о тебе... Шел бы ты отсюда, пока зубы целы" -2 репутации', 'За столом сидят местные бандиты. "Ахаха, присаживайся с нами! Мы сорвали большой куш, давай отметим!". Вы славно проводите время, и даже успеваете умыкнуть кошель одного из бандитов +5 монет', 0,0,-2, 0,5,0)
-    }
+    btn1.addEventListener("click", function (){
+        let rndNum = Math.floor(Math.random()*21);
+        if (hero.rep>=0){
+            if (rndNum >= 0 && rndNum <= 10){
+                startEvent("https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", 'images/town/thief.png', 'За столом сидят местные бандиты. "Шел бы ты отсюда, лопушок. Такому простачку как ты за нашим столом места нет. И монеты гони, а то не поздоровится"',0,-5,0)
+            }else if (rndNum>10){
+                startEvent("https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", 'images/town/NoName.png', 'А, авантюрист! Ну, хорошему человеку мы всегда рады, присоединяйся!" Вы весело и сытно проводите время!',0,0,2)
+                hero.hunger+=10
+            }
+        }else if(hero.rep<0){
+            if (rndNum >= 0 && rndNum <= 14){
+                startEvent("https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", 'images/town/NoName.png', 'За столом сидят местные работяги. "Хм... Наслышаны о тебе... Шел бы ты отсюда, пока зубы целы" -2 репутации',0,0,-2)
+            }else if (rndNum>14){
+                startEvent("https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", 'images/town/thief.png', 'За столом сидят местные бандиты. "Ахаха, присаживайся с нами! Мы сорвали большой куш, давай отметим!". Вы славно проводите время, и даже успеваете умыкнуть кошель одного из бандитов +5 монет',0,5,0)
+            }
+        }
+        btnClose()
+        goLocation("tavern")
+    })
+    btn2.addEventListener("click", tavernEvent)
 }
 
 function findSailor(){
     startEvent("https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", "images/sailor.png", 'За столом сидит скучающий старый моряк. "Эй ты! Как там тебя... сыграем в кости?"',0,0,0)
     btnClose()
-    btnCreate("Сидеть дальше","","","")
+    btnCreate("Сыграть","Далее","","")
     btnShow()
-    btn1.addEventListener("click", tavernEvent)
+    btn1.addEventListener("click", cubeGame);
+    btn2.addEventListener("click", tavernEvent)
+}
+
+function cubeGame(){
+    btnClose()
+    document.getElementById("text").innerText = "Ставка: " + depositArena;
+    if (hero.coins < 1) {
+        startEvent("https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", "images/sailor.png", '"Без ставки играть не интересно. Приходи когда у тебя будут деньги"', 0, 0, 0)
+        goLocation("tavern")
+    } else {
+        btnCreate("Добавить", "Убавить", "Готово", "");
+        if (depositArena < 1) {
+            btn2.disabled = true;
+        }
+        if (hero.coins < 1) {
+            btn1.disabled = true;
+        }
+        btnShow()
+
+        btn1.addEventListener("click", function () {
+            hero.coins -= 1
+            depositArena += 1;
+            document.getElementById("text").innerText = "Ставка: " + depositArena;
+            if (depositArena > 0) {
+                btn2.disabled = false;
+            }
+            rewriteStats()
+            btn1.disabled = ggBeggar(hero.coins, 1);
+        });
+        btn2.addEventListener("click", function () {
+            if (depositArena < 1) {
+                btn2.disabled = true;
+            } else {
+                hero.coins += 1;
+                depositArena -= 1;
+            }
+            document.getElementById("text").innerText = "Ставка: " + depositArena;
+            rewriteStats();
+            btn1.disabled = ggBeggar(hero.coins, 1);
+            if (depositArena == 0) {
+                btn2.disabled = true;
+            }
+        });
+        btn3.addEventListener("click", function () {
+            let cubeGG = Math.floor(Math.random()*6)+1;
+            let cubeEnemy = Math.floor(Math.random()*6)+1;
+            btnClose()
+            if (cubeGG<cubeEnemy){
+                startEvent("https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", "images/sailor.png", '"У меня выпало '+cubeEnemy+',\n а утебя '+ cubeGG + '.\n Хочешь отыгаться?',0,0,0)
+            }else if (cubeGG>cubeEnemy){
+                startEvent("https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", "images/sailor.png", '"У меня выпало '+cubeEnemy+',\n а утебя '+ cubeGG + '.\n Посейдонова борода! Ты победил. Давай еще разок?',0,0,0)
+                hero.coins += depositArena*2;
+            }else {
+                startEvent("https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", "images/sailor.png", '"У меня выпало '+cubeEnemy+',\n а утебя '+ cubeGG + '.\n Эх, ничья... Так дела не делаются. Сыграем еще?',0,0,0)
+                hero.coins += depositArena
+            }
+            depositArena=0
+            btnCreate("Сыграть","Далее","","")
+            btnShow()
+            btn1.addEventListener("click", cubeGame);
+            btn2.addEventListener("click", tavernEvent)
+        })
+    };
 }
 

@@ -61,9 +61,9 @@ function endElementAnimation() {
 }
 
 function enemyReaction(){
-    document.getElementById("charImg").classList.remove("startEnemyAnimation");
+    document.getElementById("enemyImage").classList.remove("startEnemyAnimation");
     requestAnimationFrame(() => {
-        document.getElementById("charImg").classList.add("startEnemyAnimation");
+        document.getElementById("enemyImage").classList.add("startEnemyAnimation");
     });
 }
 
@@ -210,66 +210,18 @@ function startEvent(backimg, img, evText, evHp, evCoins, evRep){
         document.getElementById("charImg").style.background = 'url('+img+')';
         document.getElementById("charImg").style.backgroundSize = "cover";
         document.getElementById("buttonBox").style.display = "block";
+        hero.hp+=evHp;
+        if (hero.coins>=evCoins*-1){
+            hero.coins+=evCoins;
+        }else{
+            hero.coins = 0
+        }
+        hero.rep+=evRep;
         rewriteStats()
     }, animSpeed*1000);  //--timeout - длительность анимации, меняем объекты, пока они скрыты
     setTimeout(() => {
         endElementAnimation("buttonBox")
     }, animSpeed*2000);    //timeout - длительность анимации x2, плавно появляется событие
-    hero.hp+=evHp;
-    if (hero.coins>=evCoins*-1){
-        hero.coins+=evCoins;
-    }else{
-        hero.coins = 0
-    }
-    hero.rep+=evRep;
-}
-
-// Создание событий 2 порядка. Положительный и отрицательный исход
-function secondEvent(id1, backimg, imgGood, imgBad, evTextGood, evTextBad, evHpGood, evCoinsGood, evRepGood, evHpBad, evCoinsBad, evRepBad){
-    btnClose()
-    startElementAnimation(id1)
-
-    setTimeout(() => {
-        document.getElementById(id1).style.display = "none";
-        document.getElementById("mainScreen").style.background = 'url('+backimg+')';
-        document.getElementById("mainScreen").style.backgroundSize = 'cover';
-        let chance = looseOrWin()
-
-        if (chance==1){
-            hero.hp+=evHpGood;
-            hero.coins+=evCoinsGood;
-            hero.rep+=evRepGood;
-            document.getElementById("text").innerText = evTextGood;
-            document.getElementById("charImg").style.background = 'url('+imgGood+')';
-            document.getElementById("charImg").style.backgroundSize = "cover";
-        }else{
-            hero.hp+=evHpBad;
-            if (hero.coins>=evCoinsBad*-1){
-                hero.coins+=evCoinsBad;
-            }else{
-                hero.coins = 0
-            }
-            hero.rep+=evRepBad;
-
-            document.getElementById("text").innerText = evTextBad;
-            document.getElementById("charImg").style.background = 'url('+imgBad+')';
-            document.getElementById("charImg").style.backgroundSize = "cover";
-        }
-    }, animSpeed*1000);
-    rewriteStats()
-
-    setTimeout(() => {
-        endElementAnimation(id1)
-    }, animSpeed*2000);
-    if (locationHero=="town"){
-        setTimeout(() => {
-            document.getElementById("walkTown").style.display = "block";
-        }, animSpeed*2000);
-    }else if(locationHero=="tavern"){
-        setTimeout(() => {
-            document.getElementById("tavernNext").style.display = "block";
-        }, animSpeed*2000);
-    }
 
 }
 
@@ -302,5 +254,14 @@ function cheatCOINplus() {
 function cheatCOINminus() {
     hero.coins -= 100
     rewriteStats()
+}
+
+function openForest(){
+    eventCount.merCount = 1;
+}
+
+function plusMer(){
+    eventCount.merCount++;
+    document.getElementById("merProfile").innerHTML = "Мер: "+ eventCount.merCount;
 }
 

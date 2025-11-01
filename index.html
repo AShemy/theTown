@@ -40,6 +40,9 @@
             <button onclick="cheatCOINplus()">+100 монет</button>
             <button onclick="cheatCOINminus()">-100 монет</button>
             <button onclick="cheatRESTART()">Начальные значения</button>
+            <button onclick="openForest()">Открыть лес</button>
+            <button onclick="plusMer()" id="merProfile">Плюс событие мера</button>
+
         </div>
 
         <div class="menu">
@@ -50,13 +53,11 @@
                 <div class="ggMainBar">
                     <div id="ggBar"></div>
                 </div>
-                <!--<p id="hp">100</p>-->
 
                 <img src="images/icons/hunger.webp"/>
                 <div class="ggMainBar">
                     <div id="hungerBar"></div>
                 </div>
-                <!--<p id="hunger">10</p>-->
 
                 <img src="images/icons/coins.png"/>
                 <p id="coins">3</p>
@@ -82,12 +83,11 @@
 
         <div id="battleScene">
             <div id="fist">
-                <div id="enemyImg"></div>
-                <!--<p id="enemyHp">100 из 100</p>-->
+                <div id="enemyImage"></div>
                 <div id="enemyHpBar">
                     <div id="enemyBar"></div>
                 </div>
-                <div onclick="attack()" id="myProgress">
+                <div onclick="hero.attack()" id="myProgress">
                     <div id="myBar"></div>
                 </div>
             </div>
@@ -96,6 +96,7 @@
 </html>
 
 <script src='service.js'></script>
+
 
 <script src='streetsScript.js'></script>
 <script src='townEvents.js'></script>
