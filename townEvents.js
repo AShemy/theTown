@@ -45,6 +45,7 @@ function findMer(){
         btnCreate("Ладно", "","","");
         btnShow()
         eventCount.merCount=1;
+        //document.getElementById("mainQuest").innerText="Задание: Отнести письмо в таверну";
         btn1.addEventListener("click", townEvent)
     }else if (eventCount.merCount==1){
         startEvent('images/town/town.jpg',"images/town/mer.webp", '"Не забудь отнести письмо Луке - хозяину таверны"',0,0,0);
@@ -63,30 +64,68 @@ function findMer(){
         btnShow()
         btn2.disabled = true;
         btn1.addEventListener("click", townEvent)
-    }else if(eventCount.merCount>2){
+    }else if(eventCount.merCount==3){
+        startEvent('images/town/town.jpg',"images/town/mer.webp", '"У тебя уже есть задание, путник"',0,0,0);
+        btnCreate("Далее", "","","");
+        btnShow()
+        btn1.addEventListener("click", townEvent)
+    }else if (eventCount.merCount==4){
         startEvent('images/town/town.jpg',"images/town/mer.webp", '"Авантюрист! Спасибо, что помогаешь нашему городу! Нам нужны такие люди как ты"',0,0,0);
         btnCreate("Поговорить", "До встречи!","");
         btnShow()
         btn1.addEventListener("click", merQuest)
+        btn2.addEventListener("click", townEvent)
+    }else if (eventCount.merCount==5){
+        btnClose()
+        startEvent('images/town/town.jpg',"images/town/персонаж", 'Пришло время искать добровольцев. Найдено: ' + eventCount.volontiers +" из 5",0,0,0);
+        let rndNum = Math.floor(Math.random()*22)
+        console.log(rndNum)
+        btnCreate("Искать", "Не хочу", "","");
+        btnShow()
+        btn1.addEventListener("click", function() {
+            btnClose()
+            if (rndNum >= 0 && rndNum <= 7) {
+                startEvent('images/town/town.jpg',"images/town/guard.webp", 'Я пойду только с честным и достойным человеком',0,0,0);
+                btnCreate("Нужно 20 <img src='images/icons/rep.png'>","Найду другого","","");
+                btnShow()
+                if (hero.rep<20){btn1.disabled = true;}
+                else{btn1.disabled = false;}
+            }else if(rndNum > 7 && rndNum <= 14) {
+                startEvent('images/town/town.jpg',"images/town/merchant.webp", 'А сколько платите?',0,0,0);
+                btnCreate("Нужно 20 <img src='images/icons/coins.png'>","Найду другого","","");
+                btnShow()
+                if (hero.coins<20){btn1.disabled = true;}
+                else{btn1.disabled = false;}
+            }else if(rndNum > 14 && rndNum < 22) {
+                startEvent('images/town/town.jpg',"images/town/NoName.png", 'В лесу опасно. Ты сможешь нас защитить?',0,0,0);
+                btnCreate("Нужно 7 <img src='images/icons/dmg.webp'>","Найду другого","","");
+                btnShow()
+                if (hero.dmg<7){btn1.disabled = true;}
+                else{btn1.disabled = false;}
+            }
+            btn1.addEventListener("click", merQuest)
+            btn2.addEventListener("click", townEvent)
+        })
         btn2.addEventListener("click", townEvent)
     }
 }
 
 function merQuest(){
     btnClose()
-    if (eventCount.merCount==2){
-        startEvent('images/town/town.jpg',"images/town/mer.webp", '"В местном лесу нынче неспокойно. Дикое зверье да всякие чудища все ближе подбираются к городу. Мне нужны смельчаки, которые расчистят лес от заразы. Берешься?"',0,0,0);
-        btnCreate("Берусь", "Не сейчас","");
+    if (eventCount.merCount==2) {
+        startEvent('images/town/town.jpg', "images/town/mer.webp", '"В местном лесу нынче неспокойно. Дикое зверье да всякие чудища все ближе подбираются к городу. Мне нужны смельчаки, которые расчистят лес от заразы. Берешься?"', 0, 0, 0);
+        btnCreate("Берусь", "Не сейчас", "");
         btnShow()
-        btn1.addEventListener("click", function (){
+        btn1.addEventListener("click", function () {
             btnClose()
-            startEvent('images/town/town.jpg',"images/town/mer.webp", '"Отлично! Я дам стражникам приказ пропустить тебя в лес."',0,0,0);
+            startEvent('images/town/town.jpg', "images/town/mer.webp", '"Отлично! Я дам стражникам приказ пропустить тебя в лес."', 0, 0, 0);
             eventCount.merCount = 3;
+            //document.getElementById("mainQuest").innerText="Задание: Разведать лес";
             goLocation('town')
         })
-        btn2.addEventListener("click", function (){
+        btn2.addEventListener("click", function () {
             btnClose()
-            startEvent('images/town/town.jpg',"images/town/mer.webp", '"Понимаю, риск большой. Как передумаешь - дай знать"',0,0,0);
+            startEvent('images/town/town.jpg', "images/town/mer.webp", '"Понимаю, риск большой. Как передумаешь - дай знать"', 0, 0, 0);
             goLocation("town")
         })
     }else if (eventCount.merCount==4){
@@ -96,7 +135,8 @@ function merQuest(){
         btn1.addEventListener("click", function (){
             btnClose()
             startEvent('images/town/town.jpg',"images/town/mer.webp", '"Спасибо тебе, авантюрист. Ну, не будем терять ни минуты!"',0,0,0);
-            eventCount.merCount = 3;
+            eventCount.merCount = 5;
+            //document.getElementById("mainQuest").innerText="Задание: Найти добровольцев или разобрать завал самому. Добровольцев собрано: "+eventCount.volontiers;
             goLocation('town')
         })
         btn2.addEventListener("click", function (){
@@ -104,9 +144,15 @@ function merQuest(){
             startEvent('images/town/town.jpg',"images/town/mer.webp", '"У всех свои дела, но помни, я расчитываю на твою помощь!"',0,0,0);
             goLocation("town")
         })
+    }else if (eventCount.merCount==5){
+        btnClose()
+        eventCount.merCount=6
+        startEvent('images/town/town.jpg',"images/town/mer.webp", '"Добровольцев собрано: "'+eventCount.volontiers+'. Еще один помощник? Отлично! Как думаешь, справимся?',0,0,0);
+        btnCreate("Выдвигаемся!","Пока нет","","");
+        btn1.addEventListener("click", forestEvent)
+        btn2.addEventListener("click", townEvent)
+        btnShow()
     }
-
-
 }
 
 
@@ -242,7 +288,7 @@ function findDude(){
     let phraseRejection = ['"Ууу… Завтра это будет болеть". Чувак больно избивает вас кулаками',
         '"Ты, вероятно, и не думал, что тебе суждено умереть сегодня… Сюрприз!!!". Чувак обливает вас бензином. Спичка. Вжух. И где он достал бензин в средневековье?',
         '"Теперь цветочки будут расти быстрее...". Чтож, это было унизительно.',
-        '"Вы, вероятно, думаете, что я не очень хороший человек…". С этими словами чувак в вас затвердевшим грязным носком.',
+        '"Вы, вероятно, думаете, что я не очень хороший человек…". С этими словами чувак кидает в вас затвердевшим грязным носком. Больно.',
         '"Не волнуйся, ты просто уснешь." Чувак прицельно бьет вас лопатой по лицу.',]
 
     let phraseConsent = ['"ДА, ДЕТКА!!! Я — КОРОЛЬ ЯЩЕРИЦ!!!". Кажется он доволен, уходим.',

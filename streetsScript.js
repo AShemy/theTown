@@ -78,6 +78,7 @@ let eventCount = {
     clickWood: 0,
     correctAnswers: 0,
     merCount: 0,
+    volontiers:0,
 }
 
 
@@ -186,7 +187,6 @@ function findFight(){
         let randNum = Math.floor(Math.random()*enemyList.length)
         enemy = enemyList[randNum]
     }
-    //document.getElementById("enemyHp").innerText = enemy.hp + " из " + enemy.hpMax;
     startEvent("images/forest/forestBg.jpg", enemy.img1, "На вас набрасывается "+enemy.name,0,0,0)
 }
 
@@ -247,7 +247,6 @@ function findBoss(text, boss, bgimg){
     btnClose()
 
     enemy = boss
-    //document.getElementById("enemyHp").innerText = enemy.hp + " из " + enemy.hpMax;
     startEvent(bgimg, enemy.img1, text,0,0,0)
 
     btnCreate("Сражаться","","","")
@@ -484,6 +483,73 @@ function fightStatUp(stat) {
     }
 }
 
+barWidth = 50
+
+function freeCaveStert(){
+    btnClose()
+
+    setTimeout(() => {
+        endElementAnimation()
+        document.getElementById("charImg").style.display = "none";
+        document.getElementById("textBox").style.display = "none";
+        document.getElementById("buttonBox").style.display = "none";
+        document.getElementById("myProgress").style.display = "none";
+        btnCreate("Разбирать","Сдаться","","")
+        document.getElementById("fist").appendChild(btn1);
+        document.getElementById("fist").appendChild(btn2);
+        document.getElementById("battleScene").style.display = "block";
+        document.getElementById("enemyImage").style.background = 'url("images/forest/cave.webp") center center no-repeat';
+        document.getElementById("enemyImage").style.backgroundRepeat = "no-repeat";
+        document.getElementById("enemyImage").style.backgroundPosition = "center";
+        document.getElementById("enemyImage").style.backgroundSize = "contain";
+        document.getElementById("enemyBar").style.width = barWidth+'%';
+        document.getElementById("enemyBar").style.transition = "all 0.1s ease";
+
+        btn1.addEventListener('click', barPlus)
+        btn2.addEventListener('click', function () {
+            outOfBattle()
+            goHub()
+        })
+
+        bar()
+    })
+
+
+}
+
+function barPlus(){
+    let x = Math.floor(Math.random() * eventCount.volontiers*1.5)+1;
+    barWidth+=x;
+    document.getElementById("enemyBar").style.width = barWidth+'%';
+    console.log("Сила добычи: ",x)
+    console.log("Прогресс", barWidth)
+}
+
+function bar() {
+    let timer = setInterval(() => {
+        if (barWidth > 0 && barWidth < 100) {
+            if (barWidth > 0) {barWidth--;}
+            document.getElementById("enemyBar").style.width = barWidth+'%';
+
+            if (barWidth >= 75){
+                document.getElementById("enemyBar").style.background = "#39a614";
+            }else if (barWidth < 75 && hero.hp >= 40){
+                document.getElementById("enemyBar").style.background = "#a69314";
+            }else if (barWidth<40){
+                document.getElementById("enemyBar").style.background = "#a61414";
+            }
+        }else if (barWidth >= 100) {
+            clearInterval(timer);
+            outOfBattle()
+            startEvent("images/forest/forestBg.jpg", "images/forest/cave2.webp", '"Дело сделано!"', 0, 0, 0)
+        }
+    }, 100);
+}
+
+
+
+
+
 //=======================================Главная петля. Выбор случайного события========================================
 //                          ------------------------------------------------------------------
 //                                          ---------------------------------
@@ -501,7 +567,13 @@ function townEvent(){
             listOfIndex.add(rndNum);
             thatDay.push(events[rndNum]);
         }
-        thatDay[Math.floor(Math.random() * 10)] = findMer;
+        if (eventCount.merCount==5){
+            thatDay[3] = findMer;
+            thatDay[7] = findMer;
+        }else{
+            thatDay[Math.floor(Math.random() * 10)] = findMer;
+        }
+
     }
 
     hero.location = "town"
@@ -570,11 +642,18 @@ function forestEvent() {
         startEvent("images/forest/forestBg.jpg", "images/town/guard.webp", '"Гражданин, дальше ходу нет! По приказу главы города проход в лес закрыт! Возвращайся в город."', 0, 0, 0)
         goLocation('hub')
         return;
-    }
-    if (eventCount.merCount == 3 && forestLoopCount==11) {
+    }else if (eventCount.merCount >= 3 && eventCount.merCount < 5 && forestLoopCount==11) {
         startEvent("images/forest/forestBg.jpg", "images/forest/cave.webp", '"Перед вами вход в пещеру. Вход завален камнями и деревянными обломками. Дальше не пройти. Стоит пообщаться с главой города Уильямом"', 0, 0, 0)
         eventCount.merCount = 4
+        document.getElementById("mainQuest").innerText="Задание: Рассказать о завале Уильяму, главе города";
         goLocation('hub')
+        return;
+    }else if ((eventCount.merCount==5 || eventCount.merCount==6) && forestLoopCount==11) {
+        btnClose()
+        startEvent("images/forest/forestBg.jpg", "images/forest/cave.webp", "Ну чтож, пора за работу! Помощников найдено: "+eventCount.volontiers ,0,0,0)
+        btnCreate("Работаем!","","","")
+        btn1.addEventListener('click', freeCaveStert)
+        btnShow()
         return;
     }
 
@@ -597,7 +676,6 @@ function forestEvent() {
     } else if (forestLoopCount % 10 == 1 && forestLoopCount != 1) {
         findHunter()
     } else {
-
         let rndNum = Math.random()
         if (hero.hp <= 0) {
             death()
@@ -673,6 +751,7 @@ function goTavern(){
         startEvent("https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", 'images/keeper.webp','Вы заходите в таверну. Лука - хозяин таверны, взял письмо, прочитал и удивленно вскинул брови. "Чтож... Уильям попросил обеспечить тебе ночлег и еду, так что располагайся"',0,0,0)
         btnClose()
         eventCount.merCount=2
+        document.getElementById("mainQuest").innerText="Задание: Заработать 10 репутации";
     }else{
         startEvent("https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", '',"Вы заходите в таверну. Лука - хозяин таверны, любезно позволяет вам ночевать здесь",0,0,0)
         btnClose()

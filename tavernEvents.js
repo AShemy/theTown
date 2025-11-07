@@ -120,15 +120,16 @@ function findGossip(){
     let rndNum = Math.floor(Math.random()*listOfGossip.length);
     startEvent("https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", "images/keeper.webp", listOfGossip[rndNum], 0,0,0)
     btnClose()
-    btnCreate("Сидеть дальше","","","")
+    btnCreate("Сидеть дальше","Уйти","","")
     btnShow()
     btn1.addEventListener("click", tavernEvent)
+    btn2.addEventListener("click", goTavern)
 }
 
 function findCompany(){
     startEvent("https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", '', "Вам стало скучно. В конце зала вы видите шумную компанию. Попробуете присоединиться к ним?",0,0,0)
     btnClose()
-    btnCreate("Присоединиться","Сидеть дальше","","")
+    btnCreate("Присоединиться","Сидеть дальше","Уйти","")
     btnShow()
     btn1.addEventListener("click", function (){
         let rndNum = Math.floor(Math.random()*21);
@@ -150,15 +151,17 @@ function findCompany(){
         goLocation("tavern")
     })
     btn2.addEventListener("click", tavernEvent)
+    btn3.addEventListener("click", goTavern)
 }
 
 function findSailor(){
     startEvent("https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", "images/sailor.png", 'За столом сидит скучающий старый моряк. "Эй ты! Как там тебя... сыграем в кости?"',0,0,0)
     btnClose()
-    btnCreate("Сыграть","Далее","","")
+    btnCreate("Сыграть","Далее","Уйти","")
     btnShow()
     btn1.addEventListener("click", cubeGame);
     btn2.addEventListener("click", tavernEvent)
+    btn3.addEventListener("click", goTavern)
 }
 
 function cubeGame(){

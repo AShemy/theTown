@@ -89,7 +89,8 @@ function ggBeggar(stat, price){
 
 //Обновление статов на экране
 function rewriteStats(){
-    //document.getElementById("hp").innerText = hero.hp;
+
+    // полоски статов - здоровье
     document.getElementById("ggBar").style.width = hero.hp + "%";
     ggBar.style.background = 'url("images/icons/hp.png") left center no-repeat';
     ggBar.style.backgroundSize = 'contain';
@@ -101,7 +102,7 @@ function rewriteStats(){
         ggBar.style.background = "#a61414";
     }
 
-    //document.getElementById("hunger").innerText = hero.hunger;
+    // полоски статов - голод
     document.getElementById("hungerBar").style.width = hero.hunger + "%";
     if (hero.hunger >= 75){
         hungerBar.style.background = "#ffaf00";
@@ -111,6 +112,7 @@ function rewriteStats(){
         hungerBar.style.background = "#870101";
     }
 
+    // текстовые статы - репутация и здоровье
     document.getElementById("rep").innerText = hero.rep;
     hero.coins = Math.floor(hero.coins*10)/10
     document.getElementById("coins").innerText = hero.coins;
@@ -120,6 +122,11 @@ function rewriteStats(){
     document.getElementById("heroRep").innerText = "Репутация: "+hero.rep;
     document.getElementById("heroDmg").innerText = "Урон: "+hero.dmg;
     document.getElementById("heroSpeed").innerText = "Скорость: "+hero.speed/1000 + " секунд";
+
+    const questLine = ["Пройтись по городу","Отнести письмо в таверну","Заработать 10 репутации","Разведать лес","Сообщить Уильяму о завале","Найти добровольцев или разобрать завал самому. Добровольцев собрано: "+eventCount.volontiers,"",]
+    document.getElementById("mainQuest").innerText="Задание: "+questLine[eventCount.merCount];
+
+    document.getElementById("numberQuest").innerText = "Номер квеста: "+eventCount.merCount;
 }
 
 function btnCreate(buttonText1, buttonText2, buttonText3, buttonText4){
@@ -264,4 +271,11 @@ function plusMer(){
     eventCount.merCount++;
     document.getElementById("merProfile").innerHTML = "Мер: "+ eventCount.merCount;
 }
+
+function plusVolon(){
+    eventCount.volontiers++;
+    document.getElementById("volonProfile").innerHTML = "Волонтеры: "+ eventCount.volontiers;
+
+}
+
 

@@ -302,6 +302,7 @@ button img {
     display: none;
     top: 10%;
     left: 18%;
+    overflow-y: scroll;
 }
 
 #heroProfile p {
