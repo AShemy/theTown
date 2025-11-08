@@ -595,9 +595,9 @@ function townEvent(){
         console.log(thatDay[loopCount]);
         console.log("круг: "+loopCount)
 
-        //thatDay[loopCount]()
+        thatDay[loopCount]()
         //events[14]()
-        findMer()
+        //findMer()
         loopCount++;
     }else{
         hero.day++;
@@ -780,4 +780,5 @@ function goHub(){
     btn2.addEventListener("click", goTavern);
     btn3.addEventListener("click", forestEvent);
 }
+
 
