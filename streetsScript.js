@@ -595,8 +595,9 @@ function townEvent(){
         console.log(thatDay[loopCount]);
         console.log("круг: "+loopCount)
 
-        thatDay[loopCount]()
+        //thatDay[loopCount]()
         //events[14]()
+        findMer()
         loopCount++;
     }else{
         hero.day++;
@@ -648,7 +649,7 @@ function forestEvent() {
         document.getElementById("mainQuest").innerText="Задание: Рассказать о завале Уильяму, главе города";
         goLocation('hub')
         return;
-    }else if ((eventCount.merCount==5 || eventCount.merCount==6) && forestLoopCount==11) {
+    }else if (eventCount.merCount==5 && forestLoopCount==11) {
         btnClose()
         startEvent("images/forest/forestBg.jpg", "images/forest/cave.webp", "Ну чтож, пора за работу! Помощников найдено: "+eventCount.volontiers ,0,0,0)
         btnCreate("Работаем!","","","")

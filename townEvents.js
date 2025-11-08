@@ -45,7 +45,6 @@ function findMer(){
         btnCreate("Ладно", "","","");
         btnShow()
         eventCount.merCount=1;
-        //document.getElementById("mainQuest").innerText="Задание: Отнести письмо в таверну";
         btn1.addEventListener("click", townEvent)
     }else if (eventCount.merCount==1){
         startEvent('images/town/town.jpg',"images/town/mer.webp", '"Не забудь отнести письмо Луке - хозяину таверны"',0,0,0);
@@ -136,7 +135,6 @@ function merQuest(){
             btnClose()
             startEvent('images/town/town.jpg',"images/town/mer.webp", '"Спасибо тебе, авантюрист. Ну, не будем терять ни минуты!"',0,0,0);
             eventCount.merCount = 5;
-            //document.getElementById("mainQuest").innerText="Задание: Найти добровольцев или разобрать завал самому. Добровольцев собрано: "+eventCount.volontiers;
             goLocation('town')
         })
         btn2.addEventListener("click", function (){
@@ -145,8 +143,8 @@ function merQuest(){
             goLocation("town")
         })
     }else if (eventCount.merCount==5){
+        eventCount.volontiers++;
         btnClose()
-        eventCount.merCount=6
         startEvent('images/town/town.jpg',"images/town/mer.webp", '"Добровольцев собрано: "'+eventCount.volontiers+'. Еще один помощник? Отлично! Как думаешь, справимся?',0,0,0);
         btnCreate("Выдвигаемся!","Пока нет","","");
         btn1.addEventListener("click", forestEvent)
