@@ -771,6 +771,7 @@ function goPrison(){
 }
 
 function goHub(){
+    loopCount=0
     startEvent("images/hub.jpg", "","День "+hero.day+". Куда отправляемся?",0,0,0)
     btnClose()
     btnCreate("<img src='images/icons/rep.png'/>В Город", "<img src='images/icons/hp.png'/><img src='images/icons/hunger.webp'/>В Таверну", "<img src='images/icons/dmg.webp'/>В Лес", "")
@@ -780,5 +781,6 @@ function goHub(){
     btn2.addEventListener("click", goTavern);
     btn3.addEventListener("click", forestEvent);
 }
+
 
 
