@@ -90,6 +90,7 @@ function findHealer(){
     btn2.addEventListener("click",goTavern)
 }
 
+//===================События=====================
 function findGossip(){
     listOfGossip = [
         '"В лесу много добычи, это да. Но и много опасностей. Я бы не ходил туда с голыми кулаками."',

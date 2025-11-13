@@ -154,7 +154,6 @@ function merQuest(){
 }
 
 
-
 //====================Торговец=================================
 function findMerchant(){
     btnClose()
@@ -423,9 +422,6 @@ function woundedThief(){
     btnShow()
 }
 
-
-
-
 //===========================Бродяга===============================
 //=КМБ
 function findKMB(){
@@ -607,9 +603,60 @@ function fireBeggar(){
     btn2.addEventListener("click", townEvent)
 }
 
+function fishingBeggar(){
+    let rndNum = Math.floor(Math.random() * 7)+3
+    btnClose()
+    startEvent('images/town/town.jpg',"images/town/NoName.png", '"Э, мужик! Наживка для рыбалки не интересует? Сегодня всего '+rndNum+' монет за одну"',0,0,0);
+    btnCreate("Давай!", "Пройти мимо", "","");
+    btnShow()
+    btn1.addEventListener("click", function () {
+        btnClose()
+        btnCreate("Добавить", "Убавить", "Беру", "");
+        if (depositArena < rndNum) {
+            btn2.disabled = true;
+        }
+        if (hero.coins < rndNum) {
+            btn1.disabled = true;
+        }
+        btnShow()
 
+        btn1.addEventListener("click", function () {
+            hero.coins -= rndNum
+            depositArena += rndNum;
+            document.getElementById("text").innerText = "Наживки: " + Math.floor(depositArena/rndNum);
+            if (depositArena > 0) {
+                btn2.disabled = false;
+            }
+            rewriteStats()
+            btn1.disabled = ggBeggar(hero.coins, rndNum);
+        });
+        btn2.addEventListener("click", function () {
+            if (depositArena < rndNum) {
+                btn2.disabled = true;
+            } else {
+                hero.coins += rndNum;
+                depositArena -= rndNum;
+            }
+            document.getElementById("text").innerText = "Наживки: " + Math.floor(depositArena/rndNum);
+            rewriteStats();
+            btn1.disabled = ggBeggar(hero.coins, rndNum);
+            if (depositArena == 0) {
+                btn2.disabled = true;
+            }
+        });
+        btn3.addEventListener("click", function () {
+            btnClose()
+            startEvent('images/town/town.jpg',"images/town/NoName.png", '"Поздравляю с приобретением. Удачной рыбалки!"',0,0,0);
+            inventory.bait += depositArena/rndNum
+            depositArena = 0
+            btnCreate("Бывай!", "", "","");
+            btnShow()
+            btn1.addEventListener("click", townEvent)
+        })
+    })
+    btn2.addEventListener("click", townEvent)
 
-
+}
 
 // =========================Бабушка=======================
 //=Подвал

@@ -117,11 +117,19 @@ function rewriteStats(){
     hero.coins = Math.floor(hero.coins*10)/10
     document.getElementById("coins").innerText = hero.coins;
 
-    document.getElementById("heroHp").innerText = "Здоровье: "+ hero.hp;
-    document.getElementById("heroCoins").innerText = "Монеты: "+ hero.coins;
-    document.getElementById("heroRep").innerText = "Репутация: "+hero.rep;
-    document.getElementById("heroDmg").innerText = "Урон: "+hero.dmg;
-    document.getElementById("heroSpeed").innerText = "Скорость: "+hero.speed/1000 + " секунд";
+    document.getElementById("heroHp").innerText = 'Здоровье: '+ hero.hp +"  |  | Монеты: "+ hero.coins + "  |  | Репутация: "+hero.rep;
+    document.getElementById("heroDmg").innerText = "Сытость: "+hero.hunger +" |  | Урон: "+hero.dmg;
+    //document.getElementById("heroSpeed").innerText = "Скорость: "+hero.speed/1000 + " секунд";
+
+    let textInv = document.getElementById("inventory")
+    textInv.innerText = "В инвентаре: "
+    if (inventory.fish != 0){
+        textInv.innerText += "Рыба - "+ inventory.fish+" шт. ";
+    }
+    if (inventory.bait != 0){
+        textInv.innerText += "Наживка - "+ inventory.bait+" шт. ";
+    }
+
 
     const questLine = ["Пройтись по городу","Отнести письмо в таверну","Заработать 10 репутации","Разведать лес","Сообщить Уильяму о завале","Найти добровольцев или разобрать завал самому. Добровольцев собрано: "+eventCount.volontiers,"",]
     document.getElementById("mainQuest").innerText="Задание: "+questLine[eventCount.merCount];

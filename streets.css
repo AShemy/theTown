@@ -84,6 +84,29 @@
     transition: all 2s;
 }
 
+/*--------------------------------Рыбалочка---------------------*/
+.fishingDiv {
+    background-color: grey;
+    width: 80%;
+    width-max: 200px;
+    width-min: 100px;
+    height: 2vh;
+    border-radius: 20px;
+    border: 2px solid white;
+    display: block;
+    margin: auto;
+    margin-top: 2%;
+    box-shadow: 10px 10px 10px black;
+    overflow: hidden;
+}
+
+.fishingDivBar {
+    width: 50%;
+    height: 100%;
+    background: #379700;
+    transition: width 0.5s;
+}
+
 /*--------------------------------Здоровье врага---------------*/
 #enemyHpBar {
     background-color: grey;
@@ -131,25 +154,24 @@ body {
 }
 
 .menu button {
-    width: 5%;
+    margin-top: 2%;
+    margin-left: 2%;
+    margin-right: 2%;
+    width: 8%;
+    height: 100%;
+    background-color: #d4e4f6;
+    background-size: 60%;
+    border: none;
+    border-radius: 20px;
+    box-shadow: 10px 10px 10px black;
 }
 
 .btnMusic {
-    width: 9%;
-    height: 80%;
-    background: url("music.png");
-    background-size: contain;
-    border: none;
-    background-repeat: no-repeat;
+    background: url("music.png") center center no-repeat;
 }
 
 .btnProfile {
-    width: 9%;
-    height: 80%;
-    background: url("images/icons/profile.png");
-    background-size: contain;
-    border: none;
-    background-repeat: no-repeat;
+    background: url("images/icons/profile.png") center center no-repeat;
 }
 
 .stats {
@@ -232,13 +254,6 @@ button img {
     height: 35%;
 }
 
-
-#fightScene {
-    width: 100%;
-    height: 100%;
-    background: url("https://avatars.mds.yandex.net/i?id=6011f9ffe6bd29aecb49239f94e2afdd_l-12613260-images-thumbs&n=13");
-    background-size: cover;
-}
 
 #enemyImage{
     width: 35vw;
@@ -370,7 +385,9 @@ button img {
     }
 
     .menu button {
-        width: 5%;
+        width: 10%;
+        margin-right: 3%;
+        background-size: 60%;
     }
 
     .stats {

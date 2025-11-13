@@ -12,12 +12,12 @@
     <!-- ================================== ***Основа***=================================== -->
         <div id="heroProfile">
             <p id="heroHp">Здоровье: 100</p>
-            <p id="heroCoins">Монеты: 3</p>
-            <p id="heroRep">Репутация: 0</p>
-
+            <!--<p id="heroCoins">Монеты: 3</p>
+            <p id="heroRep">Репутация: 0</p>-->
             <p id="heroDmg">Урон: 1</p>
-            <p id="heroSpeed">Скорость : 0.5</p>
-            <p id="mainQuest">Задание: Пройдись по городу</p>
+            <p id="mainQuest"><b>Задание:</b> Пройдись по городу</p>
+            <p id="inventory">В инвентаре: </p>
+
             <p id="numberQuest">Номер квеста: </p>
 
             <button onclick="cheatDMG()">+100 урона</button>
@@ -26,14 +26,12 @@
             <button onclick="cheatCOINplus()">+100 монет</button>
             <button onclick="cheatCOINminus()">-100 монет</button>
             <button onclick="cheatRESTART()">Начальные значения</button>
-            <button onclick="openForest()">Открыть лес</button>
             <button onclick="plusMer()" id="merProfile">Плюс событие мера</button>
             <button onclick="plusVolon()" id="volonProfile">Плюс доброволец</button>
         </div>
 
         <div class="menu">
             <button onclick="showProfile()" class="btnProfile"></button>
-
             <div id="stats" class="stats">
                 <img src="images/icons/hp.png" alt="Здоровье"/>
                 <div class="ggMainBar">
@@ -51,20 +49,17 @@
                 <img src="images/icons/rep.png"/>
                 <p id="rep">0</p>
             </div>
-
             <button onclick="musicPlay()" class="btnMusic"></button>
-
         </div>
 
-        <div class="characterImage" id="charImg">
-        </div>
+        <div class="characterImage" id="charImg"></div>
 
 
-        <div id="textBox">
-            <p id="text">День 1. Куда отправимся?</p>
-        </div>
+        <div id="textBox"><p id="text">День 1. Куда отправимся?</p></div>
+
 
         <div class="buttonbox" id="buttonBox"></div>
+
 
 
         <div id="battleScene">

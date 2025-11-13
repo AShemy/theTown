@@ -5,9 +5,6 @@ let hero = {
     coins:3,
     hunger: 40,
     dmg:5,
-    attention: 1,
-    agility: 1,
-    speech: 1,
     speed: 150,
     day: 1,
     location: "",
@@ -65,6 +62,12 @@ let hero = {
         }
     }
 }
+
+let inventory = {
+    fish: 0,
+    bait: 0,
+}
+
 let thatDay = []
 
 let deposit = 0;
@@ -79,6 +82,7 @@ let eventCount = {
     correctAnswers: 0,
     merCount: 0,
     volontiers:0,
+    rode: 0,
 }
 
 
@@ -146,21 +150,21 @@ function enemyConstructor(enemyName,enemyHp,enemyDmg,enemySpeed,enemyImg,enemyRe
     this.giveReward = function() { hero.coins +=this.reward; };
 }
 
-let spider = new enemyConstructor("Паук",10,1,500,"images/enemy/spider.png",1)
-let rat = new enemyConstructor("Крыса",15,2,1000,"images/enemy/rat.png",2)
-let dog = new enemyConstructor("Одичавшая собака",20,3,1500,"images/enemy/dog.png",5)
+let spider = new enemyConstructor("Паук",15,2,500,"images/enemy/spider.png",1)
+let rat = new enemyConstructor("Крыса",20,3,1000,"images/enemy/rat.png",2)
+let dog = new enemyConstructor("Одичавшая собака",30,4,1500,"images/enemy/dog.png",5)
 
 
-let disertir = new enemyConstructor("Дезертир", 30,4,1000,"images/town/guard.webp",7)
-let robber = new enemyConstructor("Грабитель",25,5,1000,"images/town/thief.png",8)
-let skeleton = new enemyConstructor("Скелет",30,6,1000,"images/enemy/skeleton.png",10)
+let disertir = new enemyConstructor("Дезертир", 40,5,1000,"images/town/guard.webp",7)
+let robber = new enemyConstructor("Грабитель",30,6,1000,"images/town/thief.png",8)
+let skeleton = new enemyConstructor("Скелет",40,7,1000,"images/enemy/skeleton.png",10)
 
 let guard = new enemyConstructor("Стражник", 100,10,1000,"images/town/guard.webp",7)
-let strider = new enemyConstructor("Бродяга", 30,3,1200,"images/town/NoName.png",5)
+let strider = new enemyConstructor("Бродяга", 35,4,1200,"images/town/NoName.png",5)
 
 
 let evilGranny = new enemyConstructor("Демоническая бабка",100,20,3000,"images/town/evilgranny.webp",50)
-let ratKing = new enemyConstructor("Крысинный король",40,3,1500,"images/enemy/ratKing.png",30)
+let ratKing = new enemyConstructor("Крысинный король",50,4,1400,"images/enemy/ratKing.png",30)
 
 
 // ----------------------------------------- Боевка---------------------------------------------
@@ -199,6 +203,7 @@ function fightScene(){
         document.getElementById("textBox").style.display = "none";
         document.getElementById("buttonBox").style.display = "none";
         document.getElementById("battleScene").style.display = "block";
+        document.getElementById("myProgress").style.display = "block";
         document.getElementById("enemyImage").style.background = 'url('+enemy.img1+') center center no-repeat';
         document.getElementById("enemyImage").style.backgroundRepeat = "no-repeat";
         document.getElementById("enemyImage").style.backgroundPosition = "center";
@@ -436,32 +441,29 @@ function calmForest(){
 }
 
 function findAltar() {
-    startEvent("images/forest/forestBg.jpg","images/forest/altar.png","Вы находите алтарь со светящимся знаком репутации. Пришло время усилиться. Ваш урон: "+hero.dmg+". Скорость атаки: раз в " + hero.speed/1000+"с", 0,0,0)
+    startEvent("images/forest/forestBg.jpg","images/forest/altar.png","Вы находите алтарь со светящимся знаком репутации. Пришло время усилиться. Ваш урон: "+hero.dmg, 0,0,0)
     btnClose()
-    btnCreate('Скорость -' + priceUpgrade + '<img src="images/rep.png"/>', 'Урон -' + priceUpgrade + '<img src="images/rep.png"/>',"Идти дальше","")
+    btnCreate('Урон -' + priceUpgrade + '<img src="images/rep.png"/>',"Идти дальше","","")
     btnShow()
     if (hero.rep<priceUpgrade){
         btn1.disabled = true;
-        btn2.disabled = true;
+        //btn2.disabled = true;
     }else{
         btn1.disabled = false;
-        btn2.disabled = false;
+        //btn2.disabled = false;
     }
-    btn1.addEventListener('click', function(){})
-    btn2.addEventListener('click', function(){
+    btn1.addEventListener('click', function(){
         hero.dmg = Math.floor(hero.dmg*1.1*10)/10
-        document.getElementById("text").innerText = "Символ вспыхнул ярче. Теперь люди меньше вам доверяют, но вы стали сильнее. Ваш урон: "+hero.dmg+". Скорость атаки: раз в " + Math.floor(hero.speed/100)/10+"с"
+        document.getElementById("text").innerText = "Символ вспыхнул ярче. Теперь люди меньше вам доверяют, но вы стали сильнее. Ваш урон: "+hero.dmg
         priceUpgrade = Math.floor(priceUpgrade *= 1.2)
-        btn1.innerHTML = 'Скорость -' + priceUpgrade + '<img src="images/icons/rep.png"/>';
-        btn2.innerHTML = 'Урон -' + priceUpgrade + '<img src="images/icons/rep.png"/>';
+        btn1.innerHTML = 'Урон -' + priceUpgrade + '<img src="images/icons/rep.png"/>';
         if (hero.rep<priceUpgrade){
            btn1.disabled = true;
-           btn2.disabled = true;
         }
         hero.rep-=priceUpgrade
         rewriteStats()
     })
-    btn3.addEventListener('click', forestEvent)
+    btn2.addEventListener('click', forestEvent)
 }
 
 function fightStatUp(stat) {
@@ -483,6 +485,7 @@ function fightStatUp(stat) {
     }
 }
 
+//------------Вход в пещеру-------------
 barWidth = 50
 
 function freeCaveStert(){
@@ -513,8 +516,6 @@ function freeCaveStert(){
 
         bar()
     })
-
-
 }
 
 function barPlus(){
@@ -545,9 +546,76 @@ function bar() {
         }
     }, 100);
 }
+//-------------------------------------Рыбалка-------------------------------------
+function findFishing(){
+    startEvent("images/forest/forestBg.jpg","images/forest/lake.png",'Вы находите небольшое озеро. Кажется, это отличное место для рыбалки. Остановимся?',0,0,0)
+    btnClose()
+    btnCreate("Рыбачить","Идти дальше","","")
+    btnShow()
+    btn1.addEventListener('click', startFishing)
+    btn2.addEventListener('click', forestEvent)
+}
 
-
-
+function startFishing(){
+    btnClose()
+    let divMain= document.createElement("div");
+    let divBar= document.createElement("div");
+    divMain.classList.add("fishingDiv")
+    divBar.classList.add("fishingDivBar");
+    document.getElementById("buttonBox").appendChild(divMain);
+    divMain.appendChild(divBar);
+    divMain.style.display = "none";
+    startEvent("images/forest/forestBg.jpg","images/forest/lake.png",'Рыбы: '+inventory.fish+'\n Наживки: '+inventory.bait,0,0,0)
+    btnCreate("Закинуть удочку","Тянуть","Хватит","")
+    btnShow()
+    btn2.disabled = true;
+    btn1.addEventListener('click', function () {
+        if (inventory.bait == 0){
+            document.getElementById("text").innerText = 'Наживки нет, сегодня не порыбачим';
+            return
+        }
+        btn1.disabled = true;
+        document.getElementById("text").innerText = 'Рыбы: '+inventory.fish+'\n Наживки: '+inventory.bait+'\nЖдем пока клюнет...';
+        setTimeout(() => {
+            divMain.style.display = "block";
+            let timer = setInterval(() => {
+                if (barWidth > 0 && barWidth < 100) {
+                    btn2.disabled = false;
+                    barWidth--;
+                    divBar.style.width = barWidth+'%';
+                    document.getElementById("text").innerText = 'Рыбы: '+inventory.fish+'\n Наживки: '+inventory.bait+'\n❗❗❗ ТЯНИ ❗❗❗';
+                }else if (barWidth >= 100) {
+                    clearInterval(timer);
+                    barWidth=50;
+                    divBar.style.width = barWidth+'%';
+                    inventory.fish++;
+                    inventory.bait--;
+                    startEvent("images/forest/forestBg.jpg","images/forest/lake.png",'Рыбы: '+inventory.fish+'\n Наживки: '+inventory.bait,0,0,0)
+                    btn2.disabled = true;
+                    btn1.disabled = false;
+                }else{
+                    clearInterval(timer);
+                    barWidth=50;
+                    divBar.style.width = barWidth+'%';
+                    inventory.bait--;
+                    startEvent("images/forest/forestBg.jpg","images/forest/lake.png",'Рыбы: '+inventory.fish+'\n Наживки: '+inventory.bait,0,0,0)
+                    btn2.disabled = true;
+                    btn1.disabled = false;
+                }
+                console.log(barWidth);
+            }, 100);
+        },3000)
+    })
+    btn2.addEventListener('click', function () {
+        let x = Math.floor(Math.random() * 10);
+        barWidth+=x;
+        divBar.style.width = barWidth+'%';
+    })
+    btn3.addEventListener('click', function () {
+        divMain.remove()
+        forestEvent()
+    })
+}
 
 
 //=======================================Главная петля. Выбор случайного события========================================
@@ -555,7 +623,7 @@ function bar() {
 //                                          ---------------------------------
 //Петля города
 function townEvent(){
-    let events = [woundedThief, findTresure, findThief, findKMB, findBasement, findGuard, woodClicker,findBeggar,findArenaBet, findCat, findMerchant, findDude, indulgence, findBuisnessMerchant, fireBeggar] //Массив с функциями
+    let events = [fishingBeggar,woundedThief, findTresure, findThief, findKMB, findBasement, findGuard, woodClicker,findBeggar,findArenaBet, findCat, findMerchant, findDude, indulgence, findBuisnessMerchant, fireBeggar] //Массив с функциями
     let listOfIndex = new Set();
 
     if (loopCount==0){  //Создаем массив без повторяющихся значений
@@ -596,7 +664,7 @@ function townEvent(){
         console.log("круг: "+loopCount)
 
         thatDay[loopCount]()
-        //events[14]()
+        //events[0]()
         //findMer()
         loopCount++;
     }else{
@@ -682,11 +750,14 @@ function forestEvent() {
             death()
             return;
             //---Поляна------------------------------------------
-        }else if (rndNum>=0.1 && rndNum<0.2){
+        }else if (rndNum>=0.12 && rndNum<0.20){
             findGlade()
             //---Спокойный лес-----------------------------------
-        }else if (rndNum>=0 && rndNum<0.1){
+        }else if (rndNum>=0 && rndNum<0.05) {
             calmForest()
+            //---Рыбалка-----------------------------------------
+        }else if (rndNum>=0.05 && rndNum<0.12){
+            findFishing()
             //---Охотник-----------------------------------------
         }else if (rndNum>=0.2 && rndNum<0.3){
             findHunter()
@@ -694,7 +765,6 @@ function forestEvent() {
         }else if (rndNum>=0.3 && rndNum<1) {
             findFight()
         }
-
     }
 }
 
@@ -772,6 +842,7 @@ function goPrison(){
 
 function goHub(){
     loopCount=0
+    console.log("Круг: ",loopCount)
     startEvent("images/hub.jpg", "","День "+hero.day+". Куда отправляемся?",0,0,0)
     btnClose()
     btnCreate("<img src='images/icons/rep.png'/>В Город", "<img src='images/icons/hp.png'/><img src='images/icons/hunger.webp'/>В Таверну", "<img src='images/icons/dmg.webp'/>В Лес", "")
@@ -781,6 +852,4 @@ function goHub(){
     btn2.addEventListener("click", goTavern);
     btn3.addEventListener("click", forestEvent);
 }
-
-
 
