@@ -842,6 +842,7 @@ function goPrison(){
 
 function goHub(){
     loopCount=0
+    forestLoopCount = 0
     console.log("Круг: ",loopCount)
     startEvent("images/hub.jpg", "","День "+hero.day+". Куда отправляемся?",0,0,0)
     btnClose()

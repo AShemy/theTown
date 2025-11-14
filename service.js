@@ -271,8 +271,9 @@ function cheatCOINminus() {
     rewriteStats()
 }
 
-function openForest(){
-    eventCount.merCount = 1;
+function cheatHunger() {
+    hero.hunger = 100
+    rewriteStats()
 }
 
 function plusMer(){
@@ -284,6 +285,12 @@ function plusVolon(){
     eventCount.volontiers++;
     document.getElementById("volonProfile").innerHTML = "Волонтеры: "+ eventCount.volontiers;
 
+}
+
+function goFishing(){
+    inventory.bait = 20;
+    document.getElementById('heroProfile').style.display = 'none'
+    findFishing()
 }
 
 
