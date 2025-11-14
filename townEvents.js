@@ -6,7 +6,7 @@
 function test(){
     btnClose()
     startEvent('images/town/town.jpg',"images/town/персонаж", 'текст события',0,0,0);
-    let rndNum = Math.floor(Math.random()*22)+hero.dmg
+    let rndNum = Math.floor(Math.random()*22)
     console.log(rndNum)
     btnCreate("Кнопка1", "Кнопка2", "","");
     btnShow()
@@ -345,7 +345,7 @@ function findThief(){
     }else{
         btnClose()
         startEvent('images/town/town.jpg',"images/town/thief.png", 'В толпе с вами столкнулся человек. Да он вас обчистил!',0,-8,0);
-        let rndNum = Math.floor(Math.random()*22)+hero.agility;
+        let rndNum = Math.floor(Math.random()*22)
         console.log(rndNum)
         btnCreate("Погнаться", "Закричать", "","");
 
@@ -529,7 +529,7 @@ function findBeggar(){
             btn1.addEventListener("click", townEvent)
             return
         }
-        let rndNum = Math.floor(Math.random()*22)+hero.attention;
+        let rndNum = Math.floor(Math.random()*22)
         if (rndNum >= 0 && rndNum <= 14) {
             startEvent('images/town/town.jpg',"images/town/NoName.png", '"Ик! О-о-о, мое уважение, долгих лет..." Бродяга быстро уходит. Проверив карманы вы поняли, что бродяга стащил у вас пару монет',0,-2,0);
             goLocation("town")
@@ -655,7 +655,6 @@ function fishingBeggar(){
         })
     })
     btn2.addEventListener("click", townEvent)
-
 }
 
 // =========================Бабушка=======================
@@ -724,7 +723,7 @@ function findGuard(){
         criminalScum()
         return
     }
-    let rndNum = Math.floor(Math.random()*22)+hero.attention
+    let rndNum = Math.floor(Math.random()*22)
     startEvent('images/town/town.jpg',"images/town/guard.webp", 'Вас останавливает стражник. "Гражданин! Мы разыскиваем карманника и ты подходишь под описание. Карманы к досмотру!"',0,0,0)
     btnCreate("Согласиться", "Сопротивляться", "", "");
     btn1.addEventListener("click", function() {

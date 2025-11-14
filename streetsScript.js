@@ -623,7 +623,7 @@ function startFishing(){
 //                                          ---------------------------------
 //Петля города
 function townEvent(){
-    let events = [fishingBeggar,woundedThief, findTresure, findThief, findKMB, findBasement, findGuard, woodClicker,findBeggar,findArenaBet, findCat, findMerchant, findDude, indulgence, findBuisnessMerchant, fireBeggar] //Массив с функциями
+    const events = [fishingBeggar,woundedThief, findTresure, findThief, findKMB, findBasement, findGuard, woodClicker,findBeggar,findArenaBet, findCat, findMerchant, findDude, indulgence, findBuisnessMerchant, fireBeggar] //Массив с функциями
     let listOfIndex = new Set();
 
     if (loopCount==0){  //Создаем массив без повторяющихся значений
