@@ -276,6 +276,12 @@ function cheatHunger() {
     rewriteStats()
 }
 
+function cheatFish() {
+    inventory.fish += 1
+    rewriteStats()
+}
+
+
 function plusMer(){
     eventCount.merCount++;
     document.getElementById("merProfile").innerHTML = "Мер: "+ eventCount.merCount;

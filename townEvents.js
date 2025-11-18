@@ -603,58 +603,109 @@ function fireBeggar(){
     btn2.addEventListener("click", townEvent)
 }
 
+//==========================================Рыбак=======================================================
+
+let rndNumBait;
+let rndNumFish
+
 function fishingBeggar(){
-    let rndNum = Math.floor(Math.random() * 7)+3
+    rndNumBait = Math.floor(Math.random() * 7)+3
+    rndNumFish = Math.floor(Math.random() * 9)+5
     btnClose()
-    startEvent('images/town/town.jpg',"images/town/NoName.png", '"Э, мужик! Наживка для рыбалки не интересует? Сегодня всего '+rndNum+' монет за одну"',0,0,0);
-    btnCreate("Давай!", "Пройти мимо", "","");
+    startEvent('images/town/town.jpg',"images/town/fisher.webp", '"Отличный денек для рыбалки! Продам наживку, куплю рыбу. \nНаживка:  '+rndNumBait+' монет. \nРыба: '+rndNumFish+' монет"',0,0,0);
+    btnCreate("Купить наживку", "Продать рыбу", "Не интересует","");
     btnShow()
+    btn1.addEventListener("click", fishingBuyBait);
+    btn2.addEventListener("click", fishingSellFish);
+    btn3.addEventListener("click", townEvent);
+}
+
+function fishingBuyBait(){
+    btnClose()
+    btnCreate("Добавить", "Убавить", "Беру", "");
+    if (depositArena < rndNumBait) {
+        btn2.disabled = true;
+    }
+    if (hero.coins < rndNumBait) {
+        btn1.disabled = true;
+    }
+    btnShow()
+
     btn1.addEventListener("click", function () {
-        btnClose()
-        btnCreate("Добавить", "Убавить", "Беру", "");
-        if (depositArena < rndNum) {
+        hero.coins -= rndNumBait
+        depositArena += rndNumBait;
+        document.getElementById("text").innerText = "Наживки: " + Math.floor(depositArena/rndNumBait);
+        if (depositArena > 0) {
+            btn2.disabled = false;
+        }
+        rewriteStats()
+        btn1.disabled = ggBeggar(hero.coins, rndNumBait);
+    });
+    btn2.addEventListener("click", function () {
+        if (depositArena < rndNumBait) {
+            btn2.disabled = true;
+        } else {
+            hero.coins += rndNumBait;
+            depositArena -= rndNumBait;
+        }
+        document.getElementById("text").innerText = "Наживки: " + Math.floor(depositArena/rndNumBait);
+        rewriteStats();
+        btn1.disabled = ggBeggar(hero.coins, rndNumBait);
+        if (depositArena == 0) {
             btn2.disabled = true;
         }
-        if (hero.coins < rndNum) {
-            btn1.disabled = true;
-        }
+    });
+    btn3.addEventListener("click", function () {
+        btnClose()
+        startEvent('images/town/town.jpg',"images/town/fisher.webp", '"Поздравляю с приобретением. Удачной рыбалки!"',0,0,0);
+        inventory.bait += depositArena/rndNumBait
+        depositArena = 0
+        btnCreate("Бывай!", "", "","");
         btnShow()
-
-        btn1.addEventListener("click", function () {
-            hero.coins -= rndNum
-            depositArena += rndNum;
-            document.getElementById("text").innerText = "Наживки: " + Math.floor(depositArena/rndNum);
-            if (depositArena > 0) {
-                btn2.disabled = false;
-            }
-            rewriteStats()
-            btn1.disabled = ggBeggar(hero.coins, rndNum);
-        });
-        btn2.addEventListener("click", function () {
-            if (depositArena < rndNum) {
-                btn2.disabled = true;
-            } else {
-                hero.coins += rndNum;
-                depositArena -= rndNum;
-            }
-            document.getElementById("text").innerText = "Наживки: " + Math.floor(depositArena/rndNum);
-            rewriteStats();
-            btn1.disabled = ggBeggar(hero.coins, rndNum);
-            if (depositArena == 0) {
-                btn2.disabled = true;
-            }
-        });
-        btn3.addEventListener("click", function () {
-            btnClose()
-            startEvent('images/town/town.jpg',"images/town/NoName.png", '"Поздравляю с приобретением. Удачной рыбалки!"',0,0,0);
-            inventory.bait += depositArena/rndNum
-            depositArena = 0
-            btnCreate("Бывай!", "", "","");
-            btnShow()
-            btn1.addEventListener("click", townEvent)
-        })
+        btn1.addEventListener("click", townEvent)
     })
-    btn2.addEventListener("click", townEvent)
+}
+
+function fishingSellFish(){
+    btnClose()
+    startEvent('images/town/town.jpg',"images/town/fisher.webp", '"Сколько продашь?"',0,0,0);
+
+    btnCreate("Добавить", "Убавить", "Далее", "");
+    if (depositArena <= 0) {btn2.disabled = true;}
+    if (inventory.fish <= 0) {btn1.disabled = true;}
+    btnShow()
+
+    btn1.addEventListener("click", function () {
+        hero.coins += rndNumFish
+        inventory.fish--;
+        depositArena++;
+        document.getElementById("text").innerText = "Рыбы в инвентаре: " + inventory.fish + '\nВыставлено на продажу: '+depositArena;
+        if (inventory.fish<=0){btn1.disabled = true}
+        if (depositArena >0) {btn2.disabled = false;}
+        rewriteStats()
+    });
+    btn2.addEventListener("click", function () {
+       if (inventory.fish>0){btn1.disabled = false;}
+           if (depositArena <=0) {
+               btn2.disabled = true;
+           } else {
+               btn2.disabled = false;
+               hero.coins -= rndNumFish;
+               depositArena -= 1;
+               if (depositArena <=0) {btn2.disabled = true;}
+               inventory.fish++
+           }
+           document.getElementById("text").innerText = "Рыбы в инвентаре: " + inventory.fish + '\nВыставлено на продажу: '+depositArena;
+           rewriteStats();
+       });
+    btn3.addEventListener("click", function () {
+        btnClose()
+        startEvent('images/town/town.jpg',"images/town/fisher.webp", '"Отличная сделка, пока!"',0,0,0);
+        depositArena = 0
+        btnCreate("Бывай!", "", "","");
+        btnShow()
+        btn1.addEventListener("click", townEvent)
+    })
 }
 
 // =========================Бабушка=======================
@@ -860,6 +911,24 @@ function findArenaBet(){
     btn1.addEventListener("click", makeBet)
     btn2.addEventListener("click", makeBet)
     btn3.addEventListener("click", townEvent);
+}
+
+function townTavern(){
+    btnClose()
+    startEvent("images/town/town.jpg", "images/tavern.webp", 'Прогуливаясь по городу вы встречаете таверну. Зайдем?',0,0,0)
+    btnCreate("В Таверну", "В Город", "","");
+    btnShow()
+    btn1.addEventListener("click", goTavern)
+    btn2.addEventListener("click", townEvent);
+}
+
+function townForest(){
+    btnClose()
+    startEvent("images/town/town.jpg", "images/townForest.webp", 'Вы набрели на выход из города. Отправимся в лес?',0,0,0)
+    btnCreate("В Лес", "В Город", "","");
+    btnShow()
+    btn1.addEventListener("click", forestEvent)
+    btn2.addEventListener("click", townEvent);
 }
 
 // ==========================Странный кот (сфинкс)==============

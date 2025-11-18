@@ -556,6 +556,8 @@ function findFishing(){
     btn2.addEventListener('click', forestEvent)
 }
 
+let x;    //---------че ловим------------
+
 function startFishing(){
     btnClose()
     let divMain= document.createElement("div");
@@ -565,17 +567,37 @@ function startFishing(){
     document.getElementById("buttonBox").appendChild(divMain);
     divMain.appendChild(divBar);
     divMain.style.display = "none";
-    startEvent("images/forest/forestBg.jpg","images/forest/lake.png",'Рыбы: '+inventory.fish+'\n Наживки: '+inventory.bait,0,0,0)
+    startEvent("images/forest/forestBg.jpg","images/forest/lake.png",'Наживки: '+inventory.bait,0,0,0)
     btnCreate("Закинуть удочку","Тянуть","Хватит","")
     btnShow()
     btn2.disabled = true;
+
     btn1.addEventListener('click', function () {
         if (inventory.bait == 0){
             document.getElementById("text").innerText = 'Наживки нет, сегодня не порыбачим';
             return
         }
+        let boot = {img: "images/forest/boot.webp", power: 15, name: "старый ботинок. Вряд ли он пригодится"}
+        let amulet = {img: "images/forest/amulet.webp", power: 6, name: "Амулет силы. Взяв его в руки вы чувстуете небывалую мощь, +0.5 урона."}
+        let fish = {img: "images/forest/fish.webp", power: 9, name: "Рыба. Самая обычная и довольно вкусная, если верно приготовить. Можно продать"}
+
+        let rndNum = Math.random();
+        console.log(rndNum)
+        if (0<= rndNum && rndNum <=0.1){
+            x = amulet;
+            console.log("АМУЛЕТ");
+        }
+        else if (0.1<rndNum && rndNum<=0.7){
+            x = fish;
+            console.log("РИБА");
+        }
+        else if (0.7<rndNum){
+            x = boot;
+            console.log("БОТ");
+        }
+
         btn1.disabled = true;
-        document.getElementById("text").innerText = 'Рыбы: '+inventory.fish+'\n Наживки: '+inventory.bait+'\nЖдем пока клюнет...';
+        document.getElementById("text").innerText = 'Наживки: '+inventory.bait+'\nЖдем пока клюнет...';
         setTimeout(() => {
             divMain.style.display = "block";
             let timer = setInterval(() => {
@@ -583,14 +605,16 @@ function startFishing(){
                     btn2.disabled = false;
                     barWidth--;
                     divBar.style.width = barWidth+'%';
-                    document.getElementById("text").innerText = 'Рыбы: '+inventory.fish+'\n Наживки: '+inventory.bait+'\n❗❗❗ ТЯНИ ❗❗❗';
+                    document.getElementById("text").innerText = 'Наживки: '+inventory.bait+'\n❗❗❗ ТЯНИ ❗❗❗';
                 }else if (barWidth >= 100) {
                     clearInterval(timer);
                     barWidth=50;
                     divBar.style.width = barWidth+'%';
-                    inventory.fish++;
+                    if (x==fish){inventory.fish++;}
+                    else if (x==amulet){hero.dmg += 0.5}
                     inventory.bait--;
-                    startEvent("images/forest/forestBg.jpg","images/forest/lake.png",'Рыбы: '+inventory.fish+'\n Наживки: '+inventory.bait,0,0,0)
+                    rewriteStats()
+                    startEvent( "images/forest/forestBg.jpg",x.img,'Вы поймали: '+x.name+'\n Наживки: '+inventory.bait,0,0,0)
                     btn2.disabled = true;
                     btn1.disabled = false;
                 }else{
@@ -607,15 +631,113 @@ function startFishing(){
         },3000)
     })
     btn2.addEventListener('click', function () {
-        let x = Math.floor(Math.random() * 10);
-        barWidth+=x;
+        let pwr = Math.floor(Math.random() * x.power);
+        barWidth+=pwr;
         divBar.style.width = barWidth+'%';
     })
     btn3.addEventListener('click', function () {
         divMain.remove()
+        findCooking()
+    })
+}
+
+
+let divMain;
+let divBar;
+let indicator;
+let indicatorRange = 5;
+let speed = 2;
+let timerello;
+
+function findCooking(){
+    divMain= document.createElement("div");
+    divBar= document.createElement("div");
+    indicator= document.createElement("div");
+    divMain.classList.add("mainBar")
+    divBar.classList.add("winBar");
+    indicator.classList.add("indicator");
+    document.getElementById("buttonBox").appendChild(divMain);
+    divMain.appendChild(divBar);
+    divMain.appendChild(indicator);
+    divMain.style.display = "none";
+    btnClose()
+    startEvent("images/forest/forestBg.jpg","images/forest/bonefire.webp",'Если ты голоден, можешь приготовить рыбу. Готовим?',0,0,0)
+    btnCreate("Готовить","Идти дальше","","")
+    btnShow()
+    btn1.addEventListener('click', function () {
+        if (inventory.fish>0){startCoocking()}
+        else{document.getElementById("text").innerText = "У вас нет рыбы для готовки"}
+    })
+    btn2.addEventListener('click', function (){
+        divMain.remove();
         forestEvent()
     })
 }
+
+function startCoocking(){
+    btnClose()
+    startEvent("images/forest/forestBg.jpg","images/forest/bonefire.webp",'Нажми, когда ползунок попадет в зеленую область',0,0,0)
+    divMain.style.display = "block";
+    btnCreate("Новая рыба","Жарить","Выйти","");
+    btn2.disabled = true;
+    btnShow()
+    btn1.addEventListener('click', function (){
+        if (inventory.fish<=0){
+            startEvent("images/forest/forestBg.jpg","images/forest/bonefire.webp",'У вас больше нет рыбы',0,0,0)
+            return
+        }
+        btn1.disabled = true;
+        btn2.disabled = false;
+        clearInterval(timerello);
+        winRange= Math.floor(Math.random() * 20)+10;
+        rangeMarginVar = Math.floor(Math.random() * 70)+5;
+        divBar.style.width = winRange + '%';
+        divBar.style.marginLeft = rangeMarginVar + '%';
+        indicator.style.width = indicatorRange + '%';
+
+        indicator.style.transition = 'all '+speed+'s linear';
+
+        indicator.style.marginLeft = "100%";
+        setTimeout(() => {
+            indicator.style.marginLeft = "0%";
+        } , speed*1000);
+        timerello = setInterval(()=>{
+            indicator.style.marginLeft = "100%";
+            setTimeout(() => {
+                indicator.style.marginLeft = "0%";
+                console.log(indicator.offsetLeft);
+            } , speed*1000);
+        },speed*2000)
+    })
+    btn2.addEventListener('click', function (){
+        clearInterval(timerello);
+        btn2.disabled = true;
+        btn1.disabled = false;
+
+        winMargin = parseFloat(window.getComputedStyle(divBar).marginLeft);
+        winWidth = parseFloat(window.getComputedStyle(divBar).width);
+
+        indicatorMargin = parseFloat(window.getComputedStyle(indicator).marginLeft);
+        indicatorWidth = parseFloat(window.getComputedStyle(indicator).width);
+
+        if (indicatorMargin>=winMargin && indicatorMargin+indicatorWidth<=winMargin+winWidth){
+            startEvent("images/forest/forestBg.jpg","images/forest/cookFish.webp",'Ты прекрасно справился и сытно перекусил! Еще разок?',0,0,0)
+            inventory.fish--;
+            hero.hunger+=20;
+        }else {
+            startEvent("images/forest/forestBg.jpg","images/forest/coalFish.webp",'Ты спалил ее в угли. Это явно не съедобно',0,0,0)
+            inventory.fish--;
+        }
+    })
+    btn3.addEventListener('click', function () {
+        divMain.remove();
+        forestEvent()
+    })
+}
+
+
+
+
 
 
 //=======================================Главная петля. Выбор случайного события========================================
@@ -623,7 +745,7 @@ function startFishing(){
 //                                          ---------------------------------
 //Петля города
 function townEvent(){
-    const events = [fishingBeggar,woundedThief, findTresure, findThief, findKMB, findBasement, findGuard, woodClicker,findBeggar,findArenaBet, findCat, findMerchant, findDude, indulgence, findBuisnessMerchant, fireBeggar] //Массив с функциями
+    const events = [townForest, townTavern, fishingBeggar,woundedThief, findTresure, findThief, findKMB, findBasement, findGuard, woodClicker,findBeggar,findArenaBet, findCat, findMerchant, findDude, indulgence, findBuisnessMerchant, fireBeggar] //Массив с функциями
     let listOfIndex = new Set();
 
     if (loopCount==0){  //Создаем массив без повторяющихся значений

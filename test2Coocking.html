@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Тестовый файл</title>
+
+</head>
+<body>
+
+    <div class="cave">
+        <div id="caveBar"></div>
+        <div id="indicator"></div>
+    </div>
+
+    <p id="result">Результат</p>
+
+    <button onclick="popitka()" id="pull">Тянуть</button>
+    <button onclick="start()" id="catch">Ловить рыбу</button>
+
+</body>
+</html>
+
+<script>
+    let indicator = document.getElementById('indicator')
+    let rangeBar = document.getElementById('caveBar')
+
+    let speed = 5;
+
+    let winRange = 20;
+    let rangeMarginVar = 50;
+
+    function start() {
+        rangeBar.style.width = winRange + '%';
+        rangeBar.style.marginLeft = rangeMarginVar + '%';
+        indicator.style.transition = 'all '+speed+'s linear';
+        indicator.style.marginLeft = "100%";
+        setTimeout(() => {
+            indicator.style.marginLeft = "0%";
+        } , speed*1000);
+        let timer = setInterval(()=>{
+            indicator.style.marginLeft = "100%";
+            setTimeout(() => {
+                indicator.style.marginLeft = "0%";
+                console.log(indicator.offsetLeft);
+            } , speed*1000);
+        },speed*2000)
+    }
+
+    function popitka() {
+        console.log('Отступ зеленки: ' + window.getComputedStyle(rangeBar).marginLeft)
+        console.log('Ширина зеленки: ' + window.getComputedStyle(rangeBar).width)
+        console.log('Отступ индикатора' + window.getComputedStyle(indicator).marginLeft)
+
+        winMargin = parseFloat(window.getComputedStyle(rangeBar).marginLeft);
+        winWidth = parseFloat(window.getComputedStyle(rangeBar).width);
+
+        indicatorMargin = parseFloat(window.getComputedStyle(indicator).marginLeft);
+        indicatorWidth = parseFloat(window.getComputedStyle(indicator).width);
+
+        if (indicatorMargin>=winMargin && indicatorMargin+indicatorWidth<=winMargin+winWidth){
+            document.getElementById('result').innerText = "Попал";
+        }else {
+            document.getElementById('result').innerText = "Промазал";
+        }
+    }
+
+
+</script>
+
+<style>
+    body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: url("https://www.kolymastory.ru/wp-content/gallery/polishchuk_nil/001.jpg");
+        background-size: cover;
+        font-size: 30px;
+    }
+    .cave {
+        width: 50vw;
+        height: 5vh;
+        background: #757575;
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+    }
+    #caveBar {
+        height: 100%;
+        width: 0%;
+        margin-left: 0%;
+        background: #65fd00;
+        transition: all 0.1s ease;
+        position: absolute;
+    }
+
+    #indicator{
+        height: 100%;
+        width: 2%;
+        background: black;
+        transition: all 0.1s ease;
+        position: absolute;
+    }
+
+    button {
+        width: 20vw;
+        height: 10vh;
+        font-size: 20px;
+        margin-top: 1%;
+    }
+
+    #result {
+        background: #c6c6c6;
+        font-size: 2vw;
+    }
+</style>

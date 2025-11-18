@@ -7,6 +7,32 @@
 }
 
 
+/*----------------------------Ползалка с индикатором------------------------------------*/
+.mainBar {
+    width: 50vw;
+    height: 5vh;
+    background: #757575;
+    border-radius: 10px;
+    border: 3px solid white;
+    overflow: hidden;
+    position: relative;
+}
+.winBar {
+    height: 100%;
+    width: 30%;
+    margin-left: 0%;
+    background: #65fd00;
+    transition: all 0.1s ease;
+    position: absolute;
+}
+.indicator{
+    height: 100%;
+    width: 2%;
+    background: black;
+    transition: all 0.1s ease;
+    position: absolute;
+}
+
 /*--------------------------------Кнопка Ататки----------------------------------*/
 #myProgress {
     width: 100%;
@@ -261,17 +287,6 @@ button img {
     display: block;
     margin: auto;
 }
-
-/*#enemyHp {
-    width: 10%;
-    height: 7%;
-    margin: auto;
-    background-color: rgba(255, 255, 255, 0.7);
-    border-radius: 20px;
-    box-shadow: 10px 10px 10px black;
-    text-align: center;
-    align-items: center;
-}*/
 
 #fist button {
     width: 20%;

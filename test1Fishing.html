@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Тестовый файл</title>
+
+</head>
+<body>
+    <p id="bait">Осталось наживки: 5</p>
+    <p id="fish">Рыбы поймано: 0</p>
+    <div class="cave">
+        <div id="caveBar"></div>
+    </div>
+    <button onclick="barPlus()" id="pull">Тянуть</button>
+    <button onclick="bar()" id="catch">Ловить рыбу</button>
+    <img id="norm" src="https://avatars.mds.yandex.net/i?id=7acea3211a04479de94f327a19b30a9b_l-5875933-images-thumbs&n=13">
+</body>
+</html>
+
+<script>
+    barWidth = 50
+    fish = 0
+    bait = 5
+    document.getElementById("pull").disabled = true;
+
+    function barPlus(){
+        let x = Math.floor(Math.random() * 20);
+        barWidth+=x;
+        document.getElementById("caveBar").style.width = barWidth+'%';
+    }
+
+    function bar() {
+        document.getElementById("pull").disabled = false;
+        let timer = setInterval(() => {
+            if (barWidth > 0 && barWidth < 100) {
+                barWidth--;
+                document.getElementById("caveBar").style.width = barWidth+'%';
+                document.getElementById("norm").src = "https://avatars.mds.yandex.net/i?id=542368858666cb8c33983c709160ae9c59dce352-5887331-images-thumbs&n=13 ";
+                document.getElementById("catch").disabled = true;
+            }else if (barWidth >= 100) {
+                clearInterval(timer);
+                barWidth=50;
+                document.getElementById("caveBar").style.width = barWidth+'%';
+                fish++;
+                bait--;
+                document.getElementById("fish").innerText = "Рыбы поймано: " + fish;
+                document.getElementById("bait").innerText = "Осталось наживки: " + bait;
+                document.getElementById("pull").disabled = true;
+                document.getElementById("catch").disabled = false;
+                document.getElementById("norm").src = "https://avatars.mds.yandex.net/i?id=cf600ebcf5c61ff710013c0dad5205f8892a1126-5656190-images-thumbs&n=13";
+            }else{
+                clearInterval(timer);
+                barWidth=50;
+                document.getElementById("caveBar").style.width = barWidth+'%';
+                bait--;
+                document.getElementById("bait").innerText = "Осталось наживки: " + bait;
+                document.getElementById("pull").disabled = true;
+                document.getElementById("catch").disabled = false;
+                document.getElementById("norm").src = "https://avatars.mds.yandex.net/i?id=0b9d96610ac325b50261f4bda99e9e84_l-12421877-images-thumbs&n=13";
+            }
+            console.log(barWidth);
+        }, 100);
+    }
+</script>
+
+<style>
+    body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: url("https://www.kolymastory.ru/wp-content/gallery/polishchuk_nil/001.jpg");
+        background-size: cover;
+        font-size: 30px;
+    }
+    .cave {
+        width: 50vw;
+        height: 5vh;
+        background: #757575;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    #caveBar {
+        height: 100%;
+        width: 50%;
+        background: #65fd00;
+        transition: all 0.1s ease;
+    }
+
+    p {
+        background: rgba(255,255,255,0.5);
+    }
+
+    img {
+        width: 40%;
+        border-radius: 20px;
+        border: 5px solid white;
+    }
+
+    button {
+        width: 20vw;
+        height: 10vh;
+        font-size: 20px;
+        margin-top: 1%;
+    }
+</style>
