@@ -612,16 +612,46 @@ function fishingBeggar(){
     rndNumBait = Math.floor(Math.random() * 7)+3
     rndNumFish = Math.floor(Math.random() * 9)+5
     btnClose()
-    startEvent('images/town/town.jpg',"images/town/fisher.webp", '"Отличный денек для рыбалки! Продам наживку, куплю рыбу. \nНаживка:  '+rndNumBait+' монет. \nРыба: '+rndNumFish+' монет"',0,0,0);
-    btnCreate("Купить наживку", "Продать рыбу", "Не интересует","");
+    if (hero.location == "town"){
+        startEvent('images/town/town.jpg',"images/town/fisher.webp", '"Отличный денек для рыбалки! Продам наживку, куплю рыбу. \nНаживка:  '+rndNumBait+' монет. \nРыба: '+rndNumFish+' монет"',0,0,0);
+        btnCreate("Купить наживку", "Продать рыбу", "Не интересует","");
+        btn3.addEventListener("click", townEvent);
+    }else if (hero.location == "tavern"){
+        btnCreate("Купить наживку", "Продать рыбу", "Не интересует","Уйти");
+        startEvent('https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg',"images/town/fisher.webp", '"Отличный денек для рыбалки! Продам наживку, куплю рыбу. \nНаживка:  '+rndNumBait+' монет. \nРыба: '+rndNumFish+' монет"',0,0,0);
+        btn3.addEventListener("click", tavernEvent);
+        btn4.addEventListener("click", goTavern);
+    }
     btnShow()
-    btn1.addEventListener("click", fishingBuyBait);
-    btn2.addEventListener("click", fishingSellFish);
-    btn3.addEventListener("click", townEvent);
+    btn1.addEventListener("click", function (){
+        if (rndNumBait>hero.coins) {
+            if (hero.location == "town") {
+                startEvent('images/town/town.jpg', "images/town/fisher.webp", '"У тебя не хватает денег..."', 0, 0, 0);
+            }else if (hero.location == "tavern"){
+                startEvent('https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg', "images/town/fisher.webp", '"У тебя не хватает денег..."', 0, 0, 0);
+            }
+            return
+        }else{
+            fishingBuyBait()
+        }
+    });
+    btn2.addEventListener("click", function (){
+        if (inventory.fish<=0) {
+            if (hero.location == "town") {
+                startEvent('images/town/town.jpg', "images/town/fisher.webp", '"А рыбы-то у тебя нет! Купи наживку? На нее можно рыбу ловить"', 0, 0, 0);
+            }else if (hero.location == "tavern"){
+                startEvent('https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg', "images/town/fisher.webp", '"А рыбы-то у тебя нет! Купи наживку? На нее можно рыбу ловить"', 0, 0, 0);
+            }
+            return
+        }else{
+            fishingSellFish()
+        }
+    });
 }
 
 function fishingBuyBait(){
     btnClose()
+    document.getElementById("text").innerText = "Наживки: " + Math.floor(depositArena/rndNumBait);
     btnCreate("Добавить", "Убавить", "Беру", "");
     if (depositArena < rndNumBait) {
         btn2.disabled = true;
@@ -657,18 +687,23 @@ function fishingBuyBait(){
     });
     btn3.addEventListener("click", function () {
         btnClose()
-        startEvent('images/town/town.jpg',"images/town/fisher.webp", '"Поздравляю с приобретением. Удачной рыбалки!"',0,0,0);
         inventory.bait += depositArena/rndNumBait
         depositArena = 0
         btnCreate("Бывай!", "", "","");
         btnShow()
-        btn1.addEventListener("click", townEvent)
+        if (hero.location == "town"){
+            startEvent('images/town/town.jpg',"images/town/fisher.webp", '"Отличная сделка. Удачной рыбалки!"',0,0,0);
+            btn1.addEventListener("click", townEvent)
+        }else if (hero.location == "tavern"){
+            startEvent('https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg',"images/town/fisher.webp", '"Отличная сделка. Удачной рыбалки!"',0,0,0);
+            btn1.addEventListener("click", tavernEvent)
+        }
     })
 }
 
 function fishingSellFish(){
     btnClose()
-    startEvent('images/town/town.jpg',"images/town/fisher.webp", '"Сколько продашь?"',0,0,0);
+    document.getElementById("text").innerText = "Сколько продашь?";
 
     btnCreate("Добавить", "Убавить", "Далее", "");
     if (depositArena <= 0) {btn2.disabled = true;}
@@ -700,11 +735,16 @@ function fishingSellFish(){
        });
     btn3.addEventListener("click", function () {
         btnClose()
-        startEvent('images/town/town.jpg',"images/town/fisher.webp", '"Отличная сделка, пока!"',0,0,0);
         depositArena = 0
         btnCreate("Бывай!", "", "","");
         btnShow()
-        btn1.addEventListener("click", townEvent)
+        if (hero.location == "town"){
+            startEvent('images/town/town.jpg',"images/town/fisher.webp", '"Отличная сделка, пока!"',0,0,0);
+            btn1.addEventListener("click", townEvent)
+        }else if (hero.location == "tavern"){
+            startEvent('https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg',"images/town/fisher.webp", '"Отличная сделка, пока!"',0,0,0);
+            btn1.addEventListener("click", tavernEvent)
+        }
     })
 }
 

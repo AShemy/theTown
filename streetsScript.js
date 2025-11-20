@@ -548,17 +548,23 @@ function bar() {
 }
 //-------------------------------------Рыбалка-------------------------------------
 function findFishing(){
-    startEvent("images/forest/forestBg.jpg","images/forest/lake.png",'Вы находите небольшое озеро. Кажется, это отличное место для рыбалки. Остановимся?',0,0,0)
+    startEvent("images/fishBg.webp","",'Вы находите небольшое озеро. Кажется, это отличное место для рыбалки. Остановимся?',0,0,0)
     btnClose()
     btnCreate("Рыбачить","Идти дальше","","")
     btnShow()
     btn1.addEventListener('click', startFishing)
-    btn2.addEventListener('click', forestEvent)
+    if (hero.location == 'forest'){
+        btn2.addEventListener('click', forestEvent)  //тест пройден
+    }else if (hero.location == 'town'){
+        btn2.addEventListener('click', townEvent)    //тест пройден
+    }
+
 }
 
 let x;    //---------че ловим------------
 
 function startFishing(){
+    console.log('При нахождении рыбалки: '+hero.location);
     btnClose()
     let divMain= document.createElement("div");
     let divBar= document.createElement("div");
@@ -567,7 +573,7 @@ function startFishing(){
     document.getElementById("buttonBox").appendChild(divMain);
     divMain.appendChild(divBar);
     divMain.style.display = "none";
-    startEvent("images/forest/forestBg.jpg","images/forest/lake.png",'Наживки: '+inventory.bait,0,0,0)
+    startEvent("images/fishBg.webp","",'Наживки: '+inventory.bait,0,0,0)
     btnCreate("Закинуть удочку","Тянуть","Хватит","")
     btnShow()
     btn2.disabled = true;
@@ -577,6 +583,7 @@ function startFishing(){
             document.getElementById("text").innerText = 'Наживки нет, сегодня не порыбачим';
             return
         }
+        btn3.disabled = true
         let boot = {img: "images/forest/boot.webp", power: 15, name: "старый ботинок. Вряд ли он пригодится"}
         let amulet = {img: "images/forest/amulet.webp", power: 6, name: "Амулет силы. Взяв его в руки вы чувстуете небывалую мощь, +0.5 урона."}
         let fish = {img: "images/forest/fish.webp", power: 9, name: "Рыба. Самая обычная и довольно вкусная, если верно приготовить. Можно продать"}
@@ -614,7 +621,8 @@ function startFishing(){
                     else if (x==amulet){hero.dmg += 0.5}
                     inventory.bait--;
                     rewriteStats()
-                    startEvent( "images/forest/forestBg.jpg",x.img,'Вы поймали: '+x.name+'\n Наживки: '+inventory.bait,0,0,0)
+                    startEvent( "images/fishBg.webp",x.img,'Вы поймали: '+x.name+'\n Наживки: '+inventory.bait,0,0,0)
+                    btn3.disabled = false
                     btn2.disabled = true;
                     btn1.disabled = false;
                 }else{
@@ -622,7 +630,8 @@ function startFishing(){
                     barWidth=50;
                     divBar.style.width = barWidth+'%';
                     inventory.bait--;
-                    startEvent("images/forest/forestBg.jpg","images/forest/lake.png",'Рыбы: '+inventory.fish+'\n Наживки: '+inventory.bait,0,0,0)
+                    startEvent("images/fishBg.webp","",'Рыбы: '+inventory.fish+'\n Наживки: '+inventory.bait,0,0,0)
+                    btn3.disabled = false
                     btn2.disabled = true;
                     btn1.disabled = false;
                 }
@@ -636,8 +645,16 @@ function startFishing(){
         divBar.style.width = barWidth+'%';
     })
     btn3.addEventListener('click', function () {
-        divMain.remove()
-        findCooking()
+        divMain.remove();
+        if (inventory.fish > 0){
+            btn3.addEventListener('click', findCooking())
+        }else{
+            if (hero.location == 'forest'){
+                btn3.addEventListener('click', forestEvent())
+            }else if (hero.location == 'town'){
+                btn3.addEventListener('click', townEvent())
+            }
+        }
     })
 }
 
@@ -646,10 +663,11 @@ let divMain;
 let divBar;
 let indicator;
 let indicatorRange = 5;
-let speed = 2;
+let speed = 1;
 let timerello;
 
 function findCooking(){
+    console.log('При нахождении готовке: '+hero.location);
     divMain= document.createElement("div");
     divBar= document.createElement("div");
     indicator= document.createElement("div");
@@ -661,33 +679,40 @@ function findCooking(){
     divMain.appendChild(indicator);
     divMain.style.display = "none";
     btnClose()
-    startEvent("images/forest/forestBg.jpg","images/forest/bonefire.webp",'Если ты голоден, можешь приготовить рыбу. Готовим?',0,0,0)
+    startEvent("images/fishBg.webp","images/forest/bonefire.webp",'Если ты голоден, можешь приготовить рыбу. Готовим?',0,0,0)
     btnCreate("Готовить","Идти дальше","","")
     btnShow()
     btn1.addEventListener('click', function () {
         if (inventory.fish>0){startCoocking()}
         else{document.getElementById("text").innerText = "У вас нет рыбы для готовки"}
     })
-    btn2.addEventListener('click', function (){
-        divMain.remove();
-        forestEvent()
+    btn2.addEventListener('click', function () {
+        if (hero.location == 'forest'){
+            divMain.remove();
+            btn2.addEventListener('click', forestEvent())
+        }else if (hero.location == 'town'){
+            divMain.remove();
+            btn2.addEventListener('click', townEvent())
+        }
     })
+
 }
 
 function startCoocking(){
     btnClose()
-    startEvent("images/forest/forestBg.jpg","images/forest/bonefire.webp",'Нажми, когда ползунок попадет в зеленую область',0,0,0)
+    startEvent("images/fishBg.webp","images/forest/bonefire.webp",'Нажми, когда ползунок попадет в зеленую область',0,0,0)
     divMain.style.display = "block";
     btnCreate("Новая рыба","Жарить","Выйти","");
     btn2.disabled = true;
     btnShow()
     btn1.addEventListener('click', function (){
         if (inventory.fish<=0){
-            startEvent("images/forest/forestBg.jpg","images/forest/bonefire.webp",'У вас больше нет рыбы',0,0,0)
+            startEvent("images/fishBg.webp","images/forest/bonefire.webp",'У вас больше нет рыбы',0,0,0)
             return
         }
         btn1.disabled = true;
         btn2.disabled = false;
+        btn3.disabled = true;
         clearInterval(timerello);
         winRange= Math.floor(Math.random() * 20)+10;
         rangeMarginVar = Math.floor(Math.random() * 70)+5;
@@ -721,17 +746,22 @@ function startCoocking(){
         indicatorWidth = parseFloat(window.getComputedStyle(indicator).width);
 
         if (indicatorMargin>=winMargin && indicatorMargin+indicatorWidth<=winMargin+winWidth){
-            startEvent("images/forest/forestBg.jpg","images/forest/cookFish.webp",'Ты прекрасно справился и сытно перекусил! Еще разок?',0,0,0)
+            startEvent("images/fishBg.webp","images/forest/cookFish.webp",'Ты прекрасно справился и сытно перекусил! Еще разок?',0,0,0)
             inventory.fish--;
             hero.hunger+=20;
         }else {
-            startEvent("images/forest/forestBg.jpg","images/forest/coalFish.webp",'Ты спалил ее в угли. Это явно не съедобно',0,0,0)
+            startEvent("images/fishBg.webp","images/forest/coalFish.webp",'Ты спалил ее в угли. Это явно не съедобно',0,0,0)
             inventory.fish--;
         }
+        btn3.disabled = false;
     })
     btn3.addEventListener('click', function () {
         divMain.remove();
-        forestEvent()
+        if (hero.location == 'town'){
+            townEvent()
+        }else if (hero.location == 'forest'){
+            forestEvent()
+        }
     })
 }
 
@@ -745,7 +775,7 @@ function startCoocking(){
 //                                          ---------------------------------
 //Петля города
 function townEvent(){
-    const events = [townForest, townTavern, fishingBeggar,woundedThief, findTresure, findThief, findKMB, findBasement, findGuard, woodClicker,findBeggar,findArenaBet, findCat, findMerchant, findDude, indulgence, findBuisnessMerchant, fireBeggar] //Массив с функциями
+    const events = [findFishing,townForest, townTavern, fishingBeggar,woundedThief, findTresure, findThief, findKMB, findBasement, findGuard, woodClicker,findBeggar,findArenaBet, findCat, findMerchant, findDude, indulgence, findBuisnessMerchant, fireBeggar] //Массив с функциями
     let listOfIndex = new Set();
 
     if (loopCount==0){  //Создаем массив без повторяющихся значений
@@ -814,7 +844,7 @@ function tavernEvent(){
         if (hero.hunger < 100){
             hero.hunger+=5;
         }
-        let events = [findSailor, findGossip, findCompany] //Массив с функциями
+        let events = [findSailor, findGossip, findCompany, fishingBeggar] //Массив с функциями
         let rndNum = Math.floor(Math.random()*events.length)
         events[rndNum]()//Скобочки после массива вызовут функцию
     }else{
@@ -828,6 +858,7 @@ function tavernEvent(){
 //Петля леса
 function forestEvent() {
     console.log(forestLoopCount)
+    hero.location = "forest"
     btnClose()
     if (eventCount.merCount < 3) {
         startEvent("images/forest/forestBg.jpg", "images/town/guard.webp", '"Гражданин, дальше ходу нет! По приказу главы города проход в лес закрыт! Возвращайся в город."', 0, 0, 0)
@@ -848,7 +879,7 @@ function forestEvent() {
         return;
     }
 
-    hero.location = "forest"
+
     document.getElementById("myBar").style.width = 0 + "%"
 
     forestLoopCount++
