@@ -20,6 +20,11 @@
 
             <p id="numberQuest">Номер квеста: </p>
 
+            <button onclick="newGame()">Новая игра</button>
+            <button onclick="save()">Сохранить игру</button>
+            <button onclick="load()">Загрузить игру</button>
+            <button onclick="deleteSave()">Стереть сейв</button>
+            <br/>
             <button onclick="cheatDMG()">+100 урона</button>
             <button onclick="cheatREPplus()">+100 репутации</button>
             <button onclick="cheatCOINplus()">+100 монет</button>
@@ -58,8 +63,10 @@
                 <img src="images/icons/rep.png"/>
                 <p id="rep">0</p>
             </div>
-            <button onclick="musicPlay()" class="btnMusic"></button>
+            <button onclick="goMenu()" class="btnMusic" id="goMenuBtn"></button>
         </div>
+
+        <img src="images/logo.webp" class="logo" id="logo"/>
 
         <div class="characterImage" id="charImg"></div>
 

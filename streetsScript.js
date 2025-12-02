@@ -68,12 +68,6 @@ let inventory = {
     bait: 0,
 }
 
-let thatDay = []
-
-let deposit = 0;
-let depositArena = 0;
-
-
 let eventCount = {
     merchantBuisness: 0,
     angryGranny: 0,
@@ -85,10 +79,144 @@ let eventCount = {
     rode: 0,
 }
 
+let priceUpgrade = 5;
+
+function save(){
+    localStorage.setItem('gameProgress', JSON.stringify({
+        Shp: hero.hp,
+        SmaxHp: hero.maxHp,
+        Srep: hero.rep,
+        Scoins: hero.coins,
+        Shunger: hero.hunger,
+        Sdmg: hero.dmg,
+        Sspeed: hero.speed,
+        Sday: hero.day,
+        Sinventory: inventory,
+        SeventCount: eventCount,
+        SpriceUpgrade: priceUpgrade,
+    }));
+}
+
+function load(){
+    const progress = localStorage.getItem('gameProgress');
+    if (progress) {
+        const gameData = JSON.parse(progress);
+        hero.hp = gameData.Shp;
+        hero.maxHp = gameData.SmaxHp
+        hero.rep = gameData.Srep
+        hero.coins = gameData.Scoins
+        hero.hunger = gameData.Shunger
+        hero.dmg = gameData.Sdmg
+        hero.speed = gameData.Sspeed
+        hero.day = gameData.Sday
+        inventory = gameData.Sinventory
+        eventCount = gameData.SeventCount
+        priceUpgrade = gameData.SpriceUpgrade
+        console.log('Игра загружена');
+        rewriteStats()
+        goHub()
+    }else{
+        console.log('Нет сохранений, запускаю новую игру');
+        newGame()
+    }
+}
+
+function newGame(){
+    localStorage.removeItem('gameProgress');
+    console.log('Новая игра');
+    hero = {
+        hp:100,
+        maxHp:100,
+        rep:0,
+        coins:3,
+        hunger: 40,
+        dmg:5,
+        speed: 150,
+        day: 1,
+        location: "",
+        eat: function(food){
+            if(this.hunger+food<=this.maxHp){
+                this.hunger+=food;
+            }else{
+                this.hunger=100;
+            }
+        },
+        heal: function(plusHp){
+            if(this.hp+plusHp<=this.maxHp){
+                this.hp+=plusHp;
+            }else{
+                this.hp=100;
+            }
+        },
+        giveMoney: function(price){
+            if(this.coins-price<0){
+                this.coins=0
+            }else{
+                this.coins-=price
+            }
+        },
+        attack: function(){
+            enemy.hp -= hero.dmg;
+
+            let enemyPercent = enemy.hp/enemy.hpMax * 100;
+            let enemyHpBar = document.getElementById("enemyBar")
+            enemyHpBar.style.width = enemyPercent + "%";
+            if (enemyPercent >= 80){
+                enemyHpBar.style.background = "#39a614";
+            }else if (enemyPercent < 80 && enemyPercent > 40){
+                enemyHpBar.style.background = "#a69314";
+            }else{
+                enemyHpBar.style.background = "#870101";
+            }
+            enemyReaction()
+
+            var width = 100;
+            var elem = document.getElementById("myBar");
+            var mainElem = document.getElementById("myProgress");
+            mainElem.classList.add("disabledDiv")
+            elem.style.transition = hero.speed+'ms';
+            var id = setInterval(frame, hero.speed/10);
+            function frame() {
+                if (width == 0) {
+                    mainElem.classList.remove("disabledDiv")
+                    clearInterval(id);
+                } else {
+                    mainElem.classList.add("disabledDiv")
+                    width--;
+                    elem.style.width = width + "%";
+                }
+            }
+        }
+    }
+    inventory = {
+        fish: 0,
+        bait: 0,
+    }
+    eventCount = {
+        merchantBuisness: 0,
+        angryGranny: 0,
+        needWood: 0,
+        clickWood: 0,
+        correctAnswers: 0,
+        merCount: 0,
+        volontiers:0,
+        rode: 0,
+    }
+    priceUpgrade = 5;
+    rewriteStats()
+    goHub()
+}
+
+function deleteSave(){
+    localStorage.removeItem('gameProgress');
+}
+
+let thatDay = []
+
+let deposit = 0;
+let depositArena = 0;
 
 let enemy;
-
-let priceUpgrade = 5;
 
 let loopCount = 0;
 let forestLoopCount = 0;
@@ -101,7 +229,9 @@ let btn4;
 
 btnClose()
 document.getElementById("battleScene").style.display = "none";
-goHub()
+//load()
+//goHub()
+startGame()
 
 
 //------------------------------------------Противники----------------------------------------------
@@ -860,7 +990,8 @@ function forestEvent() {
     console.log(forestLoopCount)
     hero.location = "forest"
     btnClose()
-    if (eventCount.merCount < 3) {
+
+    if (eventCount.merCount < 3 && forestLoopCount==1) {
         startEvent("images/forest/forestBg.jpg", "images/town/guard.webp", '"Гражданин, дальше ходу нет! По приказу главы города проход в лес закрыт! Возвращайся в город."', 0, 0, 0)
         goLocation('hub')
         return;
@@ -882,16 +1013,16 @@ function forestEvent() {
 
     document.getElementById("myBar").style.width = 0 + "%"
 
-    forestLoopCount++
-    hero.hunger--;
-
     if (hero.hunger <= 0) {
         hero.hunger = 0
         hero.hp -= 10;
     }
-    console.log("Игровой круг: " + forestLoopCount)
+    console.log("Игровой круг Лес: " + forestLoopCount)
 
-    if (forestLoopCount % 9 == 0) {
+    if (forestLoopCount==0){
+        console.log("Игровой круг Лес: " + forestLoopCount)
+        findFishing()
+    }else if (forestLoopCount % 9 == 0) {
         findAltar()
     } else if (forestLoopCount % 10 == 0) {
         findBoss("Лес - опасное, мистическое место. Помимо обычных обитателей здесь можно встретить жутких существ из страшных рассказов, которыми пугают детей в городе... Перед вами Крысиный Король", ratKing, 'images/forest/forestBg.jpg')
@@ -919,6 +1050,9 @@ function forestEvent() {
             findFight()
         }
     }
+
+    forestLoopCount++
+    hero.hunger--;
 }
 
 function prisonEvent(){
@@ -997,6 +1131,7 @@ function goHub(){
     loopCount=0
     forestLoopCount = 0
     console.log("Круг: ",loopCount)
+    save()
     startEvent("images/hub.jpg", "","День "+hero.day+". Куда отправляемся?",0,0,0)
     btnClose()
     btnCreate("<img src='images/icons/rep.png'/>В Город", "<img src='images/icons/hp.png'/><img src='images/icons/hunger.webp'/>В Таверну", "<img src='images/icons/dmg.webp'/>В Лес", "")
@@ -1005,5 +1140,87 @@ function goHub(){
     btn1.addEventListener("click", townEvent);
     btn2.addEventListener("click", goTavern);
     btn3.addEventListener("click", forestEvent);
+}
+
+function startGame(){
+    document.getElementById("goMenuBtn").disabled = true;
+
+    const progress = localStorage.getItem('gameProgress');
+    document.getElementById('charImg').style.display="none";
+    document.getElementById('textBox').style.display="none";
+    document.getElementById('logo').style.display="block";
+    btnClose()
+    btnCreate("Продолжить", "Новая игра", "Музыка", "Об игре")
+    btnShow()
+
+    if (!progress){
+        btn1.disabled = true;
+        btn1.innerText = "Нет сохранений"
+    }else{btn1.disabled = false;}
+
+    btn1.addEventListener("click", function () {
+        document.getElementById("goMenuBtn").disabled = false;
+        document.getElementById('logo').style.display="none";
+        document.getElementById('charImg').style.display="block";
+        document.getElementById('textBox').style.display="block";
+        //divMain.remove();
+        load()
+    });
+    btn2.addEventListener("click", function () {
+        document.getElementById("goMenuBtn").disabled = false;
+        document.getElementById('logo').style.display="none";
+        document.getElementById('charImg').style.display="block";
+        document.getElementById('textBox').style.display="block";
+        //divMain.remove();
+        newGame()
+    });
+    btn3.addEventListener("click", musicPlay);
+}
+
+function goMenu(){
+    document.getElementById("goMenuBtn").disabled = true;
+
+    document.getElementById('charImg').style.display="none";
+    document.getElementById('textBox').style.display="none";
+    document.getElementById('buttonBox').style.display="none";
+    document.getElementById('logo').style.display="block";
+
+    let divMain= document.createElement("div");
+    divMain.classList.add("buttonbox")
+    document.getElementById("mainScreen").appendChild(divMain);
+
+
+    let cont = document.createElement("button");
+    let newGameBtn = document.createElement("button");
+    let musicPlayBtn = document.createElement("button");
+    let about = document.createElement("button");
+
+    divMain.appendChild(cont);
+    divMain.appendChild(newGameBtn);
+    divMain.appendChild(musicPlayBtn);
+    divMain.appendChild(about);
+
+    cont.innerText = "Продолжить"
+    newGameBtn.innerText = "Новая игра"
+    musicPlayBtn.innerText = "Музыка"
+    about.innerText = "Об игре"
+
+    cont.addEventListener("click", function () {
+        divMain.remove()
+        document.getElementById("goMenuBtn").disabled = false;
+        document.getElementById('logo').style.display="none";
+        document.getElementById('charImg').style.display="block";
+        document.getElementById('textBox').style.display="block";
+        document.getElementById('buttonBox').style.display="block";
+    });
+    newGameBtn.addEventListener("click", function () {
+        divMain.remove();
+        document.getElementById("goMenuBtn").disabled = false;
+        document.getElementById('logo').style.display="none";
+        document.getElementById('charImg').style.display="block";
+        document.getElementById('textBox').style.display="block";
+        newGame()
+    });
+    musicPlayBtn.addEventListener("click", musicPlay);
 }
 
