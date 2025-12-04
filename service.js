@@ -70,6 +70,13 @@ function enemyReaction(){
     });
 }
 
+function cutReaction(){
+    document.getElementById("cut").classList.remove("cutAnim");
+    requestAnimationFrame(() => {
+        document.getElementById("cut").classList.add("cutAnim");
+    });
+}
+
 //------------------------------------------Служебные-------------------------------------------
 
 //Расчет положительного или отрицательного события (добавить скрытые статы)

@@ -7,6 +7,10 @@
         <audio src="music2.mp3" id="background-music" autoplay loop>
             Ваш браузер не поддерживает аудио.
         </audio>
+        <audio src="attack.mp3" id="attackMusic">
+            Ваш браузер не поддерживает аудио.
+        </audio>
+
     </head>
 	<body id="mainScreen">
     <!-- ================================== ***Основа***=================================== -->
@@ -44,7 +48,7 @@
 
         </div>
 
-        <div class="menu">
+        <div class="menu" id="menuStats">
             <button onclick="showProfile()" class="btnProfile"></button>
             <div id="stats" class="stats">
                 <img src="images/icons/hp.png" alt="Здоровье"/>
@@ -80,7 +84,9 @@
 
         <div id="battleScene">
             <div id="fist">
-                <div id="enemyImage"></div>
+                <div id="enemyImage">
+                    <div id="cut"></div>
+                </div>
                 <div id="enemyHpBar">
                     <div id="enemyBar"></div>
                 </div>

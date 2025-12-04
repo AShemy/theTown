@@ -1,3 +1,5 @@
+let attackSound = document.getElementById('attackMusic')
+
 let hero = {
     hp:100,
     maxHp:100,
@@ -30,6 +32,11 @@ let hero = {
         }
     },
     attack: function(){
+        if (musicOnOfF == 1) {
+            hasFocus = true;
+            attackSound.play()
+        }
+
         enemy.hp -= hero.dmg;
 
         let enemyPercent = enemy.hp/enemy.hpMax * 100;
@@ -43,6 +50,7 @@ let hero = {
             enemyHpBar.style.background = "#870101";
         }
         enemyReaction()
+        cutReaction()
 
         var width = 100;
         var elem = document.getElementById("myBar");
@@ -80,6 +88,7 @@ let eventCount = {
 }
 
 let priceUpgrade = 5;
+let deposit = 0;
 
 function save(){
     localStorage.setItem('gameProgress', JSON.stringify({
@@ -94,6 +103,7 @@ function save(){
         Sinventory: inventory,
         SeventCount: eventCount,
         SpriceUpgrade: priceUpgrade,
+        Sdeposit: deposit,
     }));
 }
 
@@ -112,6 +122,7 @@ function load(){
         inventory = gameData.Sinventory
         eventCount = gameData.SeventCount
         priceUpgrade = gameData.SpriceUpgrade
+        deposit = gameData.Sdeposit
         console.log('Игра загружена');
         rewriteStats()
         goHub()
@@ -213,7 +224,7 @@ function deleteSave(){
 
 let thatDay = []
 
-let deposit = 0;
+
 let depositArena = 0;
 
 let enemy;
@@ -673,6 +684,11 @@ function bar() {
             clearInterval(timer);
             outOfBattle()
             startEvent("images/forest/forestBg.jpg", "images/forest/cave2.webp", '"Дело сделано!"', 0, 0, 0)
+            btnClose()
+            btnCreate("Зайти в пещеру WIP", "Вернуться в город","");
+            btnShow()
+
+            btn2.addEventListener('click', goHub)
         }
     }, 100);
 }
@@ -1003,7 +1019,7 @@ function forestEvent() {
         return;
     }else if (eventCount.merCount==5 && forestLoopCount==11) {
         btnClose()
-        startEvent("images/forest/forestBg.jpg", "images/forest/cave.webp", "Ну чтож, пора за работу! Помощников найдено: "+eventCount.volontiers ,0,0,0)
+        startEvent("images/forest/forestBg.jpg", "images/forest/cave.webp", "Ну что ж, пора за работу! Помощников найдено: "+eventCount.volontiers ,0,0,0)
         btnCreate("Работаем!","","","")
         btn1.addEventListener('click', freeCaveStert)
         btnShow()
@@ -1143,6 +1159,7 @@ function goHub(){
 }
 
 function startGame(){
+    document.getElementById('menuStats').style.display="none";
     document.getElementById("goMenuBtn").disabled = true;
 
     const progress = localStorage.getItem('gameProgress');
@@ -1160,6 +1177,7 @@ function startGame(){
 
     btn1.addEventListener("click", function () {
         document.getElementById("goMenuBtn").disabled = false;
+        document.getElementById('menuStats').style.display="flex";
         document.getElementById('logo').style.display="none";
         document.getElementById('charImg').style.display="block";
         document.getElementById('textBox').style.display="block";
@@ -1168,6 +1186,7 @@ function startGame(){
     });
     btn2.addEventListener("click", function () {
         document.getElementById("goMenuBtn").disabled = false;
+        document.getElementById('menuStats').style.display="flex";
         document.getElementById('logo').style.display="none";
         document.getElementById('charImg').style.display="block";
         document.getElementById('textBox').style.display="block";
@@ -1177,50 +1196,50 @@ function startGame(){
     btn3.addEventListener("click", musicPlay);
 }
 
-function goMenu(){
-    document.getElementById("goMenuBtn").disabled = true;
 
+
+
+function goMenu(){
+    //document.getElementById("goMenuBtn").disabled = true;
+    document.getElementById('menuStats').style.display="none";
     document.getElementById('charImg').style.display="none";
     document.getElementById('textBox').style.display="none";
     document.getElementById('buttonBox').style.display="none";
     document.getElementById('logo').style.display="block";
-
-    let divMain= document.createElement("div");
-    divMain.classList.add("buttonbox")
-    document.getElementById("mainScreen").appendChild(divMain);
-
-
+    let divMenuBtn= document.createElement("div");
+    divMenuBtn.classList.add("buttonbox")
+    document.getElementById("mainScreen").appendChild(divMenuBtn);
     let cont = document.createElement("button");
     let newGameBtn = document.createElement("button");
     let musicPlayBtn = document.createElement("button");
     let about = document.createElement("button");
-
-    divMain.appendChild(cont);
-    divMain.appendChild(newGameBtn);
-    divMain.appendChild(musicPlayBtn);
-    divMain.appendChild(about);
-
+    divMenuBtn.appendChild(cont);
+    divMenuBtn.appendChild(newGameBtn);
+    divMenuBtn.appendChild(musicPlayBtn);
+    divMenuBtn.appendChild(about);
     cont.innerText = "Продолжить"
     newGameBtn.innerText = "Новая игра"
     musicPlayBtn.innerText = "Музыка"
     about.innerText = "Об игре"
-
     cont.addEventListener("click", function () {
-        divMain.remove()
-        document.getElementById("goMenuBtn").disabled = false;
+        divMenuBtn.remove()
+        document.getElementById('menuStats').style.display="flex";
+        //document.getElementById("goMenuBtn").disabled = false;
         document.getElementById('logo').style.display="none";
         document.getElementById('charImg').style.display="block";
         document.getElementById('textBox').style.display="block";
         document.getElementById('buttonBox').style.display="block";
     });
     newGameBtn.addEventListener("click", function () {
-        divMain.remove();
-        document.getElementById("goMenuBtn").disabled = false;
+        divMenuBtn.remove();
+        document.getElementById('menuStats').style.display="flex";
+        //document.getElementById("goMenuBtn").disabled = false;
         document.getElementById('logo').style.display="none";
         document.getElementById('charImg').style.display="block";
         document.getElementById('textBox').style.display="block";
         newGame()
     });
     musicPlayBtn.addEventListener("click", musicPlay);
+
 }
 
