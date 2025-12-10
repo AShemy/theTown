@@ -305,9 +305,9 @@ function rewriteStats(){
     hero.coins = Math.floor(hero.coins*10)/10
 
     // текстовые статы - репутация и здоровье
-    //document.getElementById("rep").innerText = hero.rep;
+    document.getElementById("rep").innerText = hero.rep;
 
-    //document.getElementById("coins").innerText = hero.coins;
+    document.getElementById("coins").innerText = hero.coins;
 //
     //document.getElementById("heroHp").innerText = 'Здоровье: '+ hero.hp +"  |  | Монеты: "+ hero.coins + "  |  | Репутация: "+hero.rep;
     //document.getElementById("heroDmg").innerText = "Сытость: "+hero.hunger +" |  | Урон: "+hero.dmg;
