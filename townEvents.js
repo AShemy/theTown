@@ -636,7 +636,7 @@ function fishingBeggar(){
         }
     });
     btn2.addEventListener("click", function (){
-        if (inventory.fish<=0) {
+        if (inventory.fish.count1<=0) {
             if (hero.location == "town") {
                 startEvent('images/town/town.jpg', "images/town/fisher.webp", '"А рыбы-то у тебя нет! Купи наживку? На нее можно рыбу ловить"', 0, 0, 0);
             }else if (hero.location == "tavern"){
@@ -687,7 +687,7 @@ function fishingBuyBait(){
     });
     btn3.addEventListener("click", function () {
         btnClose()
-        inventory.bait += depositArena/rndNumBait
+        inventory.bait.count1 += depositArena/rndNumBait
         depositArena = 0
         btnCreate("Бывай!", "", "","");
         btnShow()
@@ -707,20 +707,20 @@ function fishingSellFish(){
 
     btnCreate("Добавить", "Убавить", "Далее", "");
     if (depositArena <= 0) {btn2.disabled = true;}
-    if (inventory.fish <= 0) {btn1.disabled = true;}
+    if (inventory.fish.count1 <= 0) {btn1.disabled = true;}
     btnShow()
 
     btn1.addEventListener("click", function () {
         hero.coins += rndNumFish
-        inventory.fish--;
+        inventory.fish.count1--;
         depositArena++;
-        document.getElementById("text").innerText = "Рыбы в инвентаре: " + inventory.fish + '\nВыставлено на продажу: '+depositArena;
-        if (inventory.fish<=0){btn1.disabled = true}
+        document.getElementById("text").innerText = "Рыбы в инвентаре: " + inventory.fish.count1 + '\nВыставлено на продажу: '+depositArena;
+        if (inventory.fish.count1<=0){btn1.disabled = true}
         if (depositArena >0) {btn2.disabled = false;}
         rewriteStats()
     });
     btn2.addEventListener("click", function () {
-       if (inventory.fish>0){btn1.disabled = false;}
+       if (inventory.fish.count1>0){btn1.disabled = false;}
            if (depositArena <=0) {
                btn2.disabled = true;
            } else {
@@ -728,9 +728,9 @@ function fishingSellFish(){
                hero.coins -= rndNumFish;
                depositArena -= 1;
                if (depositArena <=0) {btn2.disabled = true;}
-               inventory.fish++
+               inventory.fish.count1++
            }
-           document.getElementById("text").innerText = "Рыбы в инвентаре: " + inventory.fish + '\nВыставлено на продажу: '+depositArena;
+           document.getElementById("text").innerText = "Рыбы в инвентаре: " + inventory.fish.count1 + '\nВыставлено на продажу: '+depositArena;
            rewriteStats();
        });
     btn3.addEventListener("click", function () {

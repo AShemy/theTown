@@ -71,22 +71,6 @@ let hero = {
     }
 }
 
-let inventory = {
-    fish: 0,
-    bait: 0,
-}
-
-let eventCount = {
-    merchantBuisness: 0,
-    angryGranny: 0,
-    needWood: 0,
-    clickWood: 0,
-    correctAnswers: 0,
-    merCount: 0,
-    volontiers:0,
-    rode: 0,
-}
-
 let priceUpgrade = 5;
 let deposit = 0;
 
@@ -167,6 +151,11 @@ function newGame(){
             }
         },
         attack: function(){
+            if (musicOnOfF == 1) {
+                hasFocus = true;
+                attackSound.play()
+            }
+
             enemy.hp -= hero.dmg;
 
             let enemyPercent = enemy.hp/enemy.hpMax * 100;
@@ -180,6 +169,7 @@ function newGame(){
                 enemyHpBar.style.background = "#870101";
             }
             enemyReaction()
+            cutReaction()
 
             var width = 100;
             var elem = document.getElementById("myBar");
@@ -199,10 +189,7 @@ function newGame(){
             }
         }
     }
-    inventory = {
-        fish: 0,
-        bait: 0,
-    }
+
     eventCount = {
         merchantBuisness: 0,
         angryGranny: 0,
@@ -215,7 +202,7 @@ function newGame(){
     }
     priceUpgrade = 5;
     rewriteStats()
-    goHub()
+    firstSteps()
 }
 
 function deleteSave(){
@@ -242,7 +229,79 @@ btnClose()
 document.getElementById("battleScene").style.display = "none";
 //load()
 //goHub()
-startGame()
+startGame() //запуск главного меню
+
+
+//------------------------------------------Старт игры------------------------------------------
+function firstSteps(){
+    hero.location = "start"
+    btnClose()
+    btnCreate("Осмотреться","","","")
+    startEvent("images/forest/forestBg.jpg", "", 'Вы очнулись. Голова болит, мысли путаются. Вы не помните ничего из своей прошлой жизни',0,0,0)
+    btnShow()
+    btn1.addEventListener("click", function(){
+        btnClose()
+        btnCreate("Карманы?","","","")
+        startEvent("images/forest/forestBg.jpg", "images/forest/grave.webp", 'Вы чувствуете запах сырой земли и хвои. Вокруг вас старый, темный лес. Рядом с вами - безымянная могила. Внезапно, вы слышите громкое урчание. На долю секунды вы испугались, но с облегчеием поняли - это ваш живот. Вы дико голодны',0,0,0)
+        btnShow()
+        btn1.addEventListener("click", function(){
+            btnClose()
+            btnCreate("Я понял","","","")
+            startEvent("images/forest/forestBg.jpg", "images/forest/grave.webp", 'Нажмите на значок человека в левом верхнем углу, чтобы открыть профиль персонажа <img src="images/icons/profile.png">',0,0,0)
+            btnShow()
+            btn1.addEventListener("click", function(){
+                btnClose()
+                btnCreate("Развернуться","","","")
+                startEvent("images/forest/forestBg.jpg", "", 'В карманах 3 странные монеты. Вы никогда еще не видели подобных. Еды нет... Внезапно вы слышите хруст веток!',0,0,0)
+                btnShow()
+                btn1.addEventListener("click", function(){
+                    findBoss("Из темноты медленно крадется дикая собака. Она голодна и кажется, вы ее сегодняшний ужин. Бежать уже поздно, придется драться", dog, "images/forest/forestBg.jpg")
+                })
+            })
+        })
+    })
+}
+
+function startHunter(){
+    outOfBattle()
+    if (hero.hp <=0){
+        startEvent("images/forest/forestBg.jpg", "", 'Сил сражаться больше нет. Вы чувствуете, как зубы впиваются в вашу плоть. Глаза закрываются, вы проваливаетесь в темноту...',0,0,0)
+    }else if(hero.hp >0){
+        startEvent("images/forest/forestBg.jpg", "", 'Адреналин на пределе, но вы чувствуете, что победа за вами. Вы наносите удар и для противника он оказывается последним. Обессиленный, но довольный собой вы опускаетесь на землю',0,0,0)
+    }
+    btnClose()
+    btnCreate("Далее", "", "", "")
+    btnShow()
+    btn1.addEventListener("click", function(){
+        if (hero.hp <=0){
+            startEvent("images/forest/forestBg.jpg", "images/hunter.png", 'Вы с трудом открываете глаза. Перед вами суровый бородатый мужчина. "Эй, путник, приходи в себя. Ты явно ослаблен. Так... поднимаемся!" - мужчина помогает вам встать',0,0,0)
+        }if (hero.hp >0){
+            startEvent("images/forest/forestBg.jpg", "images/hunter.png", '"Здорово ты его приложил! Не сильно он тебя потрепал?" - из за деревьев выходит суровый бородатый мужчина.',0,0,0)
+        }
+        btnClose()
+        btnCreate("Ты кто?","","","")
+        btnShow()
+        btn1.addEventListener("click", function() {
+            startEvent("images/forest/forestBg.jpg", "images/hunter.png", '"Местные называют меня Охотником, будем знакомы. Дай угадаю, ты только очнулся? Голова мутная, память потеряна, в глазах двоится? Не переживай, здесь каждый был на твоем месте"', 0, 0, 0)
+            btnClose()
+            btnCreate("Каждый?", "", "", "")
+            btnShow()
+            btn1.addEventListener("click", function () {
+                startEvent("images/forest/forestBg.jpg", "images/hunter.png", '"Да, нас таких много. Все начинали как ты - одинокие, напуганные, без памяти. Тут не далеко целое поселение. Мы назвали его Город. Понимаю, не слишком хорошее название, но всех больше интересовало выживание, а не красивое название"', 0, 0, 0)
+                btnClose()
+                btnCreate("Что делать?", "", "", "")
+                btnShow()
+                btn1.addEventListener("click", function () {
+                    startEvent("images/forest/forestBg.jpg", "images/hunter.png", '"Я провожу тебя до города, дальше сам. Советую найти Уильяма - главу города. Он один из первых попал сюда. Люди смогли построить Город благодаря его руководству"', 0, 0, 0)
+                    btnClose()
+                    btnCreate("Хорошо", "", "", "")
+                    btnShow()
+                    btn1.addEventListener("click", goHub)
+                })
+            })
+        })
+    })
+}
 
 
 //------------------------------------------Противники----------------------------------------------
@@ -263,6 +322,8 @@ function enemyConstructor(enemyName,enemyHp,enemyDmg,enemySpeed,enemyImg,enemyRe
                 clearInterval(timer)
                 if (hero.location=="prison"){
                     prisonHealer()
+                }else if (hero.location=="start"){
+                    startHunter()
                 }else{
                     death()
                 }
@@ -284,6 +345,8 @@ function enemyConstructor(enemyName,enemyHp,enemyDmg,enemySpeed,enemyImg,enemyRe
                     btn1.addEventListener("click", tavernEvent)
                 }else if (hero.location=="prison"){
                     btn1.addEventListener("click", prisonEvent)
+                }else if (hero.location=="start"){
+                    btn1.addEventListener("click", startHunter)
                 }
             }
         }, this.speed);
@@ -694,6 +757,8 @@ function bar() {
 }
 //-------------------------------------Рыбалка-------------------------------------
 function findFishing(){
+    console.log("Рыба: "+inventory.fish.count1)
+    console.log("Наживка: "+inventory.bait.count1)
     startEvent("images/fishBg.webp","",'Вы находите небольшое озеро. Кажется, это отличное место для рыбалки. Остановимся?',0,0,0)
     btnClose()
     btnCreate("Рыбачить","Идти дальше","","")
@@ -704,7 +769,6 @@ function findFishing(){
     }else if (hero.location == 'town'){
         btn2.addEventListener('click', townEvent)    //тест пройден
     }
-
 }
 
 let x;    //---------че ловим------------
@@ -719,13 +783,13 @@ function startFishing(){
     document.getElementById("buttonBox").appendChild(divMain);
     divMain.appendChild(divBar);
     divMain.style.display = "none";
-    startEvent("images/fishBg.webp","",'Наживки: '+inventory.bait,0,0,0)
+    startEvent("images/fishBg.webp","",'Наживки: '+inventory.bait.count1,0,0,0)
     btnCreate("Закинуть удочку","Тянуть","Хватит","")
     btnShow()
     btn2.disabled = true;
 
     btn1.addEventListener('click', function () {
-        if (inventory.bait == 0){
+        if (inventory.bait.count1 == 0){
             document.getElementById("text").innerText = 'Наживки нет, сегодня не порыбачим';
             return
         }
@@ -750,7 +814,7 @@ function startFishing(){
         }
 
         btn1.disabled = true;
-        document.getElementById("text").innerText = 'Наживки: '+inventory.bait+'\nЖдем пока клюнет...';
+        document.getElementById("text").innerText = 'Наживки: '+inventory.bait.count1+'\nЖдем пока клюнет...';
         setTimeout(() => {
             divMain.style.display = "block";
             let timer = setInterval(() => {
@@ -758,32 +822,33 @@ function startFishing(){
                     btn2.disabled = false;
                     barWidth--;
                     divBar.style.width = barWidth+'%';
-                    document.getElementById("text").innerText = 'Наживки: '+inventory.bait+'\n❗❗❗ ТЯНИ ❗❗❗';
+                    document.getElementById("text").innerText = 'Наживки: '+inventory.bait.count1+'\n❗❗❗ ТЯНИ ❗❗❗';
                 }else if (barWidth >= 100) {
                     clearInterval(timer);
                     barWidth=50;
                     divBar.style.width = barWidth+'%';
-                    if (x==fish){inventory.fish++;}
+                    if (x==fish){inventory.fish.count1++;}
                     else if (x==amulet){hero.dmg += 0.5}
-                    inventory.bait--;
-                    rewriteStats()
-                    startEvent( "images/fishBg.webp",x.img,'Вы поймали: '+x.name+'\n Наживки: '+inventory.bait,0,0,0)
+                    inventory.bait.count1--;
+                    startEvent( "images/fishBg.webp",x.img,'Вы поймали: '+x.name+'\n Наживки: '+inventory.bait.count1,0,0,0)
                     btn3.disabled = false
                     btn2.disabled = true;
                     btn1.disabled = false;
+
                 }else{
                     clearInterval(timer);
                     barWidth=50;
                     divBar.style.width = barWidth+'%';
-                    inventory.bait--;
-                    startEvent("images/fishBg.webp","",'Рыбы: '+inventory.fish+'\n Наживки: '+inventory.bait,0,0,0)
+                    inventory.bait.count1--;
+                    startEvent("images/fishBg.webp","",'Рыбы: '+inventory.fish.count1+'\n Наживки: '+inventory.bait.count1,0,0,0)
                     btn3.disabled = false
                     btn2.disabled = true;
                     btn1.disabled = false;
                 }
-                console.log(barWidth);
+                //console.log(barWidth);
             }, 100);
         },3000)
+
     })
     btn2.addEventListener('click', function () {
         let pwr = Math.floor(Math.random() * x.power);
@@ -792,7 +857,7 @@ function startFishing(){
     })
     btn3.addEventListener('click', function () {
         divMain.remove();
-        if (inventory.fish > 0){
+        if (inventory.fish.count1 > 0){
             btn3.addEventListener('click', findCooking())
         }else{
             if (hero.location == 'forest'){
@@ -802,6 +867,7 @@ function startFishing(){
             }
         }
     })
+    rewriteStats()
 }
 
 
@@ -829,7 +895,7 @@ function findCooking(){
     btnCreate("Готовить","Идти дальше","","")
     btnShow()
     btn1.addEventListener('click', function () {
-        if (inventory.fish>0){startCoocking()}
+        if (inventory.fish.count1>0){startCoocking()}
         else{document.getElementById("text").innerText = "У вас нет рыбы для готовки"}
     })
     btn2.addEventListener('click', function () {
@@ -852,7 +918,7 @@ function startCoocking(){
     btn2.disabled = true;
     btnShow()
     btn1.addEventListener('click', function (){
-        if (inventory.fish<=0){
+        if (inventory.fish.count1<=0){
             startEvent("images/fishBg.webp","images/forest/bonefire.webp",'У вас больше нет рыбы',0,0,0)
             return
         }
@@ -892,12 +958,13 @@ function startCoocking(){
         indicatorWidth = parseFloat(window.getComputedStyle(indicator).width);
 
         if (indicatorMargin>=winMargin && indicatorMargin+indicatorWidth<=winMargin+winWidth){
-            startEvent("images/fishBg.webp","images/forest/cookFish.webp",'Ты прекрасно справился и сытно перекусил! Еще разок?',0,0,0)
-            inventory.fish--;
+            startEvent("images/fishBg.webp","images/forest/cookFish.webp",'Ты прекрасно справился! Вкуснейшая рыба отправляется в твой рюкзак',0,0,0)
+            inventory.fish.count1--;
+            inventory.coockedFish.count1++;
             hero.hunger+=20;
         }else {
             startEvent("images/fishBg.webp","images/forest/coalFish.webp",'Ты спалил ее в угли. Это явно не съедобно',0,0,0)
-            inventory.fish--;
+            inventory.fish.count1--;
         }
         btn3.disabled = false;
     })
@@ -910,11 +977,6 @@ function startCoocking(){
         }
     })
 }
-
-
-
-
-
 
 //=======================================Главная петля. Выбор случайного события========================================
 //                          ------------------------------------------------------------------
@@ -1114,7 +1176,7 @@ function goLocation(where){
 
 function goTavern(){
     if (eventCount.merCount==0){
-        startEvent("https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", 'images/keeper.webp',"Хм, незнакомое лицо... Если ты к доктору - то вон сидит. Ко мне приходи когда монетой будешь богат, просто так не угощаю",0,0,0)
+        startEvent("https://i.pinimg.com/originals/89/6f/ec/896fec223382a7e3b16226b48485eda9.jpg", 'images/keeper.webp','За стойкой стоит хозяин таверны - Лука. "Хм, незнакомое лицо... Если ты к доктору - то вон сидит. Ко мне приходи когда монетой будешь богат, просто так не угощаю"',0,0,0)
         btnClose()
         btnCreate("<img src='images/icons/hp.png'/>Врач","Назад","","")
         btnShow()

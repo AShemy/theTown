@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        let inventory = {
+            fish:{
+               count: 5,
+               img: "images/forest/fish.webp",
+                info: "Обычная речная рыба. Если правильно приготовить - довольно вкусная",
+                canUse: false,
+                use: "Этот предмет нельзя использовать",
+            },
+            coockedFish:{
+                count: 2,
+                img: 'images/forest/cookFish.webp',
+                info: "Жареная рыба. Лучшая еда, если ты в походе. Поймал, пожарил, съел. Пальчики оближешь \n\n При использовании дает 20 сытости",
+                canUse: true,
+                use: "Хрум-хрум. Вам было очень вкусно, поверьте",
+            },
+            bait:{
+                count: 4,
+                img: 'images/forest/bait.webp',
+                info: "Наживка. Без нее не выловишь рыбку из пруда",
+                canUse: false,
+                use: "Этот предмет нельзя использовать",
+            },
+            bait3:{
+                count: 0,
+                img: 'images/forest/bait.webp',
+            },
+            bait4:{
+                count: 0,
+                img: 'images/forest/bait.webp',
+            },
+            bait5:{
+                count: 0,
+                img: 'images/forest/bait.webp',
+            },
+            bait6:{
+                count: 0,
+                img: 'images/forest/bait.webp',
+            },
+            bait7:{
+                count: 0,
+                img: 'images/forest/bait.webp',
+            },
+            bait8:{
+                count: 0,
+                img: 'images/forest/bait.webp',
+            },
+            bait9:{
+                count: 0,
+                img: 'images/forest/bait.webp',
+            },
+            bait10:{
+                count: 0,
+                img: 'images/forest/bait.webp',
+            },
+        }
+
+        let switch1 = 0;
+        let inv = document.createElement("div");;
+        let invMngr = document.createElement("div");
+        const listItems = [inventory.fish, inventory.coockedFish, inventory.bait]; // !!!!Список всех вещей
+        let listItemsFull = [];// Список всех вещей больше 0. Пока пустой
+
+        function inventoryUpdate(){
+            listItemsFull = [];
+            inv.innerHTML = "";
+            invMngr.innerHTML = "";
+            invMngr.remove();
+            inv.remove();
+            openInv()
+        }
+
+        function openInv(){
+            if (switch1 == 0){
+                const opisanie = document.createElement("p"); // параграф с орисанием
+                const btnInv = document.createElement("div"); //
+                const btnUse  = document.createElement("button");
+                const btnDrop = document.createElement("button");
+                let itemNum; // порядковый номер выбранного элемента инвентаря
+
+
+                inv.classList.add("inventory");
+                document.body.appendChild(inv); // Добавляем инвентарь в нужный элемент кода
+
+                // ------------------------------- Инвентарь-----------------------------------
+                for (let item of listItems){
+                    if (item.count>0){
+                        listItemsFull.push(item);  // Наполняем список вещей > 0
+                    }
+                }
+
+                for (let i = 0; i < listItemsFull.length; i++) {  // цикл создания заполненных ячеек
+                    const div = document.createElement("div"); // Это ячейка
+                    divCount = document.createElement("div")// Это количество предмета
+                    div.classList.add("cell");
+                    divCount.classList.add("count");
+                    inv.appendChild(div);
+                    div.appendChild(divCount);
+
+                    inv.children[i].style.background = 'url('+listItemsFull[i].img+') center center no-repeat, radial-gradient(#ecd0a4, #4e4944)';
+                    inv.children[i].style.backgroundSize = "cover";
+                    divCount.innerHTML = listItemsFull[i].count;
+
+                    inv.children[i].addEventListener("click", function(){   // Вывод информации
+                        itemNum = i;
+                        console.log("Номер элемента: "+itemNum);
+                        for (let elementNum=0; elementNum<listItemsFull.length; elementNum++){  // Всем элементам даем оригинальный цвет (беж)
+                            inv.children[elementNum].style.background = 'url('+listItemsFull[elementNum].img+') center center no-repeat, radial-gradient(#ecd0a4, #4e4944)';
+                            inv.children[elementNum].style.backgroundSize = "cover";
+                        }
+                        opisanie.innerHTML = listItemsFull[i].info;
+                        inv.children[i].style.background = 'url('+listItemsFull[i].img+') center center no-repeat, radial-gradient(#659dfa, #1a5b83)'; // меняем цвет на синий при нажатии
+                        inv.children[i].style.backgroundSize = "cover";
+                    })
+                }
+
+                for (let i = 0; i < 9-listItemsFull.length; i++){  // цикл НЕ заполненных ячеек
+                    const div = document.createElement("div");
+                    div.classList.add("cell");
+                    inv.appendChild(div);
+                }
+
+                //  -------------------------------- Менеджер -------------------------------
+                invMngr.classList.add("inventory");
+                invMngr.style.height = "25vh"
+                document.body.appendChild(invMngr);
+
+                opisanie.innerHTML = "Описание";
+                btnInv.classList.add("invBtn");
+
+                invMngr.appendChild(opisanie);
+                invMngr.appendChild(btnInv);
+
+                btnUse.innerHTML = "Использовать";
+                btnDrop.innerHTML = "Выбросить";
+                btnInv.appendChild(btnUse);
+                btnInv.appendChild(btnDrop);
+
+                btnUse.addEventListener("click", function(){ // Использвать
+                    if (listItemsFull[itemNum].canUse && listItemsFull[itemNum].count>1){
+                        listItemsFull[itemNum].count-=1;
+                        opisanie.innerHTML = listItemsFull[itemNum].use;
+                        inv.children[itemNum].children[0].innerHTML = listItemsFull[itemNum].count; //получили доступ к счетчику кол-ва предмета
+                        console.log(listItemsFull[itemNum].info);
+                        console.log(listItemsFull[itemNum].count);
+                    }else if(!listItemsFull[itemNum].canUse){
+                        opisanie.innerHTML = "Этот предмет нельзя использовать";
+                    }else if(listItemsFull[itemNum].count<=1){
+                        listItemsFull[itemNum].count-=1;
+                        opisanie.innerHTML = "Закончилось :(";
+                        switch1 = 0
+                        inventoryUpdate()
+                    }
+                })
+
+                btnDrop.addEventListener("click", function(){   // Удаление
+                    if (listItemsFull[itemNum].count>1){
+                        listItemsFull[itemNum].count-=1;
+                        inv.children[itemNum].children[0].innerHTML = listItemsFull[itemNum].count; //получили доступ к счетчику кол-ва предмета
+                    }else if (listItemsFull[itemNum].count<=1){
+                        listItemsFull[itemNum].count-=1;
+                        opisanie.innerHTML = "Предмет закончился";
+                        switch1 = 0
+                        inventoryUpdate();
+                    }
+                });
+                switch1 = 1;
+            }else if (switch1==1){
+                inv.innerHTML = "";
+                invMngr.innerHTML = "";
+                invMngr.remove();
+                inv.remove();
+                switch1 = 0;
+                listItemsFull = [];
+            }
+            console.log(switch1);
+        }
+
+    </script>
+</head>
+<body>
+    <button onclick="openInv()">Inventory</button>
+</body>
+</html>
+
+<style>
+    .inventory{
+        width: 80vw;
+        height: 50vh;
+        background-color: #cdcdcd;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        margin: auto;
+        border-radius: 20px;
+        border: 5px solid #89acc1;
+    }
+
+    .cell{
+        width: 100px;
+        height: 100px;
+        background:  radial-gradient(#ecd0a4, #4e4444);
+        border-radius: 20px;
+        margin: 1%;
+        border: 5px solid #89acc1;
+    }
+
+    .count {
+        width: 20px;
+        height: 20px;
+        background-color: #ffffff;
+        border-radius: 20px;
+        border: 2px solid #000000;
+        text-align: center;
+        text-decoration: bold;
+    }
+
+    .invBtn {
+        width: 30%;
+        height: 97%;
+        display: flex;
+        align-items: flex-end;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .invBtn button {
+        width: 70%;
+        height: 20%;
+        border-radius: 20px;
+        margin-bottom: 1%;
+    }
+
+    .inventory p {
+        width: 60%;
+        text-align: center;
+    }
+</style>
